@@ -148,7 +148,7 @@ if (is_array($extrafields->attributes[$object->table_element]['label']) && count
 $object->fields = dol_sort_array($object->fields, 'position');
 $arrayfields = dol_sort_array($arrayfields, 'position');
 
-$permissiontoread = $user->rights->monanalysevendeur->rapportjournalier->read;
+$permissiontoread = $user->rights->monanalysevendeur->rapportjournalier->read || $user->rights->monanalysevendeur->rapportjournalier->rpv;
 $permissiontoadd = $user->rights->monanalysevendeur->rapportjournalier->write;
 $permissiontodelete = $user->rights->monanalysevendeur->rapportjournalier->delete;
 
@@ -239,6 +239,20 @@ $sql .= " FROM ".MAIN_DB_PREFIX.$object->table_element." as t";
 if (is_array($extrafields->attributes[$object->table_element]['label']) && count($extrafields->attributes[$object->table_element]['label'])) $sql .= " LEFT JOIN ".MAIN_DB_PREFIX.$object->table_element."_extrafields as ef on (t.rowid = ef.fk_object)";
 if ($object->ismultientitymanaged == 1) $sql .= " WHERE t.entity IN (".getEntity($object->element).")";
 else $sql .= " WHERE 1 = 1";
+
+if (empty($user->admin)) {
+	$user_to_read=array();
+	if (!empty($user->rights->monanalysevendeur->rapportjournalier->read)) {
+		//si droit read = venderu simple, il voie ses éléments
+		$user_to_read[$user->id] = $user->id;
+	}
+	if (!empty($user->rights->monanalysevendeur->rapportjournalier->rpv)) {
+		//si l'utilisateur à la permission rpv il vois les siens et ceux des vendeurs dont il est responsable
+		$user_to_read=array_merge($user_to_read, $user->getAllChildIds());
+	}
+	if (!empty($user_to_read)) $sql .= " AND t.fk_user_creat IN (".implode(',', $user_to_read).')';
+}
+
 foreach ($search as $key => $val)
 {
 	if ($key == 'status' && $search[$key] == -1) continue;
