@@ -437,7 +437,7 @@ class modMonAnalyseVendeur extends DolibarrModules
             'titre'=>'Nouvelle Relance',
             'mainmenu'=>'monanalysevendeur',
             'leftmenu'=>'monanalysevendeur_relance',
-            'url'=>'/monanalysevendeur/autodiag_card.php?action=create',
+            'url'=>'/contacttracking/contacttracking_card.php?action=create',
             // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'langs'=>'monanalysevendeur@monanalysevendeur',
             'position'=>1100+$r,
