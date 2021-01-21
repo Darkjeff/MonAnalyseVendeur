@@ -33,7 +33,10 @@ class MonAnayseVendeurStats
      */
     public $table_element;
 
-    public $data;
+    public $data_traitement;
+    public $data_transfo;
+    public $data_row;
+    public $data_legend;
 
     /**
      * Constructor
@@ -100,7 +103,7 @@ class MonAnayseVendeurStats
 			}
 		}
 
-		$sql = "SELECT date_format(t.date_creation,'".$period_type."') as dm, t.fk_user_creat, SUM(t.nb_traitement) as nb";
+		$sql = "SELECT date_format(t.date_creation,'".$period_type."') as dm, t.fk_user_creat, SUM(t.nb_traitement) as nb, SUM(t.nb_box) as nbbox";
 		$sql .= " FROM ".MAIN_DB_PREFIX.$object_static->table_element . ' as t';
 		if (!empty($user_tags)) {
 			$sql .= 'INNER JOIN llx_categorie_user as tagu ON tagu.fk_user=t.fk_user_creat';
@@ -136,9 +139,11 @@ class MonAnayseVendeurStats
 		}
 
 		$user_data=array();
+		$i=1;
 		foreach($result as $time=>$data) {
 			if (!in_array($data[1],$user_data)) {
-				$user_data[$data[1]] = $data[1];
+				$user_data[$i] = $data[1];
+				$i++;
 			}
 		}
 
@@ -152,175 +157,23 @@ class MonAnayseVendeurStats
 			}
 			$data_r[]=$t;
 		}
-var_dump($result,$data_r);
-		$dt = key($result[0][0]);
-		$index_t=0;
-		$index_stat_u=1;
-		foreach($result as $time=>$data) {
-			if ($dt!=$time) {
-				$index_t++;
-				$index_stat_u=1;
-			}
-			while ($dt==$time) {
-				$data_r[$index_t][0] = $time;
-				$data_r[$index_t][$index_stat_u] = $data[2];
-				$dt = $time;//key($result[$index_t+1]);
-				$index_stat_u++;
+
+		$data_tx=$data_r;
+		foreach($data_r as $i=>$data_st) {
+			foreach($result as $data_src) {
+				if ($data_src[0]==$data_st[0]) {
+					$data_r[$i][array_search($data_src[1], $user_data)]=$data_src[2];
+					if ($data_src[2]!=0) {
+						$data_tx[$i][array_search($data_src[1], $user_data)] = round(($data_src[3] / $data_src[2]) * 100);
+					}
+				}
 			}
 		}
 
-		var_dump($data_r);
-		exit;
-/*
-		for ($i = 1; $i < $nbtime_diff; $i++)
-		{
-			$res[$i] = (isset($result[$i]) ? $result[$i] : 0);
-		}
-
-		$data = array();
-
-		for ($i = 1; $i < $nbtime_diff; $i++)
-		{
-			//$month = 'unknown';
-			//if ($format == 0) $month = $langs->transnoentitiesnoconv('MonthShort'.sprintf("%02d", $i));
-			//elseif ($format == 1) $month = $i;
-			//elseif ($format == 2) $month = $langs->transnoentitiesnoconv('MonthVeryShort'.sprintf("%02d", $i));
-			//$month=dol_print_date(dol_mktime(12,0,0,$i,1,$year),($format?"%m":"%b"));
-			//$month=dol_substr($month,0,3);
-			$data[$i - 1] = array($i, $res[$i]);
-		}
-*/
-		$this->data = $data_r;
+		$this->data_traitement = $data_r;
+		$this->data_transfo = $data_tx;
+		$this->data_row = $result;
+		$this->data_legend = $user_data;
 		return 1;
 	}
-
-    /**
-     * Return intervention number by month for a year
-     *
-     * @param	int		$year		Year to scan
-     *	@param	int		$format		0=Label of abscissa is a translated text, 1=Label of abscissa is month number, 2=Label of abscissa is first letter of month
-     * @return	array				Array with number by month
-     */
-    public function getNbByMonth($year, $format = 0)
-    {
-        global $user;
-
-        $sql = "SELECT date_format(c.date_valid,'%m') as dm, COUNT(*) as nb";
-        $sql .= " FROM ".$this->from;
-        if (!$user->rights->societe->client->voir && !$this->socid) $sql .= ", ".MAIN_DB_PREFIX."societe_commerciaux as sc";
-        $sql .= " WHERE c.date_valid BETWEEN '".$this->db->idate(dol_get_first_day($year))."' AND '".$this->db->idate(dol_get_last_day($year))."'";
-        $sql .= " AND ".$this->where;
-        $sql .= " GROUP BY dm";
-        $sql .= $this->db->order('dm', 'DESC');
-
-        $res = $this->_getNbByMonth($year, $sql, $format);
-        return $res;
-    }
-
-    /**
-     * Return interventions number per year
-     *
-     * @return	array	Array with number by year
-     *
-     */
-    public function getNbByYear()
-    {
-        global $user;
-
-        $sql = "SELECT date_format(c.date_valid,'%Y') as dm, COUNT(*) as nb, 0";
-        $sql .= " FROM ".$this->from;
-        if (!$user->rights->societe->client->voir && !$this->socid) $sql .= ", ".MAIN_DB_PREFIX."societe_commerciaux as sc";
-        $sql .= " WHERE ".$this->where;
-        $sql .= " GROUP BY dm";
-        $sql .= $this->db->order('dm', 'DESC');
-
-        return $this->_getNbByYear($sql);
-    }
-
-    /**
-     * Return the intervention amount by month for a year
-     *
-     * @param	int		$year		Year to scan
-     *	@param	int		$format		0=Label of abscissa is a translated text, 1=Label of abscissa is month number, 2=Label of abscissa is first letter of month
-     * @return	array				Array with amount by month
-     */
-    public function getAmountByMonth($year, $format = 0)
-    {
-        global $user;
-
-        $sql = "SELECT date_format(c.date_valid,'%m') as dm, 0";
-        $sql .= " FROM ".$this->from;
-        if (!$user->rights->societe->client->voir && !$this->socid) $sql .= ", ".MAIN_DB_PREFIX."societe_commerciaux as sc";
-        $sql .= " WHERE c.date_valid BETWEEN '".$this->db->idate(dol_get_first_day($year))."' AND '".$this->db->idate(dol_get_last_day($year))."'";
-        $sql .= " AND ".$this->where;
-        $sql .= " GROUP BY dm";
-        $sql .= $this->db->order('dm', 'DESC');
-
-        $res = $this->_getAmountByMonth($year, $sql, $format);
-        return $res;
-    }
-
-    /**
-     * Return the intervention amount average by month for a year
-     *
-     * @param	int		$year	year for stats
-     * @return	array			array with number by month
-     */
-    public function getAverageByMonth($year)
-    {
-        global $user;
-
-        $sql = "SELECT date_format(c.date_valid,'%m') as dm, 0";
-        $sql .= " FROM ".$this->from;
-        if (!$user->rights->societe->client->voir && !$this->socid) $sql .= ", ".MAIN_DB_PREFIX."societe_commerciaux as sc";
-        $sql .= " WHERE c.date_valid BETWEEN '".$this->db->idate(dol_get_first_day($year))."' AND '".$this->db->idate(dol_get_last_day($year))."'";
-        $sql .= " AND ".$this->where;
-        $sql .= " GROUP BY dm";
-        $sql .= $this->db->order('dm', 'DESC');
-
-        return $this->_getAverageByMonth($year, $sql);
-    }
-
-    /**
-     *	Return nb, total and average
-     *
-     *	@return	array	Array of values
-     */
-    public function getAllByYear()
-    {
-        global $user;
-
-        $sql = "SELECT date_format(c.date_valid,'%Y') as year, COUNT(*) as nb, 0 as total, 0 as avg";
-        $sql .= " FROM ".$this->from;
-        if (!$user->rights->societe->client->voir && !$this->socid) $sql .= ", ".MAIN_DB_PREFIX."societe_commerciaux as sc";
-        $sql .= " WHERE ".$this->where;
-        $sql .= " GROUP BY year";
-        $sql .= $this->db->order('year', 'DESC');
-
-        return $this->_getAllByYear($sql);
-    }
-
-    /**
-     *  Return nb, amount of predefined product for year
-     *
-     *  @param	int		$year			Year to scan
-     *  @param  int     $limit      	Limit
-     *  @return	array					Array of values
-     */
-    public function getAllByProduct($year, $limit = 0)
-    {
-        global $user;
-
-        $sql = "SELECT product.ref, COUNT(product.ref) as nb, 0 as total, 0 as avg";
-        $sql .= " FROM ".$this->from.", ".$this->from_line.", ".MAIN_DB_PREFIX."product as product";
-        //if (!$user->rights->societe->client->voir && !$user->socid) $sql.= ", ".MAIN_DB_PREFIX."societe_commerciaux as sc";
-        $sql .= " WHERE ".$this->where;
-        $sql .= " AND c.rowid = tl.fk_fichinter AND tl.fk_product = product.rowid";
-        $sql .= " AND c.date_valid BETWEEN '".$this->db->idate(dol_get_first_day($year, 1, false))."' AND '".$this->db->idate(dol_get_last_day($year, 12, false))."'";
-        $sql .= " GROUP BY product.ref";
-        $sql .= $this->db->order('nb', 'DESC');
-        //$sql.= $this->db->plimit(20);
-
-        return $this->_getAllByProduct($sql, $limit);
-    }
 }
