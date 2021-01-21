@@ -13,14 +13,25 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see https://www.gnu.org/licenses/.
 
-
--- BEGIN MODULEBUILDER INDEXES
-ALTER TABLE llx_monanalysevendeur_autodiag ADD INDEX idx_monanalysevendeur_autodiag_rowid (rowid);
-ALTER TABLE llx_monanalysevendeur_autodiag ADD INDEX idx_monanalysevendeur_autodiag_ref (ref);
-ALTER TABLE llx_monanalysevendeur_autodiag ADD CONSTRAINT llx_monanalysevendeur_autodiag_fk_user_creat FOREIGN KEY (fk_user_creat) REFERENCES llx_user(rowid);
--- END MODULEBUILDER INDEXES
-
---ALTER TABLE llx_monanalysevendeur_autodiag ADD UNIQUE INDEX uk_monanalysevendeur_autodiag_fieldxy(fieldx, fieldy);
-
---ALTER TABLE llx_monanalysevendeur_autodiag ADD CONSTRAINT llx_monanalysevendeur_autodiag_fk_field FOREIGN KEY (fk_field) REFERENCES llx_monanalysevendeur_myotherobject(rowid);
-
+CREATE TABLE llx_contacttracking(
+    -- BEGIN MODULEBUILDER FIELDS
+    rowid integer AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    entity integer DEFAULT 1 NOT NULL,
+    fk_soc integer,
+    date_creation datetime NOT NULL,
+    tms timestamp NOT NULL,
+    fk_user_creat integer NOT NULL,
+    fk_user_modif integer,
+    import_key varchar(14),
+    type_contact integer NOT NULL,
+    mode_contact varchar(255),
+    fk_contact integer,
+    element_type varchar(255),
+    fk_element_id integer,
+    comment text,
+    object varchar(255),
+    fk_product varchar(255) NULL,
+    type_event varchar(255) NULL,
+    fk_event integer(11) NULL
+    -- END MODULEBUILDER FIELDS
+) ENGINE=innodb;

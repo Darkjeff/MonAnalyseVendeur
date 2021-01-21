@@ -262,6 +262,46 @@ class modMonAnalyseVendeur extends DolibarrModules
 		$this->rights[$r][4] = 'rapportjournalier'; // In php code, permission will be checked by test if ($user->rights->monanalysevendeur->level1->level2)
 		$this->rights[$r][5] = 'delete'; // In php code, permission will be checked by test if ($user->rights->monanalysevendeur->level1->level2)
 		$r++;
+		$this->rights[$r][0] = $this->numero . $r; // Permission id (must not be already used)
+		$this->rights[$r][1] = $langs->trans("RightContacttrackingO1"); // Permission label
+		$this->rights[$r][3] = 1;      // Permission by default for new user (0/1)
+		$this->rights[$r][4] = 'read';    // In php code, permission will be checked by test if ($user->rights->contacttracking->level1->level2)
+		$this->rights[$r][5] = '';        // In php code, permission will be checked by test if ($user->rights->contacttracking->level1->level2)
+
+		$r++;
+		$this->rights[$r][0] = $this->numero . $r; // Permission id (must not be already used)
+		$this->rights[$r][1] = $langs->trans("RightContacttrackingO2"); // Permission label
+		$this->rights[$r][3] = 1;      // Permission by default for new user (0/1)
+		$this->rights[$r][4] = 'write';    // In php code, permission will be checked by test if ($user->rights->contacttracking->level1->level2)
+		$this->rights[$r][5] = '';        // In php code, permission will be checked by test if ($user->rights->contacttracking->level1->level2)
+
+		$r++;
+		$this->rights[$r][0] = $this->numero . $r; // Permission id (must not be already used)
+		$this->rights[$r][1] = $langs->trans("RightContacttrackingO3"); // Permission label
+		$this->rights[$r][3] = 1;      // Permission by default for new user (0/1)
+		$this->rights[$r][4] = 'delete';    // In php code, permission will be checked by test if ($user->rights->contacttracking->level1->level2)
+		$this->rights[$r][5] = '';
+
+		$r++;
+		$this->rights[$r][0] = $this->numero . $r; // Permission id (must not be already used)
+		$this->rights[$r][1] = $langs->trans("RightContacttrackingO4"); // Permission label
+		$this->rights[$r][3] = 0;      // Permission by default for new user (0/1)
+		$this->rights[$r][4] = 'readall';    // In php code, permission will be checked by test if ($user->rights->contacttracking->level1->level2)
+		$this->rights[$r][5] = '';
+
+		$r++;
+		$this->rights[$r][0] = $this->numero . $r; // Permission id (must not be already used)
+		$this->rights[$r][1] = $langs->trans("RightContacttrackingO5"); // Permission label
+		$this->rights[$r][3] = 1;      // Permission by default for new user (0/1)
+		$this->rights[$r][4] = 'writeall';    // In php code, permission will be checked by test if ($user->rights->activityreport->level1->level2)
+		$this->rights[$r][5] = '';
+
+		$r++;
+		$this->rights[$r][0] = $this->numero . $r; // Permission id (must not be already used)
+		$this->rights[$r][1] = $langs->trans("RightContacttrackingO6"); // Permission label
+		$this->rights[$r][3] = 1;      // Permission by default for new user (0/1)
+		$this->rights[$r][4] = 'deleteall';    // In php code, permission will be checked by test if ($user->rights->activityreport->level1->level2)
+		$this->rights[$r][5] = '';
 		/* END MODULEBUILDER PERMISSIONS */
 
 		// Main menu entries to add
@@ -377,7 +417,7 @@ class modMonAnalyseVendeur extends DolibarrModules
             'titre'=>'Liste Auto Diagnostic',
             'mainmenu'=>'monanalysevendeur',
             'leftmenu'=>'monanalysevendeur_autodiag',
-            'url'=>'/monanalysevendeur/autodiag_list.php',
+            'url'=>'/monanalysevendeur/autodiag_list.php?relance=0',
             // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'langs'=>'monanalysevendeur@monanalysevendeur',
             'position'=>1100+$r,
@@ -397,7 +437,7 @@ class modMonAnalyseVendeur extends DolibarrModules
             'titre'=>'Nouveau Auto Diagnostic',
             'mainmenu'=>'monanalysevendeur',
             'leftmenu'=>'monanalysevendeur_autodiag',
-            'url'=>'/monanalysevendeur/autodiag_card.php?action=create',
+            'url'=>'/monanalysevendeur/autodiag_card.php?action=create&relance=0',
             // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'langs'=>'monanalysevendeur@monanalysevendeur',
             'position'=>1100+$r,
@@ -417,7 +457,7 @@ class modMonAnalyseVendeur extends DolibarrModules
             'titre'=>'Liste Relance',
             'mainmenu'=>'monanalysevendeur',
             'leftmenu'=>'monanalysevendeur_relance',
-            'url'=>'/contacttracking/contacttracking_list.php',
+            'url'=>'/monanalysevendeur/autodiag_list.php?relance=1',
             // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'langs'=>'monanalysevendeur@monanalysevendeur',
             'position'=>1100+$r,
@@ -437,7 +477,7 @@ class modMonAnalyseVendeur extends DolibarrModules
             'titre'=>'Nouvelle Relance',
             'mainmenu'=>'monanalysevendeur',
             'leftmenu'=>'monanalysevendeur_relance',
-            'url'=>'/contacttracking/form_contacttracking.php?action=create',
+            'url'=>'/monanalysevendeur/autodiag_card.php?action=create&relance=1',
             // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'langs'=>'monanalysevendeur@monanalysevendeur',
             'position'=>1100+$r,

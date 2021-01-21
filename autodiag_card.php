@@ -1,611 +1,546 @@
 <?php
-/* Copyright (C) 2017 Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) ---Put here your own copyright and developer email---
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- */
-
-/**
- *   	\file       autodiag_card.php
- *		\ingroup    monanalysevendeur
- *		\brief      Page to create/edit/view autodiag
- */
-
-//if (! defined('NOREQUIREDB'))              define('NOREQUIREDB','1');					// Do not create database handler $db
-//if (! defined('NOREQUIREUSER'))            define('NOREQUIREUSER','1');				// Do not load object $user
-//if (! defined('NOREQUIRESOC'))             define('NOREQUIRESOC','1');				// Do not load object $mysoc
-//if (! defined('NOREQUIRETRAN'))            define('NOREQUIRETRAN','1');				// Do not load object $langs
-//if (! defined('NOSCANGETFORINJECTION'))    define('NOSCANGETFORINJECTION','1');		// Do not check injection attack on GET parameters
-//if (! defined('NOSCANPOSTFORINJECTION'))   define('NOSCANPOSTFORINJECTION','1');		// Do not check injection attack on POST parameters
-//if (! defined('NOCSRFCHECK'))              define('NOCSRFCHECK','1');					// Do not check CSRF attack (test on referer + on token if option MAIN_SECURITY_CSRF_WITH_TOKEN is on).
-//if (! defined('NOTOKENRENEWAL'))           define('NOTOKENRENEWAL','1');				// Do not roll the Anti CSRF token (used if MAIN_SECURITY_CSRF_WITH_TOKEN is on)
-//if (! defined('NOSTYLECHECK'))             define('NOSTYLECHECK','1');				// Do not check style html tag into posted data
-//if (! defined('NOREQUIREMENU'))            define('NOREQUIREMENU','1');				// If there is no need to load and show top and left menu
-//if (! defined('NOREQUIREHTML'))            define('NOREQUIREHTML','1');				// If we don't need to load the html.form.class.php
-//if (! defined('NOREQUIREAJAX'))            define('NOREQUIREAJAX','1');       	  	// Do not load ajax.lib.php library
-//if (! defined("NOLOGIN"))                  define("NOLOGIN",'1');						// If this page is public (can be called outside logged session). This include the NOIPCHECK too.
-//if (! defined('NOIPCHECK'))                define('NOIPCHECK','1');					// Do not check IP defined into conf $dolibarr_main_restrict_ip
-//if (! defined("MAIN_LANG_DEFAULT"))        define('MAIN_LANG_DEFAULT','auto');					// Force lang to a particular value
-//if (! defined("MAIN_AUTHENTICATION_MODE")) define('MAIN_AUTHENTICATION_MODE','aloginmodule');		// Force authentication handler
-//if (! defined("NOREDIRECTBYMAINTOLOGIN"))  define('NOREDIRECTBYMAINTOLOGIN',1);		// The main.inc.php does not make a redirect if not logged, instead show simple error message
-//if (! defined("FORCECSP"))                 define('FORCECSP','none');					// Disable all Content Security Policies
-
-
 // Load Dolibarr environment
 $res = 0;
 // Try main.inc.php into web root known defined into CONTEXT_DOCUMENT_ROOT (not always defined)
-if (!$res && !empty($_SERVER["CONTEXT_DOCUMENT_ROOT"])) $res = @include $_SERVER["CONTEXT_DOCUMENT_ROOT"]."/main.inc.php";
-// Try main.inc.php into web root detected using web root calculated from SCRIPT_FILENAME
-$tmp = empty($_SERVER['SCRIPT_FILENAME']) ? '' : $_SERVER['SCRIPT_FILENAME']; $tmp2 = realpath(__FILE__); $i = strlen($tmp) - 1; $j = strlen($tmp2) - 1;
-while ($i > 0 && $j > 0 && isset($tmp[$i]) && isset($tmp2[$j]) && $tmp[$i] == $tmp2[$j]) { $i--; $j--; }
-if (!$res && $i > 0 && file_exists(substr($tmp, 0, ($i + 1))."/main.inc.php")) $res = @include substr($tmp, 0, ($i + 1))."/main.inc.php";
-if (!$res && $i > 0 && file_exists(dirname(substr($tmp, 0, ($i + 1)))."/main.inc.php")) $res = @include dirname(substr($tmp, 0, ($i + 1)))."/main.inc.php";
+if (!$res && !empty($_SERVER["CONTEXT_DOCUMENT_ROOT"]))
+    $res = @include $_SERVER["CONTEXT_DOCUMENT_ROOT"] . "/main.inc.php";
+// Try main.inc.php into web root detected using web root caluclated from SCRIPT_FILENAME
+$tmp = empty($_SERVER['SCRIPT_FILENAME']) ? '' : $_SERVER['SCRIPT_FILENAME'];
+$tmp2 = realpath(__FILE__);
+$i = strlen($tmp) - 1;
+$j = strlen($tmp2) - 1;
+while ($i > 0 && $j > 0 && isset($tmp[$i]) && isset($tmp2[$j]) && $tmp[$i] == $tmp2[$j]) {
+    $i--;
+    $j--;
+}
+
+if (!$res && $i > 0 && file_exists(substr($tmp, 0, ($i + 1)) . "/main.inc.php"))
+    $res = @include substr($tmp, 0, ($i + 1)) . "/main.inc.php";
+if (!$res && $i > 0 && file_exists(dirname(substr($tmp, 0, ($i + 1))) . "/main.inc.php"))
+    $res = @include dirname(substr($tmp, 0, ($i + 1))) . "/main.inc.php";
 // Try main.inc.php using relative path
-if (!$res && file_exists("../main.inc.php")) $res = @include "../main.inc.php";
-if (!$res && file_exists("../../main.inc.php")) $res = @include "../../main.inc.php";
-if (!$res && file_exists("../../../main.inc.php")) $res = @include "../../../main.inc.php";
-if (!$res) die("Include of main fails");
+if (!$res && file_exists("../main.inc.php"))
+    $res = @include "../main.inc.php";
+if (!$res && file_exists("../../main.inc.php"))
+    $res = @include "../../main.inc.php";
+if (!$res && file_exists("../../../main.inc.php"))
+    $res = @include "../../../main.inc.php";
+if (!$res)
+    die("Include of main fails");
 
-require_once DOL_DOCUMENT_ROOT.'/core/class/html.formcompany.class.php';
-require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
-require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
-dol_include_once('/monanalysevendeur/class/autodiag.class.php');
-dol_include_once('/monanalysevendeur/lib/monanalysevendeur_autodiag.lib.php');
+include_once DOL_DOCUMENT_ROOT . '/core/class/html.formcompany.class.php';
+include_once DOL_DOCUMENT_ROOT . '/core/class/html.formfile.class.php';
+include_once DOL_DOCUMENT_ROOT . '/product/class/product.class.php';
+require_once DOL_DOCUMENT_ROOT . '/core/class/html.formactions.class.php';
+dol_include_once('/monanalysevendeur/class/contacttracking.class.php');
 
-// Load translation files required by the page
-$langs->loadLangs(array("monanalysevendeur@monanalysevendeur", "other"));
+$object = new Contacttracking($db);
+$formactions = new FormActions($db);
 
-// Get parameters
-$id = GETPOST('id', 'int');
-$ref        = GETPOST('ref', 'alpha');
-$action = GETPOST('action', 'aZ09');
-$confirm    = GETPOST('confirm', 'alpha');
-$cancel     = GETPOST('cancel', 'aZ09');
-$contextpage = GETPOST('contextpage', 'aZ') ?GETPOST('contextpage', 'aZ') : 'autodiagcard'; // To manage different context of search
-$backtopage = GETPOST('backtopage', 'alpha');
-$backtopageforcancel = GETPOST('backtopageforcancel', 'alpha');
-//$lineid   = GETPOST('lineid', 'int');
+$object->fields['fk_event']['enabled'] = GETPOST('relance', 'int');
+$object->fields['type_event']['enabled'] = GETPOST('relance', 'int');
+$object->fields['element_type']['visible'] = 0;
+$object->fields['fk_element_id']['visible'] = 0;
 
-// Initialize technical objects
-$object = new Autodiag($db);
-$extrafields = new ExtraFields($db);
-$diroutputmassaction = $conf->monanalysevendeur->dir_output.'/temp/massgeneration/'.$user->id;
-$hookmanager->initHooks(array('autodiagcard', 'globalcard')); // Note that conf->hooks_modules contains array
 
-// Fetch optionals attributes and labels
-$extrafields->fetch_name_optionals_label($object->table_element);
-
-$search_array_options = $extrafields->getOptionalsFromPost($object->table_element, '', 'search_');
-
-// Initialize array of search criterias
-$search_all = trim(GETPOST("search_all", 'alpha'));
-$search = array();
-foreach ($object->fields as $key => $val)
-{
-	if (GETPOST('search_'.$key, 'alpha')) $search[$key] = GETPOST('search_'.$key, 'alpha');
+// Load traductions files requiredby by page
+if (method_exists($langs, 'loadLangs')) {
+    $langs->loadLangs(array("contacttracking@monanalysevendeur", "other", "companies"));
+} else {
+    $langs->load('other');
+    $langs->load('companies');
+    $langs->load('contacttracking@monanalysevendeur');
 }
+// AJout
+if (GETPOST('action') == 'add') {
+    // Actions cancel, add, update or delete
+    include DOL_DOCUMENT_ROOT . '/core/actions_addupdatedelete.inc.php';
 
-if (empty($action) && empty($id) && empty($ref)) $action = 'view';
+    $object->date_creation = strtotime(GETPOST('date_creationyear') . '-' . GETPOST('date_creationmonth') . '-' . GETPOST('date_creationday') . ' ' . GETPOST('date_creationhour') . ':' . GETPOST('date_creationmin') . ':00');
+    $object->mode_contact = GETPOST('mode_contact');
+    $object->object = GETPOST('object');
+    $object->fk_soc = GETPOST('fk_soc');
+    $object->fk_user_creat = GETPOST('fk_user_creat');
+    $object->fk_contact = !GETPOST('fk_contact') ? 'NULL' : GETPOST('fk_contact');
+    $object->comment = GETPOST('comment');
+    if (!empty($conf->global->AGENDA_USE_EVENT_TYPE)) {
+        $object->type_event = GETPOST('actioncode');
+    } else {
+        $object->type_event = "AC_RDV";
+    }
 
-// Load object
-include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be include, not include_once.
+    $object->type_contact = GETPOST('type_contact');
+    if (GETPOST('product') != null) {
+        foreach (GETPOST('product') as $pr => $empty) {
+            if (!empty($object->fk_product))
+                $object->fk_product .= ',';
+            $object->fk_product .= $pr;
+        }
+    }
 
+    //element
+    $element_post = explode('-', GETPOST('fk_element_id'));
+    if (count($element_post) == 2) {
+        $object->element_type = $element_post[0];
+        $object->fk_element_id = $element_post[1];
+    }
 
-$permissiontoread = $user->rights->monanalysevendeur->autodiag->read;
-$permissiontoadd = $user->rights->monanalysevendeur->autodiag->write; // Used by the include of actions_addupdatedelete.inc.php and actions_lineupdown.inc.php
-$permissiontodelete = $user->rights->monanalysevendeur->autodiag->delete || ($permissiontoadd && isset($object->status) && $object->status == $object::STATUS_DRAFT);
-$permissionnote = $user->rights->monanalysevendeur->autodiag->write; // Used by the include of actions_setnotes.inc.php
-$permissiondellink = $user->rights->monanalysevendeur->autodiag->write; // Used by the include of actions_dellink.inc.php
-$upload_dir = $conf->monanalysevendeur->multidir_output[isset($object->entity) ? $object->entity : 1];
+    $err = 0;
+	$result=$object->create($user);
+    if ($result < 0) {
+        setEventMessage($object->error,'errors');
+    	$err++;
+    } elseif (GETPOST('re')) {
+        // On créé une relance client
+        require_once DOL_DOCUMENT_ROOT . '/comm/action/class/actioncomm.class.php';
+        require_once DOL_DOCUMENT_ROOT . '/societe/class/societe.class.php';
+        $soc = new Societe($db);
+        if (!empty(GETPOST('fk_soc_contact'))) {
+            $soc->fetch(GETPOST('fk_soc_contact'));
+        } else {
+            $soc->fetch(GETPOST('fk_soc'));
+        }
 
-// Security check - Protection if external user
-//if ($user->socid > 0) accessforbidden();
-//if ($user->socid > 0) $socid = $user->socid;
-//$isdraft = (($object->statut == $object::STATUS_DRAFT) ? 1 : 0);
-//$result = restrictedArea($user, 'monanalysevendeur', $object->id, '', '', 'fk_soc', 'rowid', $isdraft);
+        $actionComm = new ActionComm($db);
 
-//if (!$permissiontoread) accessforbidden();
+        $hour = GETPOST('rehour');
+        if ($hour == '00' && GETPOST('remin' == '00')) {
+            $hour = '10';
+        }
+        $datep = dol_mktime($hour, GETPOST('remin'), 0, GETPOST("remonth"), GETPOST("reday"), GETPOST("reyear"));
 
+        $actionComm->datep = $datep;
+        $actionComm->elementtype = $object->element_type;
+        if ($object->element_type == 'projet')
+        $actionComm->fk_project = $object->fk_element_id;
+        $actionComm->fk_element = $object->fk_element_id;
+        if (!empty(GETPOST('fk_soc_contact'))) {
+            $actionComm->socid = GETPOST('fk_soc_contact');
+        } else {
+            $actionComm->socid = GETPOST('fk_soc');
+        }
 
-/*
- * Actions
- */
+        $actionComm->contactid = $object->fk_contact;
+        $actionComm->type_code = "AC_RDV";
+        if (!empty($conf->global->AGENDA_USE_EVENT_TYPE) && GETPOST('actioncode') != '0') {
+            $actionComm->type_code = GETPOST('actioncode');
+        }
 
-$parameters = array();
-$reshook = $hookmanager->executeHooks('doActions', $parameters, $object, $action); // Note that $action and $object may have been modified by some hooks
-if ($reshook < 0) setEventMessages($hookmanager->error, $hookmanager->errors, 'errors');
+        $actionComm->label = $langs->trans('relance') . ' : ' . $soc->getFullName($langs);
+        if ($conf->global->contacttracking_CHOOSEUSER == 1){
+            $actionComm->userownerid = GETPOST('userreminder');
+        } else {
+            $actionComm->userownerid = $user->id;
+        }
 
-if (empty($reshook))
-{
-	$error = 0;
+        if (!empty(GETPOST('reminder')))
+            $actionComm->note = GETPOST('reminder');
+        else
+            $actionComm->note = GETPOST('comment');
 
-	$backurlforlist = dol_buildpath('/monanalysevendeur/autodiag_list.php', 1);
+        $event = $actionComm->create($user);
+        if ($event < 0) {
+            $err++;
+        } else {
+            $object->fk_event = $event;
+            $object->update($user);
+        }
+    }
 
-	if (empty($backtopage) || ($cancel && empty($id))) {
-		if (empty($backtopage) || ($cancel && strpos($backtopage, '__ID__'))) {
-			if (empty($id) && (($action != 'add' && $action != 'create') || $cancel)) $backtopage = $backurlforlist;
-			else $backtopage = dol_buildpath('/monanalysevendeur/autodiag_card.php', 1).'?id='.($id > 0 ? $id : '__ID__');
-		}
+    if ($err > 0) {
+    	echo $db->lasterror();
+    } else {
+    	setEventMessage($langs->trans('Success'));
+		Header("Location: autodiag_list.php?relance=".GETPOST('relance', 'int'));
+		exit();
 	}
-	$triggermodname = 'MONANALYSEVENDEUR_AUTODIAG_MODIFY'; // Name of trigger action code to execute when we modify record
-
-	// Actions cancel, add, update, update_extras, confirm_validate, confirm_delete, confirm_deleteline, confirm_clone, confirm_close, confirm_setdraft, confirm_reopen
-	include DOL_DOCUMENT_ROOT.'/core/actions_addupdatedelete.inc.php';
-
-	// Actions when linking object each other
-	include DOL_DOCUMENT_ROOT.'/core/actions_dellink.inc.php';
-
-	// Actions when printing a doc from card
-	include DOL_DOCUMENT_ROOT.'/core/actions_printing.inc.php';
-
-	// Action to move up and down lines of object
-	//include DOL_DOCUMENT_ROOT.'/core/actions_lineupdown.inc.php';
-
-	// Action to build doc
-	include DOL_DOCUMENT_ROOT.'/core/actions_builddoc.inc.php';
-
-	if ($action == 'set_thirdparty' && $permissiontoadd)
-	{
-		$object->setValueFrom('fk_soc', GETPOST('fk_soc', 'int'), '', '', 'date', '', $user, 'AUTODIAG_MODIFY');
-	}
-	if ($action == 'classin' && $permissiontoadd)
-	{
-		$object->setProject(GETPOST('projectid', 'int'));
-	}
-
-	// Actions to send emails
-	$triggersendname = 'AUTODIAG_SENTBYMAIL';
-	$autocopy = 'MAIN_MAIL_AUTOCOPY_AUTODIAG_TO';
-	$trackid = 'autodiag'.$object->id;
-	include DOL_DOCUMENT_ROOT.'/core/actions_sendmails.inc.php';
 }
-
-
-
-
-/*
- * View
- *
- * Put here all code to build page
- */
-
-$form = new Form($db);
-$formfile = new FormFile($db);
-$formproject = new FormProjets($db);
 
 $title = $langs->trans("Autodiag");
 $help_url = '';
 llxHeader('', $title, $help_url);
-
-// Example : Adding jquery code
-print '<script type="text/javascript" language="javascript">
-jQuery(document).ready(function() {
-	function init_myfunc()
-	{
-		jQuery("#myid").removeAttr(\'disabled\');
-		jQuery("#myid").attr(\'disabled\',\'disabled\');
-	}
-	init_myfunc();
-	jQuery("#mybutton").click(function() {
-		init_myfunc();
-	});
-});
-</script>';
+dol_fiche_head(array(), '');
+if (!$user->rights->contacttracking->write) :
+    ?>
+    <div class="error"><?php echo $langs->trans("contacttracking_NORIGHT") ?>.</div>
+<?php else: ?>
 
 
-// Part to create
-if ($action == 'create')
-{
-	print load_fiche_titre($langs->trans("NewObject", $langs->transnoentitiesnoconv("Autodiag")), '', 'object_'.$object->picto);
+    <?php
+    $form = new Form($db);
+    $formfile = new FormFile($db);
 
-	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
-	print '<input type="hidden" name="token" value="'.newToken().'">';
-	print '<input type="hidden" name="action" value="add">';
-	if ($backtopage) print '<input type="hidden" name="backtopage" value="'.$backtopage.'">';
-	if ($backtopageforcancel) print '<input type="hidden" name="backtopageforcancel" value="'.$backtopageforcancel.'">';
+    print '<form method="POST" action="' . $_SERVER["PHP_SELF"] . '">';
+    print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
+    print '<input type="hidden" name="action" value="add">';
+    print '<input type="hidden" name="backtopage" value="' . $backtopage . '">';
+    print '<input type="hidden" name="actioncode" value="' . $object->type_code . '">';
+    print '<input type="hidden" name="relance" value="' . GETPOST('relance', 'int') . '">';
 
-	dol_fiche_head(array(), '');
+   // print '<center><h2>' . $langs->trans('Exchanges') . '</h2></center>';
+    print '<table class="border centpercent">' . "\n";
+    foreach ($object->fields as $key => $val) {
 
-	// Set some default values
-	//if (! GETPOSTISSET('fieldname')) $_POST['fieldname'] = 'myvalue';
+        // Discard if extrafield is a hidden field on form
+        if (abs($val['visible']) != 1)
+            continue;
 
-	print '<table class="border centpercent tableforfieldcreate">'."\n";
-
-	// Common attributes
-	include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_add.tpl.php';
-
-	// Other attributes
-	include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_add.tpl.php';
-
-	print '</table>'."\n";
-
-	dol_fiche_end();
-
-	print '<div class="center">';
-	print '<input type="submit" class="button" name="add" value="'.dol_escape_htmltag($langs->trans("Create")).'">';
-	print '&nbsp; ';
-	print '<input type="'.($backtopage ? "submit" : "button").'" class="button" name="cancel" value="'.dol_escape_htmltag($langs->trans("Cancel")).'"'.($backtopage ? '' : ' onclick="javascript:history.go(-1)"').'>'; // Cancel for create does not post form if we don't know the backtopage
-	print '</div>';
-
-	print '</form>';
-
-	//dol_set_focus('input[name="ref"]');
-}
-
-// Part to edit record
-if (($id || $ref) && $action == 'edit')
-{
-	print load_fiche_titre($langs->trans("Autodiag"), '', 'object_'.$object->picto);
-
-	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
-	print '<input type="hidden" name="token" value="'.newToken().'">';
-	print '<input type="hidden" name="action" value="update">';
-	print '<input type="hidden" name="id" value="'.$object->id.'">';
-	if ($backtopage) print '<input type="hidden" name="backtopage" value="'.$backtopage.'">';
-	if ($backtopageforcancel) print '<input type="hidden" name="backtopageforcancel" value="'.$backtopageforcancel.'">';
-
-	dol_fiche_head();
-
-	print '<table class="border centpercent tableforfieldedit">'."\n";
-
-	// Common attributes
-	include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_edit.tpl.php';
-
-	// Other attributes
-	include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_edit.tpl.php';
-
-	print '</table>';
-
-	dol_fiche_end();
-
-	print '<div class="center"><input type="submit" class="button" name="save" value="'.$langs->trans("Save").'">';
-	print ' &nbsp; <input type="submit" class="button" name="cancel" value="'.$langs->trans("Cancel").'">';
-	print '</div>';
-
-	print '</form>';
-}
-
-// Part to show record
-if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'create')))
-{
-	$res = $object->fetch_optionals();
-
-	$head = autodiagPrepareHead($object);
-	dol_fiche_head($head, 'card', $langs->trans("Autodiag"), -1, $object->picto);
-
-	$formconfirm = '';
-
-	// Confirmation to delete
-	if ($action == 'delete')
-	{
-		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id, $langs->trans('DeleteAutodiag'), $langs->trans('ConfirmDeleteObject'), 'confirm_delete', '', 0, 1);
-	}
-	// Confirmation to delete line
-	if ($action == 'deleteline')
-	{
-		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id.'&lineid='.$lineid, $langs->trans('DeleteLine'), $langs->trans('ConfirmDeleteLine'), 'confirm_deleteline', '', 0, 1);
-	}
-	// Clone confirmation
-	if ($action == 'clone') {
-		// Create an array for form
-		$formquestion = array();
-		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id, $langs->trans('ToClone'), $langs->trans('ConfirmCloneAsk', $object->ref), 'confirm_clone', $formquestion, 'yes', 1);
-	}
-
-	// Confirmation of action xxxx
-	if ($action == 'xxx')
-	{
-		$formquestion = array();
-		/*
-		$forcecombo=0;
-		if ($conf->browser->name == 'ie') $forcecombo = 1;	// There is a bug in IE10 that make combo inside popup crazy
-		$formquestion = array(
-			// 'text' => $langs->trans("ConfirmClone"),
-			// array('type' => 'checkbox', 'name' => 'clone_content', 'label' => $langs->trans("CloneMainAttributes"), 'value' => 1),
-			// array('type' => 'checkbox', 'name' => 'update_prices', 'label' => $langs->trans("PuttingPricesUpToDate"), 'value' => 1),
-			// array('type' => 'other',    'name' => 'idwarehouse',   'label' => $langs->trans("SelectWarehouseForStockDecrease"), 'value' => $formproduct->selectWarehouses(GETPOST('idwarehouse')?GETPOST('idwarehouse'):'ifone', 'idwarehouse', '', 1, 0, 0, '', 0, $forcecombo))
-		);
-		*/
-		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id, $langs->trans('XXX'), $text, 'confirm_xxx', $formquestion, 0, 1, 220);
-	}
-
-	// Call Hook formConfirm
-	$parameters = array('formConfirm' => $formconfirm, 'lineid' => $lineid);
-	$reshook = $hookmanager->executeHooks('formConfirm', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
-	if (empty($reshook)) $formconfirm .= $hookmanager->resPrint;
-	elseif ($reshook > 0) $formconfirm = $hookmanager->resPrint;
-
-	// Print form confirm
-	print $formconfirm;
-
-
-	// Object card
-	// ------------------------------------------------------------
-	$linkback = '<a href="'.dol_buildpath('/monanalysevendeur/autodiag_list.php', 1).'?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
-
-	$morehtmlref = '<div class="refidno">';
-	/*
-	 // Ref customer
-	 $morehtmlref.=$form->editfieldkey("RefCustomer", 'ref_client', $object->ref_client, $object, 0, 'string', '', 0, 1);
-	 $morehtmlref.=$form->editfieldval("RefCustomer", 'ref_client', $object->ref_client, $object, 0, 'string', '', null, null, '', 1);
-	 // Thirdparty
-	 $morehtmlref.='<br>'.$langs->trans('ThirdParty') . ' : ' . (is_object($object->thirdparty) ? $object->thirdparty->getNomUrl(1) : '');
-	 // Project
-	 if (! empty($conf->projet->enabled))
-	 {
-	 $langs->load("projects");
-	 $morehtmlref.='<br>'.$langs->trans('Project') . ' ';
-	 if ($permissiontoadd)
-	 {
-	 //if ($action != 'classify') $morehtmlref.='<a class="editfielda" href="' . $_SERVER['PHP_SELF'] . '?action=classify&amp;id=' . $object->id . '">' . img_edit($langs->transnoentitiesnoconv('SetProject')) . '</a> ';
-	 $morehtmlref.=' : ';
-	 if ($action == 'classify') {
-	 //$morehtmlref.=$form->form_project($_SERVER['PHP_SELF'] . '?id=' . $object->id, $object->socid, $object->fk_project, 'projectid', 0, 0, 1, 1);
-	 $morehtmlref.='<form method="post" action="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'">';
-	 $morehtmlref.='<input type="hidden" name="action" value="classin">';
-	 $morehtmlref.='<input type="hidden" name="token" value="'.newToken().'">';
-	 $morehtmlref.=$formproject->select_projects($object->socid, $object->fk_project, 'projectid', $maxlength, 0, 1, 0, 1, 0, 0, '', 1);
-	 $morehtmlref.='<input type="submit" class="button valignmiddle" value="'.$langs->trans("Modify").'">';
-	 $morehtmlref.='</form>';
-	 } else {
-	 $morehtmlref.=$form->form_project($_SERVER['PHP_SELF'] . '?id=' . $object->id, $object->socid, $object->fk_project, 'none', 0, 0, 0, 1);
-	 }
-	 } else {
-	 if (! empty($object->fk_project)) {
-	 $proj = new Project($db);
-	 $proj->fetch($object->fk_project);
-	 $morehtmlref .= ': '.$proj->getNomUrl();
-	 } else {
-	 $morehtmlref .= '';
-	 }
-	 }
-	 }*/
-	$morehtmlref .= '</div>';
-
-
-	dol_banner_tab($object, 'ref', $linkback, 1, 'ref', 'ref', $morehtmlref);
-
-
-	print '<div class="fichecenter">';
-	print '<div class="fichehalfleft">';
-	print '<div class="underbanner clearboth"></div>';
-	print '<table class="border centpercent tableforfield">'."\n";
-
-	// Common attributes
-	//$keyforbreak='fieldkeytoswitchonsecondcolumn';	// We change column just before this field
-	//unset($object->fields['fk_project']);				// Hide field already shown in banner
-	//unset($object->fields['fk_soc']);					// Hide field already shown in banner
-	include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_view.tpl.php';
-
-	// Other attributes. Fields from hook formObjectOptions and Extrafields.
-	include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_view.tpl.php';
-
-	print '</table>';
-	print '</div>';
-	print '</div>';
-
-	print '<div class="clearboth"></div>';
-
-	dol_fiche_end();
-
-
-	/*
-	 * Lines
-	 */
-
-	if (!empty($object->table_element_line))
-	{
-		// Show object lines
-		$result = $object->getLinesArray();
-
-		print '	<form name="addproduct" id="addproduct" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.(($action != 'editline') ? '#addline' : '#line_'.GETPOST('lineid', 'int')).'" method="POST">
-		<input type="hidden" name="token" value="' . newToken().'">
-		<input type="hidden" name="action" value="' . (($action != 'editline') ? 'addline' : 'updateline').'">
-		<input type="hidden" name="mode" value="">
-		<input type="hidden" name="id" value="' . $object->id.'">
-		';
-
-		if (!empty($conf->use_javascript_ajax) && $object->status == 0) {
-			include DOL_DOCUMENT_ROOT.'/core/tpl/ajaxrow.tpl.php';
+        if (array_key_exists('enabled', $val) && isset($val['enabled']) && !$val['enabled']) {
+			continue; // We don't want this field
 		}
 
-		print '<div class="div-table-responsive-no-min">';
-		if (!empty($object->lines) || ($object->status == $object::STATUS_DRAFT && $permissiontoadd && $action != 'selectlines' && $action != 'editline'))
-		{
-			print '<table id="tablelines" class="noborder noshadow" width="100%">';
-		}
+        switch ($key) {
+            case 'type_contact' :
+                print '<tr id="field_' . $key . '">';
+                print '<td';
+                print ' class="titlefieldcreate';
+                if ($val['notnull'] > 0)
+                    print ' fieldrequired';
+                if ($val['type'] == 'text' || $val['type'] == 'html')
+                    print ' tdtop';
+                print '"';
+                print '>';
+                print $langs->trans($val['label']);
+                print '</td>';
 
-		if (!empty($object->lines))
-		{
-			$object->printObjectLines($action, $mysoc, null, GETPOST('lineid', 'int'), 1);
-		}
+                print '<td>';
 
-		// Form to add new line
-		if ($object->status == 0 && $permissiontoadd && $action != 'selectlines')
-		{
-			if ($action != 'editline')
-			{
-				// Add products/services form
-				$object->formAddObjectLine(1, $mysoc, $soc);
+                print '<label>';
+                print '<input type="radio" name="' . $key . '" value="2" checked="checked" />';
+                print $langs->trans("contacttracking_OUTCOMING");
+                print '</label>';
 
-				$parameters = array();
-				$reshook = $hookmanager->executeHooks('formAddObjectLine', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
-			}
-		}
+                print '&nbsp;&nbsp;&nbsp;<label>';
+                print '<input type="radio" name="' . $key . '" value="1" />';
+                print $langs->trans("contacttracking_INCOMING");
+                print '</label>';
 
-		if (!empty($object->lines) || ($object->status == $object::STATUS_DRAFT && $permissiontoadd && $action != 'selectlines' && $action != 'editline'))
-		{
-			print '</table>';
-		}
-		print '</div>';
+                print '</td>';
+                print '</tr>';
+                break;
 
-		print "</form>\n";
+            case 'type_event':
+
+                print '</table>';
+                print '<hr>';
+                print '<center><h3>' . $langs->trans('ReminderTitleContacttracking') . '</h3></center>';
+                print '<table  class="border centpercent">' . "\n";
+                if (!empty($conf->global->AGENDA_USE_EVENT_TYPE)) {
+                    print '<tr  id="field_' . $key . '">';
+                    print '<td class="titlefieldcreate';
+                    if ($val['notnull'] > 0)
+                        print ' fieldrequired';
+                    if ($val['type'] == 'text' || $val['type'] == 'html')
+                        print ' tdtop';
+                    print '">';
+                    print '<span class="field">' . $langs->trans($val['label']) . '</span>';
+                    print '</b></td><td>';
+                    $default = (empty($conf->global->AGENDA_USE_EVENT_TYPE_DEFAULT) ? 'AC_RDV' : $conf->global->AGENDA_USE_EVENT_TYPE_DEFAULT);
+                    //WORKFLOW prospecting event
+                    $formactions->select_type_actions(GETPOST("actioncode") ? GETPOST("actioncode") : ($object->type_code ? $object->type_code : $default), "actioncode", "systemauto", 0, -1);
+                    print '</td></tr>'; //AC_RDV
+                }
+                break;
+
+            case 'rowid':
+                break;
+
+            case 'mode_contact' :
+                print '<tr id="field_' . $key . '">';
+                print '<td';
+                print ' class="titlefieldcreate';
+                if ($val['notnull'] > 0)
+                    print ' fieldrequired';
+                if ($val['type'] == 'text' || $val['type'] == 'html')
+                    print ' tdtop';
+                print '"';
+                print '>';
+                print $langs->trans($val['label']);
+                print '</td>';
+
+                print '<td>';
+                print '<select name="' . $key . '" class="minwidth200">';
+                $modes = explode(PHP_EOL, $conf->global->contacttracking_CONTACTMODE);
+                foreach ($modes as $mode) {
+                    if (rtrim(trim($mode)) != '') {
+                        print '<option>' . $mode . '</option>';
+                    }
+                }
+
+                print '</select>';
+                print '</label>';
+
+                print '</td>';
+                print '</tr>';
+                break;
+
+            case 'fk_event':
+                break;
+
+            case 'fk_product' :
+                if (empty($conf->global->contacttracking_CONTACTPRODUCT)) {
+                    break;
+                }
+
+                print '<tr id="field_' . $key . '">';
+                print '<td';
+                print ' class="titlefieldcreate';
+                if ($val['notnull'] > 0)
+                    print ' fieldrequired';
+                if ($val['type'] == 'text' || $val['type'] == 'html')
+                    print ' tdtop';
+                print '"';
+                print '>';
+                print $langs->trans($val['label']);
+                print '</td>';
+                print '<td>';
+                $modes = explode(",", $conf->global->contacttracking_CONTACTPRODUCT);
+                $o = 1;
+                print '<table>';
+                print '<tr>';
+                foreach ($modes as $mode) {
+                    if (rtrim(trim($mode)) != '') {
+                        $p = new Product($db);
+                        $p->fetch($mode);
+                        print '<td><input type="checkbox" name="product[' . $mode . ']" value="' . $p->rowid . '">&nbsp;' . $p->label . "</td>";
+                        if ($o > 0 && $o % 3 === 0) {
+                            ;
+                            print '</tr>';
+                            print '<tr>';
+                        }
+
+                        $o++;
+                    }
+                }
+
+                print '</table>';
+                print '</td>';
+                print '</tr>';
+                break;
+
+            case 'object' :
+                if (isset($conf->global->contacttracking_CONTACTPRODUCT) && empty($conf->global->contacttracking_CONTACTPRODUCT)) {
+                    break;
+                }
+
+                print '<tr id="field_' . $key . '">';
+                print '<td';
+                print ' class="titlefieldcreate';
+                if ($val['notnull'] > 0)
+                    print ' fieldrequired';
+                if ($val['type'] == 'text' || $val['type'] == 'html')
+                    print ' tdtop';
+                print '"';
+                print '>';
+                print $langs->trans($val['label']);
+                print '</td>';
+
+                print '<td>';
+                print '<select name="' . $key . '" class="minwidth200">';
+                $modes = explode(PHP_EOL, $conf->global->contacttracking_CONTACTOBJECT);
+                foreach ($modes as $mode) {
+                    if (rtrim(trim($mode)) != '') {
+                        print '<option>' . $mode . '</option>';
+                    }
+                }
+
+                print '</select>';
+                print '</label>';
+
+                print '</td>';
+                print '</tr>';
+                break;
+
+            case 'fk_user_creat' :
+                if ($conf->global->contacttracking_CHOOSEUSER == 1) {
+                    print '<tr id="field_' . $key . '">';
+                    print '<td';
+                    print ' class="titlefieldcreate';
+                    if ($val['notnull'] > 0)
+                        print ' fieldrequired';
+                    if ($val['type'] == 'text' || $val['type'] == 'html')
+                        print ' tdtop';
+                    print '"';
+                    print '>';
+                    print $langs->trans($val['label']);
+                    print '</td>';
+
+                    print '<td>';
+
+                    echo $form->select_dolusers($user->id, 'fk_user_creat', 0, null, 0, '', '', 0, 0, 0, '', 0, '', '', 1);
+
+                    print '</td>';
+                    print '</tr>';
+                } else {
+                    print '<input type="hidden" name="' . $key . '" value="' . $user->id . '" />';
+                }
+                break;
+
+            case 'element_type' :
+
+            case 'fk_element_id' :
+                print '<tr id="field_' . $key . '">';
+                print '<td';
+                print ' class="titlefieldcreate';
+                if ($val['notnull'] > 0)
+                    print ' fieldrequired';
+                if ($val['type'] == 'text' || $val['type'] == 'html')
+                    print ' tdtop';
+                print '"';
+                print '>';
+                print $langs->trans($val['label']);
+                print '</td>';
+
+                print '<td>';
+                print '<select class="flat minwidth300" name="' . $key . '" id="' . $key . '">';
+                print '<option value="0"></option>';
+                print '</select>';
+                print '</td>';
+                print '</tr>';
+
+                break;
+
+            default :
+                if (!$user->rights->societe->contact->lire && $key == "fk_contact") {
+                    break;
+                }
+                print '<tr id="field_' . $key . '">';
+                print '<td';
+                print ' class="titlefieldcreate';
+                if ($val['notnull'] > 0)
+                    print ' fieldrequired';
+                if ($val['type'] == 'text' || $val['type'] == 'html')
+                    print ' tdtop';
+                print '"';
+                print '>';
+                print $langs->trans($val['label']);
+                print '</td>';
+                print '<td>';
+                if (in_array($val['type'], array('int', 'integer')))
+                    $value = GETPOST($key, 'int');
+                elseif ($val['type'] == 'text' || $val['type'] == 'html')
+                    $value = GETPOST($key, 'none');
+                else
+                    $value = GETPOST($key, 'alpha');
+                if ((int) DOL_VERSION > 7) {
+                    // Hack permettant l'affichage et l'autocompletion d'un input meme si la constante COMPANY_USE_SEARCH_TO_SELECT > 0
+                    if ($conf->global->COMPANY_USE_SEARCH_TO_SELECT > 0 && $key == 'fk_soc' && ! empty(GETPOST('testSoc'))) {
+                        echo $form->select_company($val, 'fk_soc', '', '',0 ,1);
+						echo ' <a href="'.DOL_URL_ROOT.'/societe/card.php?action=create&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create').'"><span class="fa fa-plus-circle valignmiddle paddingleft" title="'.$langs->trans("AddThirdParty").'"></span></a>';
+                    } else {
+                        switch ($key) {
+                            case 'date_creation' :
+                                $form->select_date('', 'date_creation', 1, 'SelectThirdParty', 0, "date_creation");
+                                break;
+                            case 'fk_soc' :
+                                echo $form->select_company('', 'fk_soc', '', '');
+								echo ' <a href="'.DOL_URL_ROOT.'/societe/card.php?action=create&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create').'"><span class="fa fa-plus-circle valignmiddle paddingleft" title="'.$langs->trans("AddThirdParty").'"></span></a>';
+                                break;
+                            case 'fk_contact' :
+                                $form->select_contacts(0, '', 'fk_contact', 1, '', '', 0, 'minwidth300');
+                                break;
+                            case 'comment' :
+                                print '<textarea name="comment" class="flat minwidth300" rows="5">';
+                                print '</textarea>';
+                                break;
+                        }
+                    }
+                } else {
+                    switch ($key) {
+                        case 'date_creation' :
+                            $form->select_date('', 'date_creation', 1, 1, 0, "date_creation");
+                            break;
+                        case 'fk_soc' :
+                            echo $form->select_company('', 'fk_soc', '', '');
+                            break;
+                        case 'fk_contact' :
+                            $form->select_contacts(0, '', 'fk_contact', 1, '', '', 0, 'minwidth300');
+                            break;
+                        case 'comment' :
+                            print '<textarea name="comment" class="flat minwidth300" rows="5">';
+                            print '</textarea>';
+                            break;
+                    }
+                }
+
+                print '</td>';
+                print '</tr>';
+        }
+    }
+
+    if ($conf->global->contacttracking_CHOOSEUSER == 1 && GETPOST('relance', 'int')==1) {
+        print '<tr id="field_userreminder">';
+        print '<td';
+        print ' class="titlefieldcreate';
+        if ($val['notnull'] > 0)
+            print ' fieldrequired';
+        if ($val['type'] == 'text' || $val['type'] == 'html')
+            print ' tdtop';
+        print '"';
+        print '>';
+        print $langs->trans('UserReminder');
+        print '</td>';
+
+        print '<td>';
+
+        echo $form->select_dolusers($user->id, 'userreminder', 0, null, 0, '', '', 0, 0, 0, '', 0, '', '', 1);
+
+        print '</td>';
+        print '</tr>';
+    }
+
+    /*
+    //Choose the society to link to the reminder (if different of the society contacted
+
+    print '<tr id="field_soc_contact">';
+    print '<td class="titlefieldcreate">';
+    print 'Client à contacter';
+    print '<td>';
+    echo $form->select_company(null, 'fk_soc_contact', '', 'SelectThirdParty');
+    print '</td>';
+    */
+	if (GETPOST('relance', 'int')==1) {
+		print '<tr id="field_relance">';
+		print '<td';
+		print ' class="titlefieldcreate fieldrequired';
+		print '"';
+		print '>';
+		print $langs->trans('DateRelance');
+		print '</td>';
+		print '<td>';
+		print $form->select_date(-1, 're', 1, 1, 0, "", 1);
+		print '</td>';
+		print '</tr>';
+		print '<tr id="field_reminder">';
+		print '<td';
+		print ' class="titlefieldcreate';
+		print '"';
+		print '>';
+		print $langs->trans('TextRelance');
+		print '</td>';
+		print '<td>';
+		print '<textarea name="reminder" id="reminder" class="flat minwidth300" style="margin-top: 5px; width: 90%" rows="5"></textarea>';
+		print '</td>';
+		print '</tr>';
 	}
 
 
-	// Buttons for actions
+    print '</table>' . "\n";
 
-	if ($action != 'presend' && $action != 'editline') {
-		print '<div class="tabsAction">'."\n";
-		$parameters = array();
-		$reshook = $hookmanager->executeHooks('addMoreActionsButtons', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
-		if ($reshook < 0) setEventMessages($hookmanager->error, $hookmanager->errors, 'errors');
+    dol_fiche_end();
 
-		if (empty($reshook))
-		{
-			// Send
-			if (empty($user->socid)) {
-				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=presend&mode=init#formmailbeforetitle">'.$langs->trans('SendMail').'</a>'."\n";
-			}
+    print '<div class="center">';
+    print '<input type="submit" class="button" name="add" value="' . dol_escape_htmltag($langs->trans("Create")) . '">';
+    print '&nbsp; ';
+    print '<input type="button" class="button" name="cancel" value="' . dol_escape_htmltag($langs->trans("Cancel")) . '" onclick="window.parent.$(\'#modal-contact\').dialog(\'close\');">'; // Cancel for create does not post form if we don't know the backtopage
+    print '</div>';
 
-			// Back to draft
-			if ($object->status == $object::STATUS_VALIDATED)
-			{
-				if ($permissiontoadd)
-				{
-					print '<a class="butAction" href="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&action=confirm_setdraft&confirm=yes">'.$langs->trans("SetToDraft").'</a>';
-				}
-			}
+    print '</form>';
+endif;
 
-			// Modify
-			if ($permissiontoadd)
-			{
-				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=edit">'.$langs->trans("Modify").'</a>'."\n";
-			}
-			else
-			{
-				print '<a class="butActionRefused classfortooltip" href="#" title="'.dol_escape_htmltag($langs->trans("NotEnoughPermissions")).'">'.$langs->trans('Modify').'</a>'."\n";
-			}
+dol_fiche_end();
+?>
 
-			// Validate
-			if ($object->status == $object::STATUS_DRAFT)
-			{
-				if ($permissiontoadd)
-				{
-					if (empty($object->table_element_line) || (is_array($object->lines) && count($object->lines) > 0))
-					{
-						print '<a class="butAction" href="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&action=confirm_validate&confirm=yes">'.$langs->trans("Validate").'</a>';
-					}
-					else
-					{
-						$langs->load("errors");
-						print '<a class="butActionRefused" href="" title="'.$langs->trans("ErrorAddAtLeastOneLineFirst").'">'.$langs->trans("Validate").'</a>';
-					}
-				}
-			}
+<script>
 
-			// Clone
-			if ($permissiontoadd)
-			{
-				print '<a class="butAction" href="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&socid='.$object->socid.'&action=clone&object=autodiag">'.$langs->trans("ToClone").'</a>'."\n";
-			}
-
-			/*
-			if ($permissiontoadd)
-			{
-				if ($object->status == $object::STATUS_ENABLED)
-				{
-					print '<a class="butActionDelete" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=disable">'.$langs->trans("Disable").'</a>'."\n";
-				}
-				else
-				{
-					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=enable">'.$langs->trans("Enable").'</a>'."\n";
-				}
-			}
-			if ($permissiontoadd)
-			{
-				if ($object->status == $object::STATUS_VALIDATED)
-				{
-					print '<a class="butActionDelete" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=close">'.$langs->trans("Cancel").'</a>'."\n";
-				}
-				else
-				{
-					print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=reopen">'.$langs->trans("Re-Open").'</a>'."\n";
-				}
-			}
-			*/
-
-			// Delete (need delete permission, or if draft, just need create/modify permission)
-			if ($permissiontodelete || ($object->status == $object::STATUS_DRAFT && $permissiontoadd))
-			{
-				print '<a class="butActionDelete" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&amp;action=delete">'.$langs->trans('Delete').'</a>'."\n";
-			}
-			else
-			{
-				print '<a class="butActionRefused classfortooltip" href="#" title="'.dol_escape_htmltag($langs->trans("NotEnoughPermissions")).'">'.$langs->trans('Delete').'</a>'."\n";
-			}
-		}
-		print '</div>'."\n";
-	}
-
-
-	// Select mail models is same action as presend
-	if (GETPOST('modelselected')) {
-		$action = 'presend';
-	}
-
-	if ($action != 'presend')
-	{
-		print '<div class="fichecenter"><div class="fichehalfleft">';
-		print '<a name="builddoc"></a>'; // ancre
-
-		$includedocgeneration = 0;
-
-		// Documents
-		if ($includedocgeneration) {
-			$objref = dol_sanitizeFileName($object->ref);
-			$relativepath = $objref . '/' . $objref . '.pdf';
-			$filedir = $conf->monanalysevendeur->dir_output.'/'.$object->element.'/'.$objref;
-			$urlsource = $_SERVER["PHP_SELF"] . "?id=" . $object->id;
-			$genallowed = $user->rights->monanalysevendeur->autodiag->read;	// If you can read, you can build the PDF to read content
-			$delallowed = $user->rights->monanalysevendeur->autodiag->write;	// If you can create/edit, you can remove a file on card
-			print $formfile->showdocuments('monanalysevendeur:Autodiag', $object->element.'/'.$objref, $filedir, $urlsource, $genallowed, $delallowed, $object->model_pdf, 1, 0, 0, 28, 0, '', '', '', $langs->defaultlang);
-		}
-
-		// Show links to link elements
-		$linktoelem = $form->showLinkToObjectBlock($object, null, array('autodiag'));
-		$somethingshown = $form->showLinkedObjectBlock($object, $linktoelem);
-
-
-		print '</div><div class="fichehalfright"><div class="ficheaddleft">';
-
-		$MAXEVENT = 10;
-
-		$morehtmlright = '<a href="'.dol_buildpath('/monanalysevendeur/autodiag_agenda.php', 1).'?id='.$object->id.'">';
-		$morehtmlright .= $langs->trans("SeeAll");
-		$morehtmlright .= '</a>';
-
-		// List of actions on element
-		include_once DOL_DOCUMENT_ROOT.'/core/class/html.formactions.class.php';
-		$formactions = new FormActions($db);
-		$somethingshown = $formactions->showactions($object, $object->element.'@monanalysevendeur', (is_object($object->thirdparty) ? $object->thirdparty->id : 0), 1, '', $MAXEVENT, '', $morehtmlright);
-
-		print '</div></div></div>';
-	}
-
-	//Select mail models is same action as presend
-	if (GETPOST('modelselected')) $action = 'presend';
-
-	// Presend form
-	$modelmail = 'autodiag';
-	$defaulttopic = 'InformationMessage';
-	$diroutput = $conf->monanalysevendeur->dir_output;
-	$trackid = 'autodiag'.$object->id;
-
-	include DOL_DOCUMENT_ROOT.'/core/tpl/card_presend.tpl.php';
-}
-
-// End of page
-llxFooter();
-$db->close();
+</script>

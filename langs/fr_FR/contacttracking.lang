@@ -1,0 +1,104 @@
+# Copyright (C) 2018 Inovea-conseil.com     <info@inovea-conseil.com>
+# Dolibarr language file - fr_FR - contacttracking
+CHARSET=UTF-8
+
+#
+# Générique
+#
+ModulecontacttrackingName = Suivi des échanges et contacts
+contacttracking = Suivi des échanges et contacts
+ModulecontacttrackingDesc = Assure le suivi de prospection, la gestion quotidienne des clients, le suivi des impayés, le SAV, … en enregistrant l'ensemble des contacts avec les tiers 
+
+#
+# Page d'administration
+#
+contacttrackingSetup = Configuration du module Suivi des échanges et contacts
+Settings = Réglages
+contacttrackingSetupPage = Page de configuration du module contacttracking
+contacttracking_CHOOSEUSER = Choisir l'utilisateur qui a contacté le tiers
+contacttracking_CHOOSEUSERTooltip = Permet de définir si vous souhaitez ajouter le champ de sélection de l'utilisateur lors de l'ajout d'un échange
+contacttracking_CONTACTMODE = Liste des modes de contact
+contacttracking_CONTACTMODETooltip = Saisissez un mode par ligne
+contacttracking_CONTACTOBJECT = Liste des objets
+contacttracking_CONTACTOBJECTTooltip = Saisissez un objet par ligne
+contacttracking_CONTACTPRODUCT = Liste des produits
+contacttracking_CONTACTPRODUCTTooltip = Entrer les id des produits a afficher
+contacttracking_BUTTONMODE = Affichage du bouton de création
+contacttracking_BUTTONMODETooltip = Permet de choisir comment apparaît le bouton d'ajout d'un échange
+CONTACTRACKING_BUTTONINTEGRE = Bouton intégré
+CONTACTRACKING_BUTTONFLOAT = Bouton flottant
+contacttracking_CHOOSEFIELD = Afficher uniquement les échanges du module dans l'historique
+contacttracking_CHOOSEFIELDTooltip = Permet de masquer les évènements Dolibarr dans l'historique
+
+##
+# Card
+##
+ContacttrackingCardTitle = Contact réalisé
+Reminderplaned= Relance prévue
+Event = Relance prévue
+
+
+##
+# Box 
+##
+widgetRelance = Prochains contacts de tiers à réaliser
+widgetRelanceDescription = Affichage des 10 prochaines relances
+MyWidgetName = Widget "Suivi des échanges"
+MyWidgetDescription = Permet de lister les prochaines relances à réaliser pour chaque utilisateur
+noentry=Aucun contact à réaliser
+
+##
+# Bouton
+##
+contacttracking_ADDCONTACT = Ajouter un échange
+
+##
+#popup
+##
+contacttracking_SAVECONTACT = Enregistrer un contact
+contacttracking_INCOMING = Contact entrant
+contacttracking_OUTCOMING = Contact sortant
+ContactMode = Mode de contact
+ElementID = Elément concerné
+objectContact = Objet
+HistoryExchange = Historique d'échanges
+ElementType = Type d'élement
+Create = Créer
+UserReminder = Relance attribuée à
+ReminderTitleContacttracking = Prévoir une relance ?
+TypeEvent = Type de l'événement
+ObjectContact = Objet
+
+##
+#relance
+##
+relance = Relance client
+DateRelance = Date de relance
+
+#Historique
+Contacttrackings=tous les échanges/contacts réalisés
+
+#
+#Droits
+#
+RightContacttrackingO1=Voir les échanges/contacts
+RightContacttrackingO2=Créer des échanges/contacts
+RightContacttrackingO3=Supprimer des échanges/contacts
+RightContacttrackingO4=Voir l'intégralité des échanges/contacts
+RightContacttrackingO5=Créer/modifier l'intégralité des échanges/contacts
+RightContacttrackingO6=Supprimer l'intégralité des échanges/contacts
+
+#
+#Menu
+#
+ContacttrackingMenu=Tous les échanges
+
+
+Deletecontacttracking = Suppression de contact
+TextRelance = Description de la relance
+ConfirmDeletecontacttracking = Etes-sûr de vouloir supprimer cet enregistrement ?
+ThirdParty = Client
+DateCreation = Date
+ThirdPartyToContact = Client à contacter
+Exchanges = Echange/Contact
+
