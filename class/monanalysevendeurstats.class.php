@@ -56,10 +56,10 @@ class MonAnayseVendeurStats
 			$result = $this->getNb($users, $user_tags, '%d/%m/%Y', $from_date, $to_date);
 		}
 		if ($period_type=='week') {
-			$result = $this->getNb($users, $user_tags, '%u', $from_date, $to_date);
+			$result = $this->getNb($users, $user_tags, 'w', $from_date, $to_date);
 		}
-		if ($period_type=='week') {
-			$result = $this->getNb($users, $user_tags, '%u', $from_date, $to_date);
+		if ($period_type=='month') {
+			$result = $this->getNb($users, $user_tags, 'm', $from_date, $to_date);
 		}
 		return $result;
 	}
