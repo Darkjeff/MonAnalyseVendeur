@@ -86,20 +86,20 @@ class MonAnayseVendeurStats
 			{
 				$time_array[$i]=dol_print_date(dol_time_plus_duree($from_date,$i,'d'),'%d/%m/%Y');
 			}
-		} elseif($period_type=='%u') {
+		} elseif($period_type=='w') {
 			$nbtime_diff=$nbday_between/7;
 			//TODO format week
 			$time_array=array();
 			for ($i = 0; $i <= $nbtime_diff; $i++)
 			{
-				$time_array[$i]=dol_time_plus_duree($from_date,1,'w');
+				$time_array[$i]=dol_print_date(dol_time_plus_duree($from_date,1,'w'),'m');
 			}
-		} elseif($period_type=='%u') {
+		} elseif($period_type=='m') {
 			$nbtime_diff=$nbday_between/30;
 			$time_array=array();
 			for ($i = 0; $i <= $nbtime_diff; $i++)
 			{
-				$time_array[$i]=dol_time_plus_duree($from_date,1,'m');
+				$time_array[$i]=dol_print_date(dol_time_plus_duree($from_date,1,'m'),'m');
 			}
 		}
 
