@@ -77,7 +77,7 @@ class MonAnayseVendeurStats
 		$object_static=new Rapportjournalier($this->db);
 		$sql_where=array();
 		$nbday_between=num_between_day($from_date, $to_date, 1);
-		var_dump($user_tags);
+		
 
 		if ($period_type=='%d/%m/%Y') {
 			$nbtime_diff=$nbday_between;
@@ -93,14 +93,14 @@ class MonAnayseVendeurStats
 			$time_array=array();
 			for ($i = 0; $i <= $nbtime_diff; $i++)
 			{
-				$time_array[$i]=dol_print_date(dol_time_plus_duree($from_date,1,'w'),'%U');
+				$time_array[$i]=dol_print_date(dol_time_plus_duree($from_date,$i,'w'),'%U');
 			}
-		} elseif($period_type=='%M') {
+		} elseif($period_type=='%m') {
 			$nbtime_diff=$nbday_between/30;
 			$time_array=array();
 			for ($i = 0; $i <= $nbtime_diff; $i++)
 			{
-				$time_array[$i]=dol_print_date(dol_time_plus_duree($from_date,1,'m'),'%M');
+				$time_array[$i]=dol_print_date(dol_time_plus_duree($from_date,$i,'m'),'%m');
 			}
 		}
 
@@ -122,10 +122,11 @@ class MonAnayseVendeurStats
 
 		$sql .= " GROUP BY dm, t.fk_user_creat";
 		$sql .= $this->db->order('dm,t.fk_user_creat', 'DESC');
-		var_dump($sql);
+		
 
 		$result=array();
 		$resql = $this->db->query($sql);
+		
 		
 		if ($resql)
 		{
@@ -149,6 +150,7 @@ class MonAnayseVendeurStats
 				$i++;
 			}
 		}
+		
 
 		$data_r=array();
 		foreach($time_array as $i=>$time) {
@@ -173,7 +175,6 @@ class MonAnayseVendeurStats
 			}
 		}
 		
-
 		$this->data_traitement = $data_r;
 		$this->data_transfo = $data_tx;
 		$this->data_row = $result;
