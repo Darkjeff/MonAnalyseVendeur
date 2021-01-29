@@ -158,7 +158,7 @@ print $form->multiselectarray('users_tags', $cate_arbo, $user_tags, null, null, 
 // Periode Type
 print '<tr><td class="left">' . $langs->trans("Period") . '</td><td class="left">';
 $type_period_array = array('day' => $langs->trans('Day'),
-	//'week'=>$langs->trans('Week'),
+	'week'=>$langs->trans('Week'),
 	'month' => $langs->trans('Month'));
 print $form->selectarray('period_type', $type_period_array, $period_type, 1, 0, 0, '', 1);
 print '</td></tr>';

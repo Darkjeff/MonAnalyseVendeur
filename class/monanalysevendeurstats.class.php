@@ -56,10 +56,10 @@ class MonAnayseVendeurStats
 			$result = $this->getNb($users, $user_tags, '%d/%m/%Y', $from_date, $to_date);
 		}
 		if ($period_type=='week') {
-			$result = $this->getNb($users, $user_tags, 'w', $from_date, $to_date);
+			$result = $this->getNb($users, $user_tags, '%U', $from_date, $to_date);
 		}
 		if ($period_type=='month') {
-			$result = $this->getNb($users, $user_tags, 'm', $from_date, $to_date);
+			$result = $this->getNb($users, $user_tags, '%M', $from_date, $to_date);
 		}
 		return $result;
 	}
@@ -77,6 +77,7 @@ class MonAnayseVendeurStats
 		$object_static=new Rapportjournalier($this->db);
 		$sql_where=array();
 		$nbday_between=num_between_day($from_date, $to_date, 1);
+		var_dump($user_tags);
 
 		if ($period_type=='%d/%m/%Y') {
 			$nbtime_diff=$nbday_between;
@@ -86,20 +87,20 @@ class MonAnayseVendeurStats
 			{
 				$time_array[$i]=dol_print_date(dol_time_plus_duree($from_date,$i,'d'),'%d/%m/%Y');
 			}
-		} elseif($period_type=='w') {
+		} elseif($period_type=='%U') {
 			$nbtime_diff=$nbday_between/7;
 			//TODO format week
 			$time_array=array();
 			for ($i = 0; $i <= $nbtime_diff; $i++)
 			{
-				$time_array[$i]=dol_print_date(dol_time_plus_duree($from_date,1,'w'),'m');
+				$time_array[$i]=dol_print_date(dol_time_plus_duree($from_date,1,'w'),'%U');
 			}
-		} elseif($period_type=='m') {
+		} elseif($period_type=='%M') {
 			$nbtime_diff=$nbday_between/30;
 			$time_array=array();
 			for ($i = 0; $i <= $nbtime_diff; $i++)
 			{
-				$time_array[$i]=dol_print_date(dol_time_plus_duree($from_date,1,'m'),'m');
+				$time_array[$i]=dol_print_date(dol_time_plus_duree($from_date,1,'m'),'%M');
 			}
 		}
 
@@ -121,9 +122,11 @@ class MonAnayseVendeurStats
 
 		$sql .= " GROUP BY dm, t.fk_user_creat";
 		$sql .= $this->db->order('dm,t.fk_user_creat', 'DESC');
+		var_dump($sql);
 
 		$result=array();
 		$resql = $this->db->query($sql);
+		
 		if ($resql)
 		{
 			$num = $this->db->num_rows($resql);
@@ -169,6 +172,7 @@ class MonAnayseVendeurStats
 				}
 			}
 		}
+		
 
 		$this->data_traitement = $data_r;
 		$this->data_transfo = $data_tx;
