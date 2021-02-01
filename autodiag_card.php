@@ -128,7 +128,7 @@ if (GETPOST('action') == 'add') {
 
         $actionComm->label = $langs->trans('relance') . ' : ' . $soc->getFullName($langs);
         if ($conf->global->contacttracking_CHOOSEUSER == 1){
-            $actionComm->userownerid = GETPOST('userreminder');
+            $actionComm->userownerid = GETPOST('fk_user_creat');
         } else {
             $actionComm->userownerid = $user->id;
         }
@@ -191,6 +191,12 @@ if (!$user->rights->contacttracking->write) :
 
         switch ($key) {
             case 'type_contact' :
+				print '<td>';
+				print $langs->trans("Client");
+				print '</td>';
+				print '<td>';
+				echo $form->select_company($val, 'fk_soc', '', '',0 ,1);
+				echo ' <a href="'.DOL_URL_ROOT.'/societe/card.php?action=create&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create').'"><span class="fa fa-plus-circle valignmiddle paddingleft" title="'.$langs->trans("AddThirdParty").'"></span></a>';
                 print '<tr id="field_' . $key . '">';
                 print '<td';
                 print ' class="titlefieldcreate';
@@ -433,11 +439,11 @@ if (!$user->rights->contacttracking->write) :
                                 $form->select_date('', 'date_creation', 1, 'SelectThirdParty', 0, "date_creation");
                                 break;
                             case 'fk_soc' :
-                                echo $form->select_company('', 'fk_soc', '', '');
-								echo ' <a href="'.DOL_URL_ROOT.'/societe/card.php?action=create&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create').'"><span class="fa fa-plus-circle valignmiddle paddingleft" title="'.$langs->trans("AddThirdParty").'"></span></a>';
+                              //  echo $form->select_company('', 'fk_soc', '', '');
+								//echo ' <a href="'.DOL_URL_ROOT.'/societe/card.php?action=create&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create').'"><span class="fa fa-plus-circle valignmiddle paddingleft" title="'.$langs->trans("AddThirdParty").'"></span></a>';
                                 break;
                             case 'fk_contact' :
-                                $form->select_contacts(0, '', 'fk_contact', 1, '', '', 0, 'minwidth300');
+                               // $form->select_contacts(0, '', 'fk_contact', 1, '', '', 0, 'minwidth300');
                                 break;
                             case 'comment' :
                                 print '<textarea name="comment" class="flat minwidth300" rows="5">';
@@ -451,10 +457,10 @@ if (!$user->rights->contacttracking->write) :
                             $form->select_date('', 'date_creation', 1, 1, 0, "date_creation");
                             break;
                         case 'fk_soc' :
-                            echo $form->select_company('', 'fk_soc', '', '');
-                            break;
+                         //   echo $form->select_company('', 'fk_soc', '', '');
+                          //  break;
                         case 'fk_contact' :
-                            $form->select_contacts(0, '', 'fk_contact', 1, '', '', 0, 'minwidth300');
+                           // $form->select_contacts(0, '', 'fk_contact', 1, '', '', 0, 'minwidth300');
                             break;
                         case 'comment' :
                             print '<textarea name="comment" class="flat minwidth300" rows="5">';
@@ -469,24 +475,24 @@ if (!$user->rights->contacttracking->write) :
     }
 
     if ($conf->global->contacttracking_CHOOSEUSER == 1 && GETPOST('relance', 'int')==1) {
-        print '<tr id="field_userreminder">';
-        print '<td';
-        print ' class="titlefieldcreate';
-        if ($val['notnull'] > 0)
-            print ' fieldrequired';
-        if ($val['type'] == 'text' || $val['type'] == 'html')
-            print ' tdtop';
-        print '"';
-        print '>';
-        print $langs->trans('UserReminder');
-        print '</td>';
+        //print '<tr id="field_userreminder">';
+        //print '<td';
+        //print ' class="titlefieldcreate';
+        //if ($val['notnull'] > 0)
+        //    print ' fieldrequired';
+        //if ($val['type'] == 'text' || $val['type'] == 'html')
+        //    print ' tdtop';
+        //print '"';
+        //print '>';
+        //print $langs->trans('UserReminder');
+        //print '</td>';
 
-        print '<td>';
+        //print '<td>';
 
-        echo $form->select_dolusers($user->id, 'userreminder', 0, null, 0, '', '', 0, 0, 0, '', 0, '', '', 1);
+        //echo $form->select_dolusers($user->id, 'userreminder', 0, null, 0, '', '', 0, 0, 0, '', 0, '', '', 1);
 
-        print '</td>';
-        print '</tr>';
+        //print '</td>';
+        //print '</tr>';
     }
 
     /*
@@ -511,17 +517,17 @@ if (!$user->rights->contacttracking->write) :
 		print $form->select_date(-1, 're', 1, 1, 0, "", 1);
 		print '</td>';
 		print '</tr>';
-		print '<tr id="field_reminder">';
-		print '<td';
-		print ' class="titlefieldcreate';
-		print '"';
-		print '>';
-		print $langs->trans('TextRelance');
-		print '</td>';
-		print '<td>';
-		print '<textarea name="reminder" id="reminder" class="flat minwidth300" style="margin-top: 5px; width: 90%" rows="5"></textarea>';
-		print '</td>';
-		print '</tr>';
+		//print '<tr id="field_reminder">';
+		//print '<td';
+		//print ' class="titlefieldcreate';
+		//print '"';
+		//print '>';
+		//print $langs->trans('TextRelance');
+		//print '</td>';
+		//print '<td>';
+		//print '<textarea name="reminder" id="reminder" class="flat minwidth300" style="margin-top: 5px; width: 90%" rows="5"></textarea>';
+		//print '</td>';
+		//print '</tr>';
 	}
 
 
