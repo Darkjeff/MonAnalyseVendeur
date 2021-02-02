@@ -84,14 +84,14 @@ $now = dol_now();
 if ($action=='editfile') {
 	$action='';
 	$import = new MonAnalyseVendeur_import($db);
-	$result = $import->importFile($upload_dir.'/'.GETPOST("urlfile"), $user);
+	$result = $import->importFile($upload_dir.'/'.GETPOST("urlfile"));
 	if ($result < 0) {
-		setEventMessages($import->error,$import->errors,'errors');
+		setEventMessages($import->error, $import->errors, 'errors');
 	} else {
 		setEventMessage('ImportOK');
 	}
 	if (!empty($import->warnings)) {
-		setEventMessages(null,$import->warnings,'warnings');
+		setEventMessages(null, $import->warnings, 'warnings');
 	}
 	header("Location: ".$_SERVER['PHP_SELF']);
 	exit;

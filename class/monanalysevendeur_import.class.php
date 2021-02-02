@@ -43,10 +43,6 @@ class MonAnalyseVendeur_import extends CommonObject
 	 */
 	public $element = 'monanalysevendeur_import';
 
-	/**
-	 * @var string Name of table without prefix where object is stored. This is also the key used for extrafields management.
-	 */
-	public $table_element = 'monanalysevendeur_monanalysevendeur_import';
 
 	/**
 	 * @var int  Does this object support multicompany module ?
@@ -64,42 +60,11 @@ class MonAnalyseVendeur_import extends CommonObject
 	 */
 	public $picto = 'monanalysevendeur_import@monanalysevendeur';
 
-
-	const STATUS_DRAFT = 0;
-	const STATUS_VALIDATED = 1;
-	const STATUS_CANCELED = 9;
-
-
-	/**
-	 *  'type' if the field format ('integer', 'integer:ObjectClass:PathToClass[:AddCreateButtonOrNot[:Filter]]', 'varchar(x)', 'double(24,8)', 'real', 'price', 'text', 'text:none', 'html', 'date', 'datetime', 'timestamp', 'duration', 'mail', 'phone', 'url', 'password')
-	 *         Note: Filter can be a string like "(t.ref:like:'SO-%') or (t.date_creation:<:'20160101') or (t.nature:is:NULL)"
-	 *  'label' the translation key.
-	 *  'enabled' is a condition when the field must be managed (Example: 1 or '$conf->global->MY_SETUP_PARAM)
-	 *  'position' is the sort order of field.
-	 *  'notnull' is set to 1 if not null in database. Set to -1 if we must set data to null if empty ('' or 0).
-	 *  'visible' says if field is visible in list (Examples: 0=Not visible, 1=Visible on list and create/update/view forms, 2=Visible on list only, 3=Visible on create/update/view form only (not list), 4=Visible on list and update/view form only (not create). 5=Visible on list and view only (not create/not update). Using a negative value means field is not shown by default on list but can be selected for viewing)
-	 *  'noteditable' says if field is not editable (1 or 0)
-	 *  'default' is a default value for creation (can still be overwrote by the Setup of Default Values if field is editable in creation form). Note: If default is set to '(PROV)' and field is 'ref', the default value will be set to '(PROVid)' where id is rowid when a new record is created.
-	 *  'index' if we want an index in database.
-	 *  'foreignkey'=>'tablename.field' if the field is a foreign key (it is recommanded to name the field fk_...).
-	 *  'searchall' is 1 if we want to search in this field when making a search from the quick search button.
-	 *  'isameasure' must be set to 1 if you want to have a total on list for this field. Field type must be summable like integer or double(24,8).
-	 *  'css' and 'cssview' is the CSS style to use on field. 'css' is used in creation and update. 'cssview' is used in view mode. For example: 'maxwidth200', 'wordbreak'
-	 *  'help' is a string visible as a tooltip on field
-	 *  'showoncombobox' if value of the field must be visible into the label of the combobox that list record
-	 *  'disabled' is 1 if we want to have the field locked by a 'disabled' attribute. In most cases, this is never set into the definition of $fields into class, but is set dynamically by some part of code.
-	 *  'arraykeyval' to set list of value if type is a list of predefined values. For example: array("0"=>"Draft","1"=>"Active","-1"=>"Cancel")
-	 *  'autofocusoncreate' to have field having the focus on a create form. Only 1 field should have this property set to 1.
-	 *  'comment' is not used. You can store here any text of your choice. It is not used by application.
-	 *
-	 *  Note: To have value dynamic, you can set value to 0 in definition and edit the value on the fly into the constructor.
-	 */
-
 	// BEGIN MODULEBUILDER PROPERTIES
 	/**
 	 * @var array  Array with all fields and their property. Do not use it as a static var. It may be modified by constructor.
 	 */
-	public $fields = array(
+	/*public $fields = array(
 		'rowid' => array('type' => 'integer', 'label' => 'TechnicalID', 'enabled' => '1', 'position' => 1, 'notnull' => 1, 'visible' => 0, 'noteditable' => '1', 'index' => 1, 'css' => 'left', 'comment' => "Id"),
 		'ref' => array('type' => 'varchar(128)', 'label' => 'Ref', 'enabled' => '1', 'position' => 10, 'notnull' => 1, 'visible' => 1, 'index' => 1, 'searchall' => 1, 'showoncombobox' => '1', 'comment' => "Reference of object"),
 		'description' => array('type' => 'text', 'label' => 'Description', 'enabled' => '1', 'position' => 60, 'notnull' => 0, 'visible' => 3,),
@@ -118,12 +83,16 @@ class MonAnalyseVendeur_import extends CommonObject
 	public $fk_user_creat;
 	public $fk_user_modif;
 	public $import_key;
-	public $status;
+	public $status;*/
 	// END MODULEBUILDER PROPERTIES
 
-	protected $indexColData=array();
+	protected $indexColData = array();
 
-	public $warnings=array();
+	protected $import_type;
+
+	protected $tempTable;
+
+	public $warnings = array();
 
 
 	// If this object has a subtable with lines
@@ -175,48 +144,29 @@ class MonAnalyseVendeur_import extends CommonObject
 		if (empty($conf->global->MAIN_SHOW_TECHNICAL_ID) && isset($this->fields['rowid'])) $this->fields['rowid']['visible'] = 0;
 		if (empty($conf->multicompany->enabled) && isset($this->fields['entity'])) $this->fields['entity']['enabled'] = 0;
 
-		$this->indexColData=array('Civ'=>array('key'=>'<TITULAIRE><CIVILITE>','index'=>null),
-			'Nom'=>array('key'=>'<TITULAIRE><NOM>','index'=>null),
-			'Prenom'=>array('key'=>'<TITULAIRE><PRENOM>','index'=>null),
-			'NumVoie1'=>array('key'=>'<TITULAIRE><NUMEROETVOIE>','index'=>null),
-			'NumVoie2'=>array('key'=>'<ADRESSEFACTURATION><NUMEROVOIE>','index'=>null),
-			'Zip1'=>array('key'=>'<TITULAIRE><CODEPOSTALE>','index'=>null),
-			'Zip2'=>array('key'=>'<ADRESSEFACTURATION><CODEPOSTAL>','index'=>null),
-			'Town1'=>array('key'=>'<TITULAIRE><CITY>','index'=>null),
-			'Town2'=>array('key'=>'<ADRESSEFACTURATION><VILLE>','index'=>null),
-			'Phone1'=>array('key'=>'<TITULAIRE><NUMEROTELEPHONEFIXE>','index'=>null),
-			'Phone2'=>array('key'=>'<CSU><NUMAPPEL>','index'=>null),
-			'Email'=>array('key'=>'<TITULAIRE><EMAILCONTACT>','index'=>null),
-			'BirthDay1'=>array('key'=>'<TITULAIRE><DATENAISSANCETITULAIRE>','index'=>null),
-			'BirthDay2'=>array('key'=>'<TITULAIRE><DATENAISSANCE>','index'=>null),
-			'Shop1'=>array('key'=>'<ENTETE><LIBELLEPOINTDEVENTE>','index'=>null),
-			'Shop1'=>array('key'=>'<EXTRACTCOMMANDE><NOMPOINTVENTE>','index'=>null),
-			'DateAction1'=>array('key'=>'DATE','index'=>null),
-			'DateAction2'=>array('key'=>'<CONTRAT><TYPEACTE>','index'=>null),
+		$this->indexColData = array('Civ' => array('key' => '<TITULAIRE><CIVILITE>', 'type' => 'varchar', 'index' => null),
+			'Nom' => array('key' => '<TITULAIRE><NOM>', 'index' => null),
+			'Prenom' => array('key' => '<TITULAIRE><PRENOM>', 'index' => null),
+			'NumVoie1' => array('key' => '<TITULAIRE><NUMEROETVOIE>', 'index' => null),
+			'NumVoie2' => array('key' => '<ADRESSEFACTURATION><NUMEROVOIE>', 'index' => null),
+			'Zip1' => array('key' => '<TITULAIRE><CODEPOSTALE>', 'index' => null),
+			'Zip2' => array('key' => '<ADRESSEFACTURATION><CODEPOSTAL>', 'index' => null),
+			'Town1' => array('key' => '<TITULAIRE><CITY>', 'index' => null),
+			'Town2' => array('key' => '<ADRESSEFACTURATION><VILLE>', 'index' => null),
+			'Phone1' => array('key' => '<TITULAIRE><NUMEROTELEPHONEFIXE>', 'index' => null),
+			'Phone2' => array('key' => '<CSU><NUMAPPEL>', 'index' => null),
+			'Email' => array('key' => '<TITULAIRE><EMAILCONTACT>', 'index' => null),
+			'BirthDay1' => array('key' => '<TITULAIRE><DATENAISSANCETITULAIRE>', 'index' => null),
+			'BirthDay2' => array('key' => '<TITULAIRE><DATENAISSANCE>', 'index' => null),
+			'Shop1' => array('key' => '<ENTETE><LIBELLEPOINTDEVENTE>', 'index' => null),
+			'Shop2' => array('key' => '<EXTRACTCOMMANDE><NOMPOINTVENTE>', 'index' => null),
+			'DateAction1' => array('key' => 'DATE', 'index' => null),
+			'DateAction2' => array('key' => '<CONTRAT><TYPEACTE>', 'index' => null),
+			'MarqueMobile' => array('key' => '<:MARQUEMOBILE>', 'index' => null),
+			'ModeleMobile' => array('key' => '<:MODELEMOBILE>', 'index' => null),
 		);
-		// Example to show how to set values of fields definition dynamically
-		/*if ($user->rights->monanalysevendeur->monanalysevendeur_import->read) {
-			$this->fields['myfield']['visible'] = 1;
-			$this->fields['myfield']['noteditable'] = 0;
-		}
 
-		// Unset fields that are disabled
-		foreach ($this->fields as $key => $val) {
-			if (isset($val['enabled']) && empty($val['enabled'])) {
-				unset($this->fields[$key]);
-			}
-		}
-
-		// Translate some data of arrayofkeyval
-		if (is_object($langs)) {
-			foreach ($this->fields as $key => $val) {
-				if (is_array($val['arrayofkeyval'])) {
-					foreach ($val['arrayofkeyval'] as $key2 => $val2) {
-						$this->fields[$key]['arrayofkeyval'][$key2] = $langs->trans($val2);
-					}
-				}
-			}
-		}*/
+		$this->import_type = '3gwin';
 	}
 
 	/**
@@ -379,258 +329,6 @@ class MonAnalyseVendeur_import extends CommonObject
 		return $this->deleteLineCommon($user, $idline, $notrigger);
 	}
 
-
-	/**
-	 *    Set draft status
-	 *
-	 * @param User $user Object user that modify
-	 * @param int $notrigger 1=Does not execute triggers, 0=Execute triggers
-	 * @return    int                        <0 if KO, >0 if OK
-	 */
-	public function setDraft($user, $notrigger = 0)
-	{
-		// Protection
-		if ($this->status <= self::STATUS_DRAFT) {
-			return 0;
-		}
-
-		/*if (! ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->monanalysevendeur->write))
-		 || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->monanalysevendeur->monanalysevendeur_advance->validate))))
-		 {
-		 $this->error='Permission denied';
-		 return -1;
-		 }*/
-
-		return $this->setStatusCommon($user, self::STATUS_DRAFT, $notrigger, 'GMAPS_IMPORT_UNVALIDATE');
-	}
-
-	/**
-	 *    Set cancel status
-	 *
-	 * @param User $user Object user that modify
-	 * @param int $notrigger 1=Does not execute triggers, 0=Execute triggers
-	 * @return    int                        <0 if KO, 0=Nothing done, >0 if OK
-	 */
-	public function cancel($user, $notrigger = 0)
-	{
-		// Protection
-		if ($this->status != self::STATUS_VALIDATED) {
-			return 0;
-		}
-
-		/*if (! ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->monanalysevendeur->write))
-		 || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->monanalysevendeur->monanalysevendeur_advance->validate))))
-		 {
-		 $this->error='Permission denied';
-		 return -1;
-		 }*/
-
-		return $this->setStatusCommon($user, self::STATUS_CANCELED, $notrigger, 'GMAPS_IMPORT_CLOSE');
-	}
-
-	/**
-	 *    Set back to validated status
-	 *
-	 * @param User $user Object user that modify
-	 * @param int $notrigger 1=Does not execute triggers, 0=Execute triggers
-	 * @return    int                        <0 if KO, 0=Nothing done, >0 if OK
-	 */
-	public function reopen($user, $notrigger = 0)
-	{
-		// Protection
-		if ($this->status != self::STATUS_CANCELED) {
-			return 0;
-		}
-
-		/*if (! ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->monanalysevendeur->write))
-		 || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->monanalysevendeur->monanalysevendeur_advance->validate))))
-		 {
-		 $this->error='Permission denied';
-		 return -1;
-		 }*/
-
-		return $this->setStatusCommon($user, self::STATUS_VALIDATED, $notrigger, 'GMAPS_IMPORT_REOPEN');
-	}
-
-	/**
-	 *  Return a link to the object card (with optionaly the picto)
-	 *
-	 * @param int $withpicto Include picto in link (0=No picto, 1=Include picto into link, 2=Only picto)
-	 * @param string $option On what the link point to ('nolink', ...)
-	 * @param int $notooltip 1=Disable tooltip
-	 * @param string $morecss Add more css on link
-	 * @param int $save_lastsearch_value -1=Auto, 0=No save of lastsearch_values when clicking, 1=Save lastsearch_values whenclicking
-	 * @return    string                              String with URL
-	 */
-	public function getNomUrl($withpicto = 0, $option = '', $notooltip = 0, $morecss = '', $save_lastsearch_value = -1)
-	{
-		global $conf, $langs, $hookmanager;
-
-		if (!empty($conf->dol_no_mouse_hover)) $notooltip = 1; // Force disable tooltips
-
-		$result = '';
-
-		$label = img_picto('', $this->picto) . ' <u>' . $langs->trans("MonAnalyseVendeur_import") . '</u>';
-		$label .= '<br>';
-		$label .= '<b>' . $langs->trans('Ref') . ':</b> ' . $this->ref;
-		if (isset($this->status)) {
-			$label .= '<br><b>' . $langs->trans("Status") . ":</b> " . $this->getLibStatut(5);
-		}
-
-		$url = dol_buildpath('/monanalysevendeur/monanalysevendeur_import_card.php', 1) . '?id=' . $this->id;
-
-		if ($option != 'nolink') {
-			// Add param to save lastsearch_values or not
-			$add_save_lastsearch_values = ($save_lastsearch_value == 1 ? 1 : 0);
-			if ($save_lastsearch_value == -1 && preg_match('/list\.php/', $_SERVER["PHP_SELF"])) $add_save_lastsearch_values = 1;
-			if ($add_save_lastsearch_values) $url .= '&save_lastsearch_values=1';
-		}
-
-		$linkclose = '';
-		if (empty($notooltip)) {
-			if (!empty($conf->global->MAIN_OPTIMIZEFORTEXTBROWSER)) {
-				$label = $langs->trans("ShowMonAnalyseVendeur_import");
-				$linkclose .= ' alt="' . dol_escape_htmltag($label, 1) . '"';
-			}
-			$linkclose .= ' title="' . dol_escape_htmltag($label, 1) . '"';
-			$linkclose .= ' class="classfortooltip' . ($morecss ? ' ' . $morecss : '') . '"';
-		} else $linkclose = ($morecss ? ' class="' . $morecss . '"' : '');
-
-		$linkstart = '<a href="' . $url . '"';
-		$linkstart .= $linkclose . '>';
-		$linkend = '</a>';
-
-		$result .= $linkstart;
-
-		if (empty($this->showphoto_on_popup)) {
-			if ($withpicto) $result .= img_object(($notooltip ? '' : $label), ($this->picto ? $this->picto : 'generic'), ($notooltip ? (($withpicto != 2) ? 'class="paddingright"' : '') : 'class="' . (($withpicto != 2) ? 'paddingright ' : '') . 'classfortooltip"'), 0, 0, $notooltip ? 0 : 1);
-		} else {
-			if ($withpicto) {
-				require_once DOL_DOCUMENT_ROOT . '/core/lib/files.lib.php';
-
-				list($class, $module) = explode('@', $this->picto);
-				$upload_dir = $conf->$module->multidir_output[$conf->entity] . "/$class/" . dol_sanitizeFileName($this->ref);
-				$filearray = dol_dir_list($upload_dir, "files");
-				$filename = $filearray[0]['name'];
-				if (!empty($filename)) {
-					$pospoint = strpos($filearray[0]['name'], '.');
-
-					$pathtophoto = $class . '/' . $this->ref . '/thumbs/' . substr($filename, 0, $pospoint) . '_mini' . substr($filename, $pospoint);
-					if (empty($conf->global->{strtoupper($module . '_' . $class) . '_FORMATLISTPHOTOSASUSERS'})) {
-						$result .= '<div class="floatleft inline-block valignmiddle divphotoref"><div class="photoref"><img class="photo' . $module . '" alt="No photo" border="0" src="' . DOL_URL_ROOT . '/viewimage.php?modulepart=' . $module . '&entity=' . $conf->entity . '&file=' . urlencode($pathtophoto) . '"></div></div>';
-					} else {
-						$result .= '<div class="floatleft inline-block valignmiddle divphotoref"><img class="photouserphoto userphoto" alt="No photo" border="0" src="' . DOL_URL_ROOT . '/viewimage.php?modulepart=' . $module . '&entity=' . $conf->entity . '&file=' . urlencode($pathtophoto) . '"></div>';
-					}
-
-					$result .= '</div>';
-				} else {
-					$result .= img_object(($notooltip ? '' : $label), ($this->picto ? $this->picto : 'generic'), ($notooltip ? (($withpicto != 2) ? 'class="paddingright"' : '') : 'class="' . (($withpicto != 2) ? 'paddingright ' : '') . 'classfortooltip"'), 0, 0, $notooltip ? 0 : 1);
-				}
-			}
-		}
-
-		if ($withpicto != 2) $result .= $this->ref;
-
-		$result .= $linkend;
-		//if ($withpicto != 2) $result.=(($addlabel && $this->label) ? $sep . dol_trunc($this->label, ($addlabel > 1 ? $addlabel : 0)) : '');
-
-		global $action, $hookmanager;
-		$hookmanager->initHooks(array('monanalysevendeur_importdao'));
-		$parameters = array('id' => $this->id, 'getnomurl' => $result);
-		$reshook = $hookmanager->executeHooks('getNomUrl', $parameters, $this, $action); // Note that $action and $object may have been modified by some hooks
-		if ($reshook > 0) $result = $hookmanager->resPrint;
-		else $result .= $hookmanager->resPrint;
-
-		return $result;
-	}
-
-	/**
-	 *  Return the label of the status
-	 *
-	 * @param int $mode 0=long label, 1=short label, 2=Picto + short label, 3=Picto, 4=Picto + long label, 5=Short label + Picto, 6=Long label + Picto
-	 * @return    string                   Label of status
-	 */
-	public function getLibStatut($mode = 0)
-	{
-		return $this->LibStatut($this->status, $mode);
-	}
-
-	// phpcs:disable PEAR.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
-
-	/**
-	 *  Return the status
-	 *
-	 * @param int $status Id status
-	 * @param int $mode 0=long label, 1=short label, 2=Picto + short label, 3=Picto, 4=Picto + long label, 5=Short label + Picto, 6=Long label + Picto
-	 * @return string                   Label of status
-	 */
-	public function LibStatut($status, $mode = 0)
-	{
-		// phpcs:enable
-		if (empty($this->labelStatus) || empty($this->labelStatusShort)) {
-			global $langs;
-			//$langs->load("monanalysevendeur@monanalysevendeur");
-			$this->labelStatus[self::STATUS_DRAFT] = $langs->trans('Draft');
-			$this->labelStatus[self::STATUS_VALIDATED] = $langs->trans('Enabled');
-			$this->labelStatus[self::STATUS_CANCELED] = $langs->trans('Disabled');
-			$this->labelStatusShort[self::STATUS_DRAFT] = $langs->trans('Draft');
-			$this->labelStatusShort[self::STATUS_VALIDATED] = $langs->trans('Enabled');
-			$this->labelStatusShort[self::STATUS_CANCELED] = $langs->trans('Disabled');
-		}
-
-		$statusType = 'status' . $status;
-		//if ($status == self::STATUS_VALIDATED) $statusType = 'status1';
-		if ($status == self::STATUS_CANCELED) $statusType = 'status6';
-
-		return dolGetStatus($this->labelStatus[$status], $this->labelStatusShort[$status], '', $statusType, $mode);
-	}
-
-	/**
-	 *    Load the info information in the object
-	 *
-	 * @param int $id Id of object
-	 * @return    void
-	 */
-	public function info($id)
-	{
-		$sql = 'SELECT rowid, date_creation as datec, tms as datem,';
-		$sql .= ' fk_user_creat, fk_user_modif';
-		$sql .= ' FROM ' . MAIN_DB_PREFIX . $this->table_element . ' as t';
-		$sql .= ' WHERE t.rowid = ' . $id;
-		$result = $this->db->query($sql);
-		if ($result) {
-			if ($this->db->num_rows($result)) {
-				$obj = $this->db->fetch_object($result);
-				$this->id = $obj->rowid;
-				if ($obj->fk_user_author) {
-					$cuser = new User($this->db);
-					$cuser->fetch($obj->fk_user_author);
-					$this->user_creation = $cuser;
-				}
-
-				if ($obj->fk_user_valid) {
-					$vuser = new User($this->db);
-					$vuser->fetch($obj->fk_user_valid);
-					$this->user_validation = $vuser;
-				}
-
-				if ($obj->fk_user_cloture) {
-					$cluser = new User($this->db);
-					$cluser->fetch($obj->fk_user_cloture);
-					$this->user_cloture = $cluser;
-				}
-
-				$this->date_creation = $this->db->jdate($obj->datec);
-				$this->date_modification = $this->db->jdate($obj->datem);
-				$this->date_validation = $this->db->jdate($obj->datev);
-			}
-
-			$this->db->free($result);
-		} else {
-			dol_print_error($this->db);
-		}
-	}
-
 	/**
 	 * Initialise object with example values
 	 * Id must be 0 if object instance is a specimen
@@ -664,135 +362,12 @@ class MonAnalyseVendeur_import extends CommonObject
 		}
 	}
 
-	/**
-	 *  Returns the reference to the following non used object depending on the active numbering module.
-	 *
-	 * @return string            Object free reference
-	 */
-	public function getNextNumRef()
-	{
-		global $langs, $conf;
-		$langs->load("monanalysevendeur@monanalysevendeur");
-
-		if (empty($conf->global->GMAPS_GMAPS_IMPORT_ADDON)) {
-			$conf->global->GMAPS_GMAPS_IMPORT_ADDON = 'mod_monanalysevendeur_import_standard';
-		}
-
-		if (!empty($conf->global->GMAPS_GMAPS_IMPORT_ADDON)) {
-			$mybool = false;
-
-			$file = $conf->global->GMAPS_GMAPS_IMPORT_ADDON . ".php";
-			$classname = $conf->global->GMAPS_GMAPS_IMPORT_ADDON;
-
-			// Include file with class
-			$dirmodels = array_merge(array('/'), (array)$conf->modules_parts['models']);
-			foreach ($dirmodels as $reldir) {
-				$dir = dol_buildpath($reldir . "core/modules/monanalysevendeur/");
-
-				// Load file with numbering class (if found)
-				$mybool |= @include_once $dir . $file;
-			}
-
-			if ($mybool === false) {
-				dol_print_error('', "Failed to include file " . $file);
-				return '';
-			}
-
-			if (class_exists($classname)) {
-				$obj = new $classname();
-				$numref = $obj->getNextValue($this);
-
-				if ($numref != '' && $numref != '-1') {
-					return $numref;
-				} else {
-					$this->error = $obj->error;
-					//dol_print_error($this->db,get_class($this)."::getNextNumRef ".$obj->error);
-					return "";
-				}
-			} else {
-				print $langs->trans("Error") . " " . $langs->trans("ClassNotFound") . ' ' . $classname;
-				return "";
-			}
-		} else {
-			print $langs->trans("ErrorNumberingModuleNotSetup", $this->element);
-			return "";
-		}
-	}
-
-	/**
-	 *  Create a document onto disk according to template module.
-	 *
-	 * @param string $modele Force template to use ('' to not force)
-	 * @param Translate $outputlangs objet lang a utiliser pour traduction
-	 * @param int $hidedetails Hide details of lines
-	 * @param int $hidedesc Hide description
-	 * @param int $hideref Hide ref
-	 * @param null|array $moreparams Array to provide more information
-	 * @return     int                        0 if KO, 1 if OK
-	 */
-	public function generateDocument($modele, $outputlangs, $hidedetails = 0, $hidedesc = 0, $hideref = 0, $moreparams = null)
-	{
-		global $conf, $langs;
-
-		$result = 0;
-		$includedocgeneration = 0;
-
-		$langs->load("monanalysevendeur@monanalysevendeur");
-
-		if (!dol_strlen($modele)) {
-			$modele = 'standard_monanalysevendeur_import';
-
-			if ($this->model_pdf) {
-				$modele = $this->model_pdf;
-			} elseif (!empty($conf->global->GMAPS_IMPORT_ADDON_PDF)) {
-				$modele = $conf->global->GMAPS_IMPORT_ADDON_PDF;
-			}
-		}
-
-		$modelpath = "core/modules/monanalysevendeur/doc/";
-
-		if ($includedocgeneration) {
-			$result = $this->commonGenerateDocument($modelpath, $modele, $outputlangs, $hidedetails, $hidedesc, $hideref, $moreparams);
-		}
-
-		return $result;
-	}
-
-	/**
-	 * Action executed by scheduler
-	 * CAN BE A CRON TASK. In such a case, parameters come from the schedule job setup field 'Parameters'
-	 * Use public function doScheduledJob($param1, $param2, ...) to get parameters
-	 *
-	 * @return    int            0 if OK, <>0 if KO (this function is used also by cron so only 0 is OK)
-	 */
-	public function doScheduledJob()
-	{
-		global $conf, $langs;
-
-		//$conf->global->SYSLOG_FILE = 'DOL_DATA_ROOT/dolibarr_mydedicatedlofile.log';
-
-		$error = 0;
-		$this->output = '';
-		$this->error = '';
-
-		dol_syslog(__METHOD__, LOG_DEBUG);
-
-		$now = dol_now();
-
-		$this->db->begin();
-
-		// ...
-
-		$this->db->commit();
-
-		return $error;
-	}
 
 	public function importFile($file)
 	{
 		global $conf, $langs;
 
-		$dol_impoprt_xlsx=new ImportXlsx($this->db,null);
+		$dol_impoprt_xlsx = new ImportXlsx($this->db, null);
 
 		$error = 0;
 		$this->output = '';
@@ -806,26 +381,36 @@ class MonAnalyseVendeur_import extends CommonObject
 
 		if (file_exists($file)) {
 
-			$nb_lines=$dol_impoprt_xlsx->import_get_nb_of_lines($file);
+			$this->initFile(basename($file));
+			$result = $this->createTempTable();
+			if ($result < 0) {
+				return $result;
+			}
+
+			$nb_lines = $dol_impoprt_xlsx->import_get_nb_of_lines($file);
+
 			//For debug
-			$nb_lines=50;
+			//$nb_lines = 150;
+
 			$dol_impoprt_xlsx->import_open_file($file);
 			$dol_impoprt_xlsx->import_read_header();
 
-			for ($currentline=1; $currentline<=$nb_lines;$currentline++) {
-				$record=$dol_impoprt_xlsx->import_read_record();
-
-				//Find column index
-				if (!empty($record) && $currentline==1) {
-					foreach($record as $colindex=>$data) {
-						foreach($this->indexColData as $dataname=>$datacolumnname)
-						if ($data['val']==$datacolumnname['key']) {
-							$this->indexColData[$dataname]['index']=$colindex;
+			for ($currentline = 1; $currentline <= $nb_lines; $currentline++) {
+				$record = $dol_impoprt_xlsx->import_read_record();
+				$colname = array();
+				$values = array();
+				//Find column index on first row
+				if (!empty($record) && $currentline == 1) {
+					foreach ($record as $colindex => $data) {
+						foreach ($this->indexColData as $dataname => $datacolumnname) {
+							if ($data['val'] == $datacolumnname['key']) {
+								$this->indexColData[$dataname]['index'] = $colindex;
+							}
 						}
 					}
-					foreach($this->indexColData as $dataname=>$datacolumnname) {
-						if ($datacolumnname['index']==null) {
-							$this->errors[]=$langs->trans('MAVIndexNotFound', $datacolumnname['key']);
+					foreach ($this->indexColData as $dataname => $datacolumnname) {
+						if ($datacolumnname['index'] == null) {
+							$this->errors[] = $langs->trans('MAVIndexNotFound', $datacolumnname['key']);
 							$error++;
 						}
 					}
@@ -834,27 +419,248 @@ class MonAnalyseVendeur_import extends CommonObject
 					$dol_impoprt_xlsx->import_close_file();
 					return -1;
 				}
-				if (!empty($record) && $currentline>1) {
 
+				if (!empty($record) && $currentline > 1) {
+					$sql = 'INSERT INTO ' . $this->tempTable . '(';
+					foreach ($this->indexColData as $dataname => $datacolumnname) {
+						$colname[] = $dataname;
+					}
+					$sql .= implode(',', $colname);
+					$sql .= ')';
+					$sql .= ' VALUES (';
+					foreach ($this->indexColData as $dataname => $datacolumnname) {
+						if (empty($record[$datacolumnname['index']]['val'])) {
+							$values[] = 'NULL';
+						} else {
+							$values[] = '\'' . $this->db->escape($record[$datacolumnname['index']]['val']) . '\'';
+						}
+					}
+					$sql .= implode(',', $values);
+					$sql .= ')';
+					$resql = $this->db->query($sql);
+					if (!$resql) {
+						$this->errors[] = $this->db->lasterror;
+						$error++;
+					}
+				}
+				if (!empty($error)) {
+					$dol_impoprt_xlsx->import_close_file();
+					return -1;
 				}
 			}
 
 			$dol_impoprt_xlsx->import_close_file();
 
+			$result=$this->findThirdparty();
+			if ($result < 0) {
+				return $result;
+			}
+
+			$result=$this->createThirdparty();
+			if ($result < 0) {
+				return $result;
+			}
+
 		} else {
 			$this->error = $langs->trans('FileNotFound');
 			return -1;
 		}
+	}
 
-		if (!empty($error)) {
-			$this->db->rollback();
-			return -1*$error;
+	/**
+	 *
+	 */
+	protected function findThirdparty()
+	{
+		$error = 0;
+		$sql = 'UPDATE ' . $this->tempTable . ' as dest, ' . MAIN_DB_PREFIX . 'societe as src';
+		$sql .= ' SET dest.fk_soc=src.rowid ';
+		$sql .= ' WHERE src.nom=CONCAT(dest.Nom,\' \',dest.Prenom)';
+		$sql .= ' AND src.zip=IFNULL(dest.Zip1,dest.Zip2)';
+		$sql .= ' AND src.town=IFNULL(dest.Town1,dest.Town2)';
+		$sql .= ' AND src.address=IFNULL(dest.NumVoie1,dest.NumVoie2)';
+
+		$resql = $this->db->query($sql);
+		if (!$resql) {
+			$this->errors[] = $this->db->lasterror;
+			return -1;
 		} else {
-			$this->db->commit();
 			return 1;
 		}
+	}
 
+	/**
+	 * @return float|int
+	 */
+	protected function createThirdparty() {
+		global $user;
+		$soc_created=0;
+		$this->db->begin();
+		$sql="SELECT rowid,";
+		foreach ($this->indexColData as $dataname => $datacolumnname) {
+			$colname[] = $dataname;
+		}
+		$sql .= implode(',', $colname);
+		$sql .= ' FROM '.$this->tempTable.' WHERE fk_soc IS NULL';
+		$resql = $this->db->query($sql);
+		if (!$resql) {
+			$this->errors[] = $this->db->lasterror;
+			return -1;
+		} else {
+			while ($obj=$this->db->fetch_object($resql)) {
+				$soc = new Societe($this->db);
+				$soc->name = $obj->Nom.' '.$obj->Prenom;
+				$soc->client = 1;
+				$soc->status = 1;
+				$soc->country_id = 1;
+				$soc->address = (!empty($obj->NumVoie1)?$obj->NumVoie1:$obj->NumVoie2);
+				$soc->zip = (!empty($obj->Zip1)?$obj->Zip1:$obj->Zip2);
+				$soc->town = (!empty($obj->Town1)?$obj->Town1:$obj->Town2);
+				$soc->phone = (!empty($obj->Phone1)?$obj->Phone1:$obj->Phone2);
+				$soc->code_client = 'auto';
+				$soc->import_key=dol_now();
+				$result=$soc->create($user);
+				if ($result<0) {
+					$this->errors[] = $this->db->lasterror;
+					$error++;
+				} else {
+					$soc_created++;
+					$sql_upd = 'UPDATE '.$this->tempTable.' SET fk_soc='.$soc->id.' WHERE Nom=\''.$this->db->escape($obj->Nom).'\'';
+					$sql_upd .= ' AND Prenom=\''.$this->db->escape($obj->Prenom).'\'';
+					$sql_upd .= ' AND IFNULL(NumVoie1,NumVoie2)=\''.$this->db->escape($soc->address).'\'';
+					$sql_upd .= ' AND IFNULL(Zip1,Zip2)=\''.$this->db->escape($soc->zip).'\'';
+					$sql_upd .= ' AND IFNULL(Town1,Town2)=\''.$this->db->escape($soc->town).'\'';
+					$sql_upd .= ' AND IFNULL(Phone1,Phone2)=\''.$this->db->escape($soc->phone).'\'';
+					$resql_upd = $this->db->query($sql_upd);
+					if (!$resql_upd) {
+						$this->errors[] = $this->db->lasterror;
+						$error++;
+					}
+				}
+			}
+		}
+		if (empty($error)) {
+			$this->db->commit();
+			return $soc_created;
+		} else {
+			$this->db->rollback();
+			return - 1 * $error;
+		}
+	}
 
+	/**
+	 * @return int
+	 * @throws Exception
+	 */
+	protected function createTempTable()
+	{
+		// Build sql temp table
+
+		$sql = 'DROP TABLE IF EXISTS ' . $this->tempTable;
+		dol_syslog(get_class($this) . '::' . __METHOD__ . ' Build sql temp table', LOG_DEBUG);
+		$resql = $this->db->query($sql);
+		if (!$resql) {
+			$this->errors[] = $this->db->lasterror;
+			return -1;
+		} else {
+			$sql = 'CREATE TABLE ' . $this->tempTable;
+			$sql .= '(';
+			$sql .= 'rowid integer NOT NULL auto_increment PRIMARY KEY,';
+			$sql .= 'fk_soc integer DEFAULT NULL,';
+			$sql .= 'integration_status integer DEFAULT NULL,';
+			$sql .= 'integration_action varchar(20) DEFAULT NULL,';
+			foreach ($this->indexColData as $dataname => $datacolumnname) {
+				$sql .= $dataname . ' text,';
+			}
+			$sql .= 'tms timestamp NOT NULL';
+			$sql .= ')ENGINE=InnoDB;';
+
+			dol_syslog(get_class($this) . '::' . __METHOD__ . ' Build sql temp table', LOG_DEBUG);
+			$resql = $this->db->query($sql);
+			if (!$resql) {
+				$this->errors[] = $this->db->lasterror;
+				return -1;
+			} else {
+				return 1;
+			}
+		}
+	}
+
+	/**
+	 */
+	protected function dropTempTable()
+	{
+		$error=0;
+		if (!empty($this->tempTable)) {
+			$sql = ' DROP TABLE IF EXISTS ' . $this->tempTable;
+
+			dol_syslog(get_class($this) . '::' . __METHOD__, LOG_DEBUG);
+			$resql = $this->db->query($sql);
+			if (!$resql) {
+				$this->errors[] = $this->db->lasterror;
+				$error++;
+			}
+		}
+
+		if (empty($error)) {
+			return 1;
+		} else {
+			return -1 * $error;
+		}
+	}
+
+	/**
+	 *
+	 * @param unknown $filesource
+	 */
+	protected function initFile($filesource)
+	{
+		global $user;
+		$this->filesource = $filesource;
+		$this->tempTable = MAIN_DB_PREFIX . 'monanalysevendeur_tmp_' . $this->import_type . '_' . $user->id . '_' . dol_trunc($this->monananylsevendeur_string_nospecial(basename($this->filesource)), 10, 'right', 'UTF-8', 1);
+	}
+
+	protected function monananylsevendeur_string_nospecial($str, $newstr = '_', $badcharstoreplace = '')
+	{
+		dol_syslog(get_class($this) . '::' . __METHOD__, LOG_DEBUG);
+
+		$forbidden_chars_to_replace = array(
+			" ",
+			"'",
+			"/",
+			"\\",
+			":",
+			"*",
+			"?",
+			"\"",
+			"<",
+			">",
+			"|",
+			"[",
+			"]",
+			",",
+			";",
+			"=",
+			"°",
+			"&",
+			"-",
+			".",
+			"(",
+			")",
+			"%",
+			"+"
+		);
+		$forbidden_chars_to_remove = array();
+		if (is_array($badcharstoreplace))
+			$forbidden_chars_to_replace = $badcharstoreplace;
+		// $forbidden_chars_to_remove=array("(",")");
+
+		$str = str_replace($forbidden_chars_to_replace, $newstr, str_replace($forbidden_chars_to_remove, "", $str));
+		$str = str_replace('€', 'EUR', $str);
+		$str = dol_string_unaccent($str);
+		$str = dol_strtolower($str);
+
+		return $str;
 	}
 }
 
