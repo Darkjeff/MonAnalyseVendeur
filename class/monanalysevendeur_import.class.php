@@ -788,7 +788,7 @@ class MonAnalyseVendeur_import extends CommonObject
 		return $error;
 	}
 
-	public function importFile($file, $user)
+	public function importFile($file)
 	{
 		global $conf, $langs;
 
@@ -840,11 +840,6 @@ class MonAnalyseVendeur_import extends CommonObject
 			}
 
 			$dol_impoprt_xlsx->import_close_file();
-
-			} else {
-				$this->error = $langs->trans('FileFormatSupported');
-				return -1;
-			}
 
 		} else {
 			$this->error = $langs->trans('FileNotFound');
