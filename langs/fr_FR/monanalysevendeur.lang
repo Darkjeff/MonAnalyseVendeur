@@ -37,6 +37,11 @@ MonAnalyseVendeurAbout = À propos de MonAnalyseVendeur
 MonAnalyseVendeurAboutPage = Page à propos de MonAnalyseVendeur
 
 #
+# import
+#
+MAVIndexNotFound=La colonne %s n'a pas été trouver dans le fichier
+
+#
 # Page d'exemple
 #
 MyPageName = Nom de ma page

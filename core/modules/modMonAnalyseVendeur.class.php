@@ -243,48 +243,48 @@ class modMonAnalyseVendeur extends DolibarrModules
 		// Add here entries to declare new permissions
 		/* BEGIN MODULEBUILDER PERMISSIONS */
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'Read objects of MonAnalyseVendeur'; // Permission label
+		$this->rights[$r][1] = 'Rapport Journalier Lire'; // Permission label
 		$this->rights[$r][4] = 'rapportjournalier'; // In php code, permission will be checked by test if ($user->rights->monanalysevendeur->level1->level2)
 		$this->rights[$r][5] = 'read'; // In php code, permission will be checked by test if ($user->rights->monanalysevendeur->level1->level2)
 		$r++;
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'Read objects of my subordante'; // Permission label
+		$this->rights[$r][1] = 'Rapport Journalier of my subordante'; // Permission label
 		$this->rights[$r][4] = 'rapportjournalier'; // In php code, permission will be checked by test if ($user->rights->monanalysevendeur->level1->level2)
     	$this->rights[$r][5] = 'rpv'; // In php code, permission will be checked by test if ($user->rights->monanalysevendeur->level1->level2)
 		$r++;
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'Create/Update objects of MonAnalyseVendeur'; // Permission label
+		$this->rights[$r][1] = 'Create/Update Rapport Journalier'; // Permission label
 		$this->rights[$r][4] = 'rapportjournalier'; // In php code, permission will be checked by test if ($user->rights->monanalysevendeur->level1->level2)
 		$this->rights[$r][5] = 'write'; // In php code, permission will be checked by test if ($user->rights->monanalysevendeur->level1->level2)
 		$r++;
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'Delete objects of MonAnalyseVendeur'; // Permission label
+		$this->rights[$r][1] = 'Delete objects Rapport Journalier'; // Permission label
 		$this->rights[$r][4] = 'rapportjournalier'; // In php code, permission will be checked by test if ($user->rights->monanalysevendeur->level1->level2)
 		$this->rights[$r][5] = 'delete'; // In php code, permission will be checked by test if ($user->rights->monanalysevendeur->level1->level2)
 		$r++;
 		$this->rights[$r][0] = $this->numero . $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = $langs->trans("RightContacttrackingO1"); // Permission label
+		$this->rights[$r][1] = $langs->trans("Contact Traking lire"); // Permission label
 		$this->rights[$r][3] = 1;      // Permission by default for new user (0/1)
 		$this->rights[$r][4] = 'read';    // In php code, permission will be checked by test if ($user->rights->contacttracking->level1->level2)
 		$this->rights[$r][5] = '';        // In php code, permission will be checked by test if ($user->rights->contacttracking->level1->level2)
 
 		$r++;
 		$this->rights[$r][0] = $this->numero . $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = $langs->trans("RightContacttrackingO2"); // Permission label
+		$this->rights[$r][1] = $langs->trans("Contact Traking Ecrire"); // Permission label
 		$this->rights[$r][3] = 1;      // Permission by default for new user (0/1)
 		$this->rights[$r][4] = 'write';    // In php code, permission will be checked by test if ($user->rights->contacttracking->level1->level2)
 		$this->rights[$r][5] = '';        // In php code, permission will be checked by test if ($user->rights->contacttracking->level1->level2)
 
 		$r++;
 		$this->rights[$r][0] = $this->numero . $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = $langs->trans("RightContacttrackingO3"); // Permission label
+		$this->rights[$r][1] = $langs->trans("Contact Traking Supprimer"); // Permission label
 		$this->rights[$r][3] = 1;      // Permission by default for new user (0/1)
 		$this->rights[$r][4] = 'delete';    // In php code, permission will be checked by test if ($user->rights->contacttracking->level1->level2)
 		$this->rights[$r][5] = '';
 
 		$r++;
 		$this->rights[$r][0] = $this->numero . $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = $langs->trans("RightContacttrackingO4"); // Permission label
+		$this->rights[$r][1] = $langs->trans("Contact Traking tout lire"); // Permission label
 		$this->rights[$r][3] = 0;      // Permission by default for new user (0/1)
 		$this->rights[$r][4] = 'readall';    // In php code, permission will be checked by test if ($user->rights->contacttracking->level1->level2)
 		$this->rights[$r][5] = '';
@@ -301,6 +301,13 @@ class modMonAnalyseVendeur extends DolibarrModules
 		$this->rights[$r][1] = $langs->trans("RightContacttrackingO6"); // Permission label
 		$this->rights[$r][3] = 1;      // Permission by default for new user (0/1)
 		$this->rights[$r][4] = 'deleteall';    // In php code, permission will be checked by test if ($user->rights->activityreport->level1->level2)
+		$this->rights[$r][5] = '';
+
+		$r++;
+		$this->rights[$r][0] = $this->numero . $r; // Permission id (must not be already used)
+		$this->rights[$r][1] = $langs->trans("RightContacttrackingO6"); // Permission label
+		$this->rights[$r][3] = 1;      // Permission by default for new user (0/1)
+		$this->rights[$r][4] = 'import';    // In php code, permission will be checked by test if ($user->rights->activityreport->level1->level2)
 		$this->rights[$r][5] = '';
 		/* END MODULEBUILDER PERMISSIONS */
 
@@ -396,7 +403,7 @@ class modMonAnalyseVendeur extends DolibarrModules
             'type'=>'left',
             'titre'=>'Nouveau Rapport',
             'mainmenu'=>'monanalysevendeur',
-            'leftmenu'=>'monanalysevendeur_rapportjournalier',
+            'leftmenu'=>'monanalysevendeur_new',
             'url'=>'/monanalysevendeur/rapportjournalier_card.php?action=create',
             // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'langs'=>'monanalysevendeur@monanalysevendeur',
@@ -416,7 +423,7 @@ class modMonAnalyseVendeur extends DolibarrModules
 			'type'=>'left',
 			'titre'=>'Statistique',
 			'mainmenu'=>'monanalysevendeur',
-			'leftmenu'=>'monanalysevendeur_rapportjournalier',
+			'leftmenu'=>'monanalysevendeur_stat',
 			'url'=>'/monanalysevendeur/index_stat.php',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'langs'=>'monanalysevendeur@monanalysevendeur',
@@ -509,7 +516,46 @@ class modMonAnalyseVendeur extends DolibarrModules
             // 0=Menu for internal users, 1=external users, 2=both
             'user'=>2
         );
-
+		$this->menu[$r++]=array(
+			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'fk_menu'=>'fk_mainmenu=monanalysevendeur',
+			// This is a Left menu entry
+			'type'=>'left',
+			'titre'=>'Import',
+			'mainmenu'=>'monanalysevendeur',
+			'leftmenu'=>'monanalysevendeur_import',
+			'url'=>'',
+			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'langs'=>'monanalysevendeur@monanalysevendeur',
+			'position'=>1100+$r,
+			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'enabled'=>'$conf->monanalysevendeur->enabled',
+			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
+			'perms'=>'$user->rights->monanalysevendeur->import',
+			'target'=>'',
+			// 0=Menu for internal users, 1=external users, 2=both
+			'user'=>2
+		);
+		$this->menu[$r++]=array(
+			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'fk_menu'=>'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_import',
+			// This is a Left menu entry
+			'type'=>'left',
+			'titre'=>'Nouvelle Import 3GWin',
+			'mainmenu'=>'monanalysevendeur',
+			'leftmenu'=>'monanalysevendeur_import 3GWin',
+			'url'=>'/monanalysevendeur/import3gwin.php',
+			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'langs'=>'monanalysevendeur@monanalysevendeur',
+			'position'=>1100+$r,
+			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'enabled'=>'$conf->monanalysevendeur->enabled',
+			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
+			'perms'=>'$user->rights->monanalysevendeur->import',
+			'target'=>'',
+			// 0=Menu for internal users, 1=external users, 2=both
+			'user'=>2
+		);
 		/* END MODULEBUILDER LEFTMENU RAPPORTJOURNALIER */
 
 		// Exports profiles provided by this module
