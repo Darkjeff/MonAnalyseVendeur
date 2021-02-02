@@ -82,7 +82,7 @@ $fileurlnb = DOL_URL_ROOT . '/viewimage.php?modulepart=monanalysevendeurstats&fi
 
 $px1 = new DolGraph();
 $mesg = $px1->isGraphKo();
-if (!$mesg) {
+if (!$mesg && !empty($data_traitement)) {
 	$px1->SetData($data_traitement);
 	$px1->SetLegend($legend);
 	$px1->SetMaxValue($px1->GetCeilMaxValue());
@@ -103,7 +103,7 @@ $fileurlnbtx = DOL_URL_ROOT . '/viewimage.php?modulepart=monanalysevendeurstats&
 
 $px2 = new DolGraph();
 $mesg = $px2->isGraphKo();
-if (!$mesg) {
+if (!$mesg && !empty($data_transfo)) {
 	$px2->SetData($data_transfo);
 	$px2->SetLegend($legend);
 	$px2->SetMaxValue($px2->GetCeilMaxValue());

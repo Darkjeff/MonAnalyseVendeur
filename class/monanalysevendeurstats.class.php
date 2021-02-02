@@ -47,6 +47,11 @@ class MonAnayseVendeurStats
     {
         global $user, $conf;
 
+        $this->data_traitement=array();
+		$this->data_transfo=array();
+		$this->data_row=array();
+		$this->data_legend=array();
+
         $this->db = $db;
     }
 
@@ -77,7 +82,7 @@ class MonAnayseVendeurStats
 		$object_static=new Rapportjournalier($this->db);
 		$sql_where=array();
 		$nbday_between=num_between_day($from_date, $to_date, 1);
-		
+
 
 		if ($period_type=='%d/%m/%Y') {
 			$nbtime_diff=$nbday_between;
@@ -123,12 +128,11 @@ class MonAnayseVendeurStats
 
 		$sql .= " GROUP BY dm, t.fk_user_creat";
 		$sql .= $this->db->order('dm,t.fk_user_creat', 'DESC');
-		
+
 
 		$result=array();
 		$resql = $this->db->query($sql);
-		var_dump ($user_tags);
-		
+
 		if ($resql)
 		{
 			$num = $this->db->num_rows($resql);
@@ -151,7 +155,7 @@ class MonAnayseVendeurStats
 				$i++;
 			}
 		}
-		
+
 
 		$data_r=array();
 		foreach($time_array as $i=>$time) {
@@ -175,7 +179,7 @@ class MonAnayseVendeurStats
 				}
 			}
 		}
-		
+
 		$this->data_traitement = $data_r;
 		$this->data_transfo = $data_tx;
 		$this->data_row = $result;
