@@ -422,6 +422,7 @@ $num = $db->num_rows($resql);
 
 llxHeader('', $title, '');
 $param = '&element_type=' . GETPOST('element_type') . '&id=' . GETPOST('id');
+$param = '&relance='.GETPOST('relance', 'int');
 if (GETPOST('element_type') == 'thirdparty') {
 	require_once DOL_DOCUMENT_ROOT . '/core/lib/company.lib.php';
 	require_once DOL_DOCUMENT_ROOT . '/societe/class/societe.class.php';
@@ -583,6 +584,7 @@ print '<input type="hidden" name="contextpage" value="' . $contextpage . '">';
 print '<input type="hidden" name="element_type" value="' . GETPOST('element_type') . '">';
 print '<input type="hidden" name="socid" value="' . GETPOST('socid') . '">';
 print '<input type="hidden" name="id" value="' . GETPOST('id') . '">';
+print '<input type="hidden" name="relance" value="' . GETPOST('relance', 'int') . '">';
 
 print_barre_liste($title, $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, $massactionbutton, $num, $nbtotalofrecords, 'title_companies', 0, '', '', $limit);
 
@@ -694,10 +696,12 @@ foreach ($object->fields as $key => $val) {
 			break;
 
 		case 'type_event':
-			//if (!empty($conf->global->AGENDA_USE_EVENT_TYPE)) {
-			print '<td></td>';
-			print '<td></td>';
-			//}
+			if (!empty($arrayfields['t.' . $key]['enabled'])) {
+				//if (!empty($conf->global->AGENDA_USE_EVENT_TYPE)) {
+				print '<td></td>';
+				print '<td></td>';
+				//}
+			}
 
 			/*
 			  print '<td class="liste_titre' . ($align ? ' ' . $align : '') . '">';
@@ -734,8 +738,10 @@ foreach ($object->fields as $key => $val) {
 			break;
 
 		case 'fk_event':
-			print '<td></td>';
-			//print '<td></td>';
+			if (empty($arrayfields['t.' . $key]['enabled'])) {
+				print '<td></td>';
+				print '<td></td>';
+			}
 			break;
 
 		default:
@@ -921,7 +927,7 @@ while ($i < min($num, $limit)) {
 						echo $obj->$key;
 					}
 				} else {
-					if ((int)DOL_VERSION > '7') {
+					if ((int) DOL_VERSION > '7') {
 						if ($key !== 'fk_element_id') {
 							print $object->showOutputField($val, $key, $obj->$key, '');
 						}
