@@ -371,6 +371,13 @@ $reshook = $hookmanager->executeHooks('printFieldListSelect', $parameters, $obje
 $sql .= $hookmanager->resPrint;
 if (is_array($extrafields->attribute_label) && count($extrafields->attribute_label))
 	$sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "contacttracking_extrafields as ef on (t.rowid = ef.fk_object)";
+
+////add link to table in order to recup relance date : ac.datep
+if (GETPOST('relance', 'int') == 1) {
+	$sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "actioncomm as ac on (ac.id = t.fk_event)";
+} 
+
+
 if ($object->ismultientitymanaged == 1)
 	$sql .= " WHERE t.entity IN (" . getEntity('contacttracking') . ")";
 else
