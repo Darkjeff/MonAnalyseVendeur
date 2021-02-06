@@ -22,19 +22,20 @@
 include_once DOL_DOCUMENT_ROOT.'/core/class/stats.class.php';
 include_once DOL_DOCUMENT_ROOT.'/core/lib/date.lib.php';
 dol_include_once('/monanalysevendeur/class/rapportjournalier.class.php');
+require_once DOL_DOCUMENT_ROOT.'/fichinter/class/fichinter.class.php';
 
 /**
  *    Class to manage intervention statistics
  */
-class MonAnayseVendeurStats
+class PickingStats
 {
     /**
      * @var string Name of table without prefix where object is stored
      */
     public $table_element;
 
-    public $data_traitement;
-    public $data_transfo;
+    public $data_potentiel;
+    public $data_valide;
     public $data_row;
     public $data_legend;
 
@@ -47,8 +48,8 @@ class MonAnayseVendeurStats
     {
         global $user, $conf;
 
-        $this->data_traitement=array();
-		$this->data_transfo=array();
+        $this->data_potentiel=array();
+		$this->data_valide=array();
 		$this->data_row=array();
 		$this->data_legend=array();
 
@@ -79,7 +80,7 @@ class MonAnayseVendeurStats
 	public function getNb($users, $user_tags, $period_type, $from_date, $to_date)
 	{
 		global $user;
-		$object_static=new Rapportjournalier($this->db);
+		$object_static=new Ficheinter($this->db);
 		$sql_where=array();
 		$nbday_between=num_between_day($from_date, $to_date, 1);
 
@@ -108,15 +109,17 @@ class MonAnayseVendeurStats
 				$time_array[$i]=dol_print_date(dol_time_plus_duree($from_date,$i,'m'),'%m');
 			}
 		}
-
-		$sql = "SELECT date_format(t.date_creation,'".$period_type."') as dm, t.fk_user_creat, SUM(t.nb_traitement) as nb, SUM(t.nb_box) as nbbox";
-		$sql .= " FROM ".MAIN_DB_PREFIX.$object_static->table_element . ' as t';
+			
+			///// todo avoir compte des oui ou non et pas la somme car valeur 1 ou 2 dans colonne
+			
+		$sql = "SELECT date_format(t.tms,'".$period_type."') as dm, t.vendeur, count(t.potentielbox) as potentiel, count(t.boxvalidee) as valide";
+		$sql .= " FROM llx_fichinter_extrafields as t";
 		if (!empty($user_tags)) {
-			$sql .= ' INNER JOIN llx_categorie_user as tagu ON tagu.fk_user=t.fk_user_creat';
+			$sql .= ' INNER JOIN llx_categorie_user as tagu ON tagu.fk_user=t.vendeur';
 		}
-		$sql_where[] = " t.date_creation BETWEEN '".$this->db->idate($from_date)."' AND '".$this->db->idate($to_date)."'";
+		$sql_where[] = " t.tms BETWEEN '".$this->db->idate($from_date)."' AND '".$this->db->idate($to_date)."'";
 		if (!empty($users)) {
-			$sql_where[] = ' t.fk_user_creat IN (' . implode(',', $users) . ')';
+			$sql_where[] = ' t.vendeur IN (' . implode(',', $users) . ')';
 		}
 		if (!empty($user_tags)) {
 			$sql_where[] = ' tagu.fk_categorie IN (' . implode(',', $user_tags) . ')';
@@ -126,7 +129,7 @@ class MonAnayseVendeurStats
 			$sql .= ' WHERE '.implode( ' AND ',$sql_where);
 		}
 
-		$sql .= " GROUP BY dm, t.fk_user_creat";
+		$sql .= " GROUP BY dm, t.vendeur";
 		$sql .= $this->db->order('dm,t.fk_user_creat', 'DESC');
 
 
