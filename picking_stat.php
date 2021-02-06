@@ -24,7 +24,7 @@
 require '../../main.inc.php';
 require_once DOL_DOCUMENT_ROOT . '/core/class/dolgraph.class.php';
 
-dol_include_once('/monanalysevendeur/class/monanalysevendeurstats.class.php');
+dol_include_once('/monanalysevendeur/class/pickingstats.class.php');
 
 $WIDTH = DolGraph::getDefaultGraphSizeForStats('width');
 $HEIGHT = DolGraph::getDefaultGraphSizeForStats('height');
@@ -51,7 +51,7 @@ $langs->loadLangs(array('monanalysevendeur@monanalysevendeur', 'other'));
 
 $form = new Form($db);
 
-$title = $langs->trans("StatMonAnayseVendeurStatistics");
+$title = $langs->trans("StatPickingStatistics");
 $dir = $conf->monanalysevendeur->dir_temp;
 
 llxHeader('', $title);
@@ -121,7 +121,7 @@ if (!$mesg && !empty($data_transfo)) {
 
 $h = 0;
 $head = array();
-$head[$h][0] = dol_buildpath("/monanalysevendeur/index_stat.php", 1);
+$head[$h][0] = dol_buildpath("/monanalysevendeur/picking_stat.php", 1);
 $head[$h][1] = $langs->trans("Statistics");
 $head[$h][2] = 'stats';
 $h++;
