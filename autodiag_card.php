@@ -196,7 +196,11 @@ if (!$user->rights->contacttracking->write) :
 				print '</td>';
 				print '<td>';
 				echo $form->select_company($val, 'fk_soc', '', '',0 ,1);
-				echo ' <a href="'.DOL_URL_ROOT.'/societe/card.php?action=create&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create').'"><span class="fa fa-plus-circle valignmiddle paddingleft" title="'.$langs->trans("AddThirdParty").'"></span></a>';
+				if (GETPOST('relance', 'int')==1) {
+				echo ' <a href="'.DOL_URL_ROOT.'/societe/card.php?action=create&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create&relance=1').'"><span class="fa fa-plus-circle valignmiddle paddingleft" title="'.$langs->trans("AddThirdParty").'"></span></a>';
+				} else {
+				echo ' <a href="'.DOL_URL_ROOT.'/societe/card.php?action=create&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create&relance=0').'"><span class="fa fa-plus-circle valignmiddle paddingleft" title="'.$langs->trans("AddThirdParty").'"></span></a>';
+				}
                 print '<tr id="field_' . $key . '">';
                 print '<td';
                 print ' class="titlefieldcreate';
