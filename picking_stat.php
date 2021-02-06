@@ -60,7 +60,7 @@ print load_fiche_titre($title, '', 'intervention');
 
 dol_mkdir($dir);
 
-$stats = new MonAnayseVendeurStats($db);
+$stats = new PickingStats($db);
 
 // Build graphic number of object
 $result = $stats->getData($users, $user_tags, $period_type, $from_date, $to_date);
@@ -89,11 +89,11 @@ if (!$mesg && !empty($data_traitement)) {
 	$px1->SetMinValue(min(0, $px1->GetFloorMinValue()));
 	$px1->SetWidth($WIDTH);
 	$px1->SetHeight($HEIGHT);
-	$px1->SetYLabel($langs->trans("Nombre Traitement"));
+	$px1->SetYLabel($langs->trans("Potentiel Box"));
 	$px1->SetShading(3);
 	$px1->SetHorizTickIncrement(1);
 	$px1->mode = 'depth';
-	$px1->SetTitle($langs->trans("Nombre Traitement"));
+	$px1->SetTitle($langs->trans("Potentiel Box"));
 
 	$px1->draw($filenamenb, $fileurlnb);
 }
@@ -110,11 +110,11 @@ if (!$mesg && !empty($data_transfo)) {
 	$px2->SetMinValue(min(0, $px2->GetFloorMinValue()));
 	$px2->SetWidth($WIDTH);
 	$px2->SetHeight($HEIGHT);
-	$px2->SetYLabel($langs->trans("Tx Transformation"));
+	$px2->SetYLabel($langs->trans("Box Validée"));
 	$px2->SetShading(3);
 	$px2->SetHorizTickIncrement(1);
 	$px2->mode = 'depth';
-	$px2->SetTitle($langs->trans("Tx Transformation"));
+	$px2->SetTitle($langs->trans("Box Validée"));
 
 	$px2->draw($filenamenbtx, $fileurlnbtx);
 }
@@ -180,8 +180,8 @@ print '<table class="noborder centpercent">';
 print '<tr class="liste_titre" height="24">';
 print '<td class="center">' . $langs->trans($type_period_array[$period_type]) . '</td>';
 print '<td class="center">' . $langs->trans('User') . '</td>';
-print '<td class="right">' . $langs->trans("Nombre Traitement") . '</td>';
-print '<td class="right">' . $langs->trans("Tx Transformation") . '</td>';
+print '<td class="right">' . $langs->trans("Potentiel Box") . '</td>';
+print '<td class="right">' . $langs->trans("Box Validée") . '</td>';
 print '</tr>';
 
 
