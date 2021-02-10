@@ -82,7 +82,7 @@ class PickingStats
 	public function getNb($users, $user_tags, $period_type, $from_date, $to_date)
 	{
 		global $user;
-		$object_static=new Ficheinter($this->db);
+		$object_static=new Fichinter($this->db);
 		$sql_where=array();
 		$nbday_between=num_between_day($from_date, $to_date, 1);
 
@@ -114,10 +114,10 @@ class PickingStats
 
 			///// todo avoir compte des oui ou non et pas la somme car valeur 1 ou 2 dans colonne
 
-		$sql = "SELECT date_format(s.tms,'".$period_type."') as dm, t.vendeur, count(t.fk_object) as cntinter, count(t.potentielbox) as potentiel, count(t.boxvalidee) as valide";
-		$sql .= ' FROM '.MAIN_DB_PREIFX.'intervention as s INNER JOIN '.MAIN_DB_PREIFX.'fichinter_extrafields as t ON s.rowid=t.fk_object';
+		$sql = "SELECT date_format(s.tms,'".$period_type."') as dm, t.vendeur, count(t.fk_object) as cntinter, count(case when t.potentielbox=1 then t.fk_object end) as potentiel, count(case when t.boxvalidee=1 then t.fk_object end) as valide";
+		$sql .= ' FROM '.MAIN_DB_PREFIX.'fichinter as s INNER JOIN '.MAIN_DB_PREFIX.'fichinter_extrafields as t ON s.rowid=t.fk_object';
 		if (!empty($user_tags)) {
-			$sql .= ' INNER JOIN llx_categorie_user as tagu ON tagu.fk_user=t.vendeur';
+			$sql .= ' INNER JOIN '.MAIN_DB_PREFIX.'categorie_user as tagu ON tagu.fk_user=t.vendeur';
 		}
 		$sql_where[] = " t.tms BETWEEN '".$this->db->idate($from_date)."' AND '".$this->db->idate($to_date)."'";
 		if (!empty($users)) {
@@ -132,9 +132,9 @@ class PickingStats
 		}
 
 		$sql .= " GROUP BY dm, t.vendeur";
-		$sql .= $this->db->order('dm,t.fk_user_creat', 'DESC');
+		$sql .= $this->db->order('dm,t.vendeur', 'DESC');
 
-
+		//print $sql;
 		$result=array();
 		$resql = $this->db->query($sql);
 
@@ -148,8 +148,9 @@ class PickingStats
 				$i++;
 			}
 		} else {
-			return -1;
 			$this->error=$this->db->lasterror;
+			return -1;
+
 		}
 
 		$user_data=array();
@@ -173,15 +174,21 @@ class PickingStats
 			$data_r[]=$t;
 		}
 
-		$data_tx=$data_r;
+		$data_pick=$data_r;
+		$data_valid=$data_r;
+		$data_potentiel=$data_r;
 		foreach($data_r as $i=>$data_st) {
 			foreach($result as $data_src) {
 				if ($data_src[0]==$data_st[0]) {
 					$data_r[$i][array_search($data_src[1], $user_data)]=$data_src[2];
 					if ($data_src[2]!=0) {
 						$data_pick[$i][array_search($data_src[1], $user_data)] = $data_src[2];
-						$data_valid[$i][array_search($data_src[1], $user_data)] = $data_src[3];
-						$data_potentiel[$i][array_search($data_src[1], $user_data)] = $data_src[4];
+					}
+					if ($data_src[3]!=0) {
+						$data_potentiel[$i][array_search($data_src[1], $user_data)] = $data_src[3];
+					}
+					if ($data_src[4]!=0) {
+						$data_valid[$i][array_search($data_src[1], $user_data)] = $data_src[4];
 					}
 				}
 			}

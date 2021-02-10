@@ -112,7 +112,7 @@ class MonAnayseVendeurStats
 		$sql = "SELECT date_format(t.date_creation,'".$period_type."') as dm, t.fk_user_creat, SUM(t.nb_traitement) as nb, SUM(t.nb_box) as nbbox";
 		$sql .= " FROM ".MAIN_DB_PREFIX.$object_static->table_element . ' as t';
 		if (!empty($user_tags)) {
-			$sql .= ' INNER JOIN llx_categorie_user as tagu ON tagu.fk_user=t.fk_user_creat';
+			$sql .= ' INNER JOIN '.MAIN_DB_PREFIX.'categorie_user as tagu ON tagu.fk_user=t.fk_user_creat';
 		}
 		$sql_where[] = " t.date_creation BETWEEN '".$this->db->idate($from_date)."' AND '".$this->db->idate($to_date)."'";
 		if (!empty($users)) {
@@ -143,8 +143,8 @@ class MonAnayseVendeurStats
 				$i++;
 			}
 		} else {
-			return -1;
 			$this->error=$this->db->lasterror;
+			return -1;
 		}
 
 		$user_data=array();

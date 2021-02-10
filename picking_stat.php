@@ -68,8 +68,6 @@ if ($result < 0) {
 	setEventMessage($stats->error, 'errors');
 }
 
-$data_pickcount = $stats->data_pickcount;
-//$data_transfo = $stats->data_transfo;
 $legend = array();
 foreach ($stats->data_legend as $i => $u) {
 	$user_static = new User($db);
@@ -80,10 +78,12 @@ foreach ($stats->data_legend as $i => $u) {
 $filenamenb = $dir . '/monanalysevendeur_pick_count' . $period_type . '-' . hash('md5', implode(',', $users)) . hash('md5', implode(',', $user_tags)) . '-' . $from_date . '-' . $to_date . '.png';
 $fileurlnb = DOL_URL_ROOT . '/viewimage.php?modulepart=monanalysevendeurstats&file=monanalysevendeur_pick_count' . $period_type . '-' . hash('md5', implode(',', $users)) . hash('md5', implode(',', $user_tags)) . '-' . $from_date . '-' . $to_date . '.png';
 
+
 $px1 = new DolGraph();
 $mesg = $px1->isGraphKo();
-if (!$mesg && !empty($data_traitement)) {
-	$px1->SetData($data_traitement);
+
+if (!$mesg && !empty($stats->data_pickcount)) {
+	$px1->SetData($stats->data_pickcount);
 	$px1->SetLegend($legend);
 	$px1->SetMaxValue($px1->GetCeilMaxValue());
 	$px1->SetMinValue(min(0, $px1->GetFloorMinValue()));
@@ -98,47 +98,47 @@ if (!$mesg && !empty($data_traitement)) {
 	$px1->draw($filenamenb, $fileurlnb);
 }
 
-/*$filenamenbtx = $dir . '/monanalysevendeurtx' . $period_type . '-' . hash('md5', implode(',', $users)) . hash('md5', implode(',', $user_tags)) . '-' . $from_date . '-' . $to_date . '.png';
-$fileurlnbtx = DOL_URL_ROOT . '/viewimage.php?modulepart=monanalysevendeurstats&file=monanalysevendeurtx' . $period_type . '-' . hash('md5', implode(',', $users)) . hash('md5', implode(',', $user_tags)) . '-' . $from_date . '-' . $to_date . '.png';
+$filenamenbtx = $dir . '/monanalysevendeur_poten' . $period_type . '-' . hash('md5', implode(',', $users)) . hash('md5', implode(',', $user_tags)) . '-' . $from_date . '-' . $to_date . '.png';
+$fileurlnbtx = DOL_URL_ROOT . '/viewimage.php?modulepart=monanalysevendeurstats&file=monanalysevendeur_poten' . $period_type . '-' . hash('md5', implode(',', $users)) . hash('md5', implode(',', $user_tags)) . '-' . $from_date . '-' . $to_date . '.png';
 
 $px2 = new DolGraph();
 $mesg = $px2->isGraphKo();
-if (!$mesg && !empty($data_transfo)) {
-	$px2->SetData($data_transfo);
+if (!$mesg && !empty($stats->data_potentiel)) {
+	$px2->SetData($stats->data_potentiel);
 	$px2->SetLegend($legend);
 	$px2->SetMaxValue($px2->GetCeilMaxValue());
 	$px2->SetMinValue(min(0, $px2->GetFloorMinValue()));
 	$px2->SetWidth($WIDTH);
 	$px2->SetHeight($HEIGHT);
-	$px2->SetYLabel($langs->trans("Box Validée"));
+	$px2->SetYLabel($langs->trans("Potentiel"));
 	$px2->SetShading(3);
 	$px2->SetHorizTickIncrement(1);
 	$px2->mode = 'depth';
-	$px2->SetTitle($langs->trans("Box Validée"));
+	$px2->SetTitle($langs->trans("Potentiel"));
 
 	$px2->draw($filenamenbtx, $fileurlnbtx);
 }
 
-$filenamenbtx = $dir . '/monanalysevendeurtx' . $period_type . '-' . hash('md5', implode(',', $users)) . hash('md5', implode(',', $user_tags)) . '-' . $from_date . '-' . $to_date . '.png';
-$fileurlnbtx = DOL_URL_ROOT . '/viewimage.php?modulepart=monanalysevendeurstats&file=monanalysevendeurtx' . $period_type . '-' . hash('md5', implode(',', $users)) . hash('md5', implode(',', $user_tags)) . '-' . $from_date . '-' . $to_date . '.png';
+$filenamenbtx = $dir . '/monanalysevendeur_valid' . $period_type . '-' . hash('md5', implode(',', $users)) . hash('md5', implode(',', $user_tags)) . '-' . $from_date . '-' . $to_date . '.png';
+$fileurlnbtx = DOL_URL_ROOT . '/viewimage.php?modulepart=monanalysevendeurstats&file=monanalysevendeur_valid' . $period_type . '-' . hash('md5', implode(',', $users)) . hash('md5', implode(',', $user_tags)) . '-' . $from_date . '-' . $to_date . '.png';
 
 $px3 = new DolGraph();
 $mesg = $px3->isGraphKo();
-if (!$mesg && !empty($data_transfo)) {
-	$px3->SetData($data_transfo);
+if (!$mesg && !empty($stats->data_valide)) {
+	$px3->SetData($stats->data_valide);
 	$px3->SetLegend($legend);
 	$px3->SetMaxValue($px2->GetCeilMaxValue());
 	$px3->SetMinValue(min(0, $px2->GetFloorMinValue()));
 	$px3->SetWidth($WIDTH);
 	$px3->SetHeight($HEIGHT);
-	$px3->SetYLabel($langs->trans("Nb Picking"));
+	$px3->SetYLabel($langs->trans("Box Validé"));
 	$px3->SetShading(3);
 	$px3->SetHorizTickIncrement(1);
 	$px3->mode = 'depth';
-	$px3->SetTitle($langs->trans("Nb Picking"));
+	$px3->SetTitle($langs->trans("Box Validé"));
 
 	$px3->draw($filenamenbtx, $fileurlnbtx);
-}*/
+}
 
 $h = 0;
 $head = array();
@@ -201,7 +201,8 @@ print '<table class="noborder centpercent">';
 print '<tr class="liste_titre" height="24">';
 print '<td class="center">' . $langs->trans($type_period_array[$period_type]) . '</td>';
 print '<td class="center">' . $langs->trans('User') . '</td>';
-print '<td class="right">' . $langs->trans("Potentiel Box") . '</td>';
+print '<td class="right">' . $langs->trans("NbPicking") . '</td>';
+print '<td class="right">' . $langs->trans("Potentiel") . '</td>';
 print '<td class="right">' . $langs->trans("Box Validée") . '</td>';
 print '</tr>';
 
@@ -214,7 +215,8 @@ foreach ($stats->data_row as $val) {
 	$user_static->fetch($val[1]);
 	print '<td class="center">' . $user_static->getFullName($langs). '</td>';
 	print '<td class="right">' . $val[2] . '</td>';
-	print '<td class="right">' . ($val[2]!=0?round(($val[3] / $val[2]) * 100):'') . '</td>';
+	print '<td class="right">' . $val[3] . '</td>';
+	print '<td class="right">' . $val[4] . '</td>';
 	print '</tr>';
 }
 
@@ -232,9 +234,9 @@ if ($mesg) {
 } else {
 	print $px1->show();
 	print "<br>\n";
-	/*print $px2->show();
+	print $px2->show();
 	print "<br>\n";
-	print $px3->show();*/
+	print $px3->show();
 }
 print '</td></tr></table>';
 
