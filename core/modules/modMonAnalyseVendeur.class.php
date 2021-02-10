@@ -694,6 +694,12 @@ class modMonAnalyseVendeur extends DolibarrModules
 		}
 
 		$extrafields = new ExtraFields($this->db);
+		$result=$extrafields->addExtraField('mav_thirdparty_eligbfilter', "ADSL eligibilty", 'checkbox', 1001,  '', 'thirdparty',   0, 0, '', array('options'=>array(''=>null)), 1, '', 1, 0, '', '', 'companies', '$conf->monanalysevendeur->enabled');
+		if ($result<0) {
+			return -1;
+		}
+
+		$extrafields = new ExtraFields($this->db);
 		$result=$extrafields->addExtraField('mav_contact_brandmob', "MavMarqueMobile", 'varchar', 1001,  '255', 'socpeople',   0, 0, '', array('options'=>array(''=>null)), 1, '', 1, 0, '', '', 'monanalysevendeur@monanalysevendeur', '$conf->monanalysevendeur->enabled');
 		if ($result<0) {
 			return -1;

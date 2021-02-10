@@ -25,6 +25,7 @@
 // Put here all includes required by your class file
 require_once DOL_DOCUMENT_ROOT . '/core/class/commonobject.class.php';
 require_once DOL_DOCUMENT_ROOT . '/societe/class/societe.class.php';
+require_once DOL_DOCUMENT_ROOT . '/contact/class/contact.class.php';
 require_once DOL_DOCUMENT_ROOT . '/comm/action/class/actioncomm.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/modules/import/import_xlsx.modules.php';
 
@@ -164,6 +165,7 @@ class MonAnalyseVendeur_import extends CommonObject
 			'LabelAction' => array('key' => '<CONTRAT><TYPEACTE>', 'index' => null),
 			'MarqueMobile' => array('key' => '<:MARQUEMOBILE>', 'index' => null),
 			'ModeleMobile' => array('key' => '<:MODELEMOBILE>', 'index' => null),
+			'EligeFibre' => array('key' => '<LIGNEADSLELIGIBILITETHD>', 'index' => null),
 		);
 
 		$this->import_type = '3gwin';
@@ -390,7 +392,7 @@ class MonAnalyseVendeur_import extends CommonObject
 			$nb_lines = $dol_impoprt_xlsx->import_get_nb_of_lines($file);
 
 			//For debug
-			//$nb_lines = 150;
+			$nb_lines = 50;
 
 			$dol_impoprt_xlsx->import_open_file($file);
 			$dol_impoprt_xlsx->import_read_header();
@@ -461,6 +463,11 @@ class MonAnalyseVendeur_import extends CommonObject
 				return $result;
 			}
 
+			$result=$this->createContactPhone();
+			if ($result < 0) {
+				return $result;
+			}
+
 		} else {
 			$this->error = $langs->trans('FileNotFound');
 			return -1;
@@ -486,6 +493,73 @@ class MonAnalyseVendeur_import extends CommonObject
 			return -1;
 		} else {
 			return 1;
+		}
+	}
+
+	/**
+	 * @return float|int
+	 */
+	protected function createContactPhone()
+	{
+		global $user, $langs;
+		$contact_created = 0;
+		$error=0;
+
+		$sql = "SELECT rowid,fk_soc,";
+		foreach ($this->indexColData as $dataname => $datacolumnname) {
+			$colname[] = $dataname;
+		}
+		$sql .= implode(',', $colname);
+		$sql .= ' FROM ' . $this->tempTable . ' WHERE fk_soc IS NOT NULL';
+		$resql = $this->db->query($sql);
+		if (!$resql) {
+			$this->errors[] = $this->db->lasterror;
+			return -1;
+		} else {
+			while ($obj = $this->db->fetch_object($resql)) {
+				$phone=(!empty($obj->Phone1)?$obj->Phone1:$obj->Phone2);
+				$sql_phone = 'SELECT rowid, lastname, fk_soc, phone FROM '.MAIN_DB_PREFIX.'socpeople';
+				$sql_phone .= ' WHERE LPAD(phone,10,\'0\')=\''.str_pad(trim($phone),10,'0', STR_PAD_LEFT).'\'';
+				$resql_phone = $this->db->query($sql_phone);
+				if (!$resql_phone) {
+					$this->errors[] = $this->db->lasterror;
+					return -1;
+				} else {
+					$num=$this->db->num_rows($resql_phone);
+					if ($num==0) {
+						$sql_cnt='select count(rowid) as cnt from '.MAIN_DB_PREFIX.'socpeople WHERE fk_soc='.$obj->fk_soc;
+						$resql_cnt = $this->db->query($sql_cnt);
+						if (!$resql_cnt) {
+							$this->errors[] = $this->db->lasterror;
+							$error++;
+						} else {
+							if ($obj_cnt = $this->db->fetch_object($resql_cnt)) {
+								$name=$langs->trans('Phone'). " #".(((int)$obj_cnt->cnt)+1);
+							}
+							$contact = new Contact($this->db);
+							$contact->phone_pro=str_pad(trim($phone),10,'0', STR_PAD_LEFT);
+							$contact->socid=$obj->fk_soc;
+							$contact->lastname=$name;
+							$contact->import_key = dol_now();
+							$result = $contact->create($user);
+							if ($result < 0) {
+								$this->errors[] = $contact->error;
+								$error++;
+							} else {
+								$contact_created++;
+							}
+						}
+					}
+				}
+			}
+		}
+		var_dump($contact_created);
+		if (empty($error)) {
+			$this->db->commit();
+			return $contact_created;
+		} else {
+			$this->db->rollback();
+			return - 1 * $error;
 		}
 	}
 
@@ -518,20 +592,35 @@ class MonAnalyseVendeur_import extends CommonObject
 					$soc->address = (!empty($obj->NumVoie1) ? $obj->NumVoie1 : $obj->NumVoie2);
 					$soc->zip = (!empty($obj->Zip1) ? $obj->Zip1 : $obj->Zip2);
 					$soc->town = (!empty($obj->Town1) ? $obj->Town1 : $obj->Town2);
+					$soc->email = $obj->Email;
 					$soc->code_client = 'auto';
 					$soc->import_key = dol_now();
+
+					//date bitrh
+					/*if (!empty($obj->BirthDay1)) {
+						$timeZone = new DateTimeZone('Europe/Paris');
+						$dateSrc = $obj->BirthDay1;
+						$dtBirth = new DateTime($dateSrc ,$timeZone);
+						$dtBirth=dol_mktime(0, 0, 0, $dtBirth->format('%m'), $dtBirth->format('%d'), $dtBirth->format('%Y'));
+					} elseif (!empty($obj->BirthDay2)) {
+						$dtBirth = new DateTime($obj->BirthDay2);
+						$dtBirth=dol_mktime(0, 0, 0, $dtBirth->format('%m'), $dtBirth->format('%d'), $dtBirth->format('%Y'));
+					}
+					$soc->array_options['options_mav_thirdparty_birthday'] = $dtBirth;
+					$soc->array_options['options_mav_thirdparty_eligbfilter'] = (!empty($obj->EligeFibre)?1:null);*/
+
 					$result = $soc->create($user);
 					if ($result < 0) {
-						$this->errors[] = $this->db->lasterror;
+						$this->errors[] = $soc->error;
 						$error++;
 					} else {
 						$soc_created++;
 						$alreadydone[] = hash('md5', $obj->Nom . $obj->Prenom . $obj->address . $obj->zip . $obj->town);
 						$sql_upd = 'UPDATE ' . $this->tempTable . ' SET fk_soc=' . $soc->id . ' WHERE Nom=\'' . $this->db->escape($obj->Nom) . '\'';
 						$sql_upd .= ' AND Prenom=\'' . $this->db->escape($obj->Prenom) . '\'';
-						$sql_upd .= ' AND IFNULL(NumVoie1,NumVoie2)=\'' . $this->db->escape($obj->address) . '\'';
-						$sql_upd .= ' AND IFNULL(Zip1,Zip2)=\'' . $this->db->escape($obj->zip) . '\'';
-						$sql_upd .= ' AND IFNULL(Town1,Town2)=\'' . $this->db->escape($obj->town) . '\'';
+						$sql_upd .= ' AND IFNULL(NumVoie1,NumVoie2)='.(empty($obj->address)?'NULL':'\'' . $this->db->escape($obj->address) . '\'');
+						$sql_upd .= ' AND IFNULL(Zip1,Zip2)='.(empty($obj->zip)?'NULL':'\'' . $this->db->escape($obj->zip) . '\'');
+						$sql_upd .= ' AND IFNULL(Town1,Town2)='.(empty($obj->town)?'NULL':'\'' . $this->db->escape($obj->town) . '\'');
 						$resql_upd = $this->db->query($sql_upd);
 						if (!$resql_upd) {
 							$this->errors[] = $this->db->lasterror;
