@@ -160,8 +160,8 @@ class MonAnalyseVendeur_import extends CommonObject
 			'BirthDay2' => array('key' => '<TITULAIRE><DATENAISSANCE>', 'index' => null),
 			'Shop1' => array('key' => '<ENTETE><LIBELLEPOINTDEVENTE>', 'index' => null),
 			'Shop2' => array('key' => '<EXTRACTCOMMANDE><NOMPOINTVENTE>', 'index' => null),
-			'DateAction1' => array('key' => 'DATE', 'index' => null),
-			'DateAction2' => array('key' => '<CONTRAT><TYPEACTE>', 'index' => null),
+			'DateAction' => array('key' => 'DATE', 'index' => null),
+			'LabelAction' => array('key' => '<CONTRAT><TYPEACTE>', 'index' => null),
 			'MarqueMobile' => array('key' => '<:MARQUEMOBILE>', 'index' => null),
 			'ModeleMobile' => array('key' => '<:MODELEMOBILE>', 'index' => null),
 		);
@@ -432,7 +432,7 @@ class MonAnalyseVendeur_import extends CommonObject
 						if (empty($record[$datacolumnname['index']]['val'])) {
 							$values[] = 'NULL';
 						} else {
-							$values[] = '\'' . $this->db->escape($record[$datacolumnname['index']]['val']) . '\'';
+							$values[] = '\'' . $this->db->escape(trim($record[$datacolumnname['index']]['val'])) . '\'';
 						}
 					}
 					$sql .= implode(',', $values);
@@ -495,6 +495,7 @@ class MonAnalyseVendeur_import extends CommonObject
 	protected function createThirdparty() {
 		global $user;
 		$soc_created=0;
+		$alreadydone=array();
 		$this->db->begin();
 		$sql="SELECT rowid,";
 		foreach ($this->indexColData as $dataname => $datacolumnname) {
@@ -508,33 +509,34 @@ class MonAnalyseVendeur_import extends CommonObject
 			return -1;
 		} else {
 			while ($obj=$this->db->fetch_object($resql)) {
-				$soc = new Societe($this->db);
-				$soc->name = $obj->Nom.' '.$obj->Prenom;
-				$soc->client = 1;
-				$soc->status = 1;
-				$soc->country_id = 1;
-				$soc->address = (!empty($obj->NumVoie1)?$obj->NumVoie1:$obj->NumVoie2);
-				$soc->zip = (!empty($obj->Zip1)?$obj->Zip1:$obj->Zip2);
-				$soc->town = (!empty($obj->Town1)?$obj->Town1:$obj->Town2);
-				$soc->phone = (!empty($obj->Phone1)?$obj->Phone1:$obj->Phone2);
-				$soc->code_client = 'auto';
-				$soc->import_key=dol_now();
-				$result=$soc->create($user);
-				if ($result<0) {
-					$this->errors[] = $this->db->lasterror;
-					$error++;
-				} else {
-					$soc_created++;
-					$sql_upd = 'UPDATE '.$this->tempTable.' SET fk_soc='.$soc->id.' WHERE Nom=\''.$this->db->escape($obj->Nom).'\'';
-					$sql_upd .= ' AND Prenom=\''.$this->db->escape($obj->Prenom).'\'';
-					$sql_upd .= ' AND IFNULL(NumVoie1,NumVoie2)=\''.$this->db->escape($soc->address).'\'';
-					$sql_upd .= ' AND IFNULL(Zip1,Zip2)=\''.$this->db->escape($soc->zip).'\'';
-					$sql_upd .= ' AND IFNULL(Town1,Town2)=\''.$this->db->escape($soc->town).'\'';
-					$sql_upd .= ' AND IFNULL(Phone1,Phone2)=\''.$this->db->escape($soc->phone).'\'';
-					$resql_upd = $this->db->query($sql_upd);
-					if (!$resql_upd) {
+				if (!in_array(hash('md5',$obj->Nom.$obj->Prenom.$obj->address.$obj->zip.$obj->town),$alreadydone)) {
+					$soc = new Societe($this->db);
+					$soc->name = $obj->Nom . ' ' . $obj->Prenom;
+					$soc->client = 1;
+					$soc->status = 1;
+					$soc->country_id = 1;
+					$soc->address = (!empty($obj->NumVoie1) ? $obj->NumVoie1 : $obj->NumVoie2);
+					$soc->zip = (!empty($obj->Zip1) ? $obj->Zip1 : $obj->Zip2);
+					$soc->town = (!empty($obj->Town1) ? $obj->Town1 : $obj->Town2);
+					$soc->code_client = 'auto';
+					$soc->import_key = dol_now();
+					$result = $soc->create($user);
+					if ($result < 0) {
 						$this->errors[] = $this->db->lasterror;
 						$error++;
+					} else {
+						$soc_created++;
+						$alreadydone[] = hash('md5', $obj->Nom . $obj->Prenom . $obj->address . $obj->zip . $obj->town);
+						$sql_upd = 'UPDATE ' . $this->tempTable . ' SET fk_soc=' . $soc->id . ' WHERE Nom=\'' . $this->db->escape($obj->Nom) . '\'';
+						$sql_upd .= ' AND Prenom=\'' . $this->db->escape($obj->Prenom) . '\'';
+						$sql_upd .= ' AND IFNULL(NumVoie1,NumVoie2)=\'' . $this->db->escape($obj->address) . '\'';
+						$sql_upd .= ' AND IFNULL(Zip1,Zip2)=\'' . $this->db->escape($obj->zip) . '\'';
+						$sql_upd .= ' AND IFNULL(Town1,Town2)=\'' . $this->db->escape($obj->town) . '\'';
+						$resql_upd = $this->db->query($sql_upd);
+						if (!$resql_upd) {
+							$this->errors[] = $this->db->lasterror;
+							$error++;
+						}
 					}
 				}
 			}

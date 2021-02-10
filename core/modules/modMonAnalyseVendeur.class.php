@@ -291,21 +291,21 @@ class modMonAnalyseVendeur extends DolibarrModules
 
 		$r++;
 		$this->rights[$r][0] = $this->numero . $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = $langs->trans("RightContacttrackingO5"); // Permission label
+		$this->rights[$r][1] = $langs->trans("Contact Traking écrire tout"); // Permission label
 		$this->rights[$r][3] = 1;      // Permission by default for new user (0/1)
 		$this->rights[$r][4] = 'writeall';    // In php code, permission will be checked by test if ($user->rights->activityreport->level1->level2)
 		$this->rights[$r][5] = '';
 
 		$r++;
 		$this->rights[$r][0] = $this->numero . $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = $langs->trans("RightContacttrackingO6"); // Permission label
+		$this->rights[$r][1] = $langs->trans("Contact Traking supprimer tout"); // Permission label
 		$this->rights[$r][3] = 1;      // Permission by default for new user (0/1)
 		$this->rights[$r][4] = 'deleteall';    // In php code, permission will be checked by test if ($user->rights->activityreport->level1->level2)
 		$this->rights[$r][5] = '';
 
 		$r++;
 		$this->rights[$r][0] = $this->numero . $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = $langs->trans("RightContacttrackingO6"); // Permission label
+		$this->rights[$r][1] = $langs->trans("Import"); // Permission label
 		$this->rights[$r][3] = 1;      // Permission by default for new user (0/1)
 		$this->rights[$r][4] = 'import';    // In php code, permission will be checked by test if ($user->rights->activityreport->level1->level2)
 		$this->rights[$r][5] = '';
@@ -686,8 +686,25 @@ class modMonAnalyseVendeur extends DolibarrModules
 		if ($result < 0) return -1; // Do not activate module if error 'not allowed' returned when loading module SQL queries (the _load_table run sql with run_sql with the error allowed parameter set to 'default')
 
 		// Create extrafields during init
-		//include_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
-		//$extrafields = new ExtraFields($this->db);
+		include_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
+		$extrafields = new ExtraFields($this->db);
+		$result=$extrafields->addExtraField('mav_thirdparty_birthday', "DateToBirth", 'date', 1000,  '', 'thirdparty',   0, 0, '', array('options'=>array(''=>null)), 1, '', 1, 0, '', '', 'companies', '$conf->monanalysevendeur->enabled');
+		if ($result<0) {
+			return -1;
+		}
+
+		$extrafields = new ExtraFields($this->db);
+		$result=$extrafields->addExtraField('mav_contact_brandmob', "MavMarqueMobile", 'varchar', 1001,  '255', 'socpeople',   0, 0, '', array('options'=>array(''=>null)), 1, '', 1, 0, '', '', 'monanalysevendeur@monanalysevendeur', '$conf->monanalysevendeur->enabled');
+		if ($result<0) {
+			return -1;
+		}
+
+		$extrafields = new ExtraFields($this->db);
+		$result=$extrafields->addExtraField('mav_contact_modelmobile', "MavModeleMobile", 'varchar', 1002,  '255', 'socpeople',   0, 0, '', array('options'=>array(''=>null)), 1, '', 1, 0, '', '', 'monanalysevendeur@monanalysevendeur', '$conf->monanalysevendeur->enabled');
+		if ($result<0) {
+			return -1;
+		}
+
 		//$result1=$extrafields->addExtraField('monanalysevendeur_myattr1', "New Attr 1 label", 'boolean', 1,  3, 'thirdparty',   0, 0, '', '', 1, '', 0, 0, '', '', 'monanalysevendeur@monanalysevendeur', '$conf->monanalysevendeur->enabled');
 		//$result2=$extrafields->addExtraField('monanalysevendeur_myattr2', "New Attr 2 label", 'varchar', 1, 10, 'project',      0, 0, '', '', 1, '', 0, 0, '', '', 'monanalysevendeur@monanalysevendeur', '$conf->monanalysevendeur->enabled');
 		//$result3=$extrafields->addExtraField('monanalysevendeur_myattr3', "New Attr 3 label", 'varchar', 1, 10, 'bank_account', 0, 0, '', '', 1, '', 0, 0, '', '', 'monanalysevendeur@monanalysevendeur', '$conf->monanalysevendeur->enabled');

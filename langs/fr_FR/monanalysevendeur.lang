@@ -51,3 +51,10 @@ MyPageName = Nom de ma page
 #
 MyWidget = Mon widget
 MyWidgetDescription = Description de mon widget
+
+
+#
+# Fields
+#
+MavMarqueMobile=Marque Mobile
+MavModeleMobile=Modèle Mobile
