@@ -543,7 +543,7 @@ class modMonAnalyseVendeur extends DolibarrModules
             'type'=>'left',
             'titre'=>'Nouveau Picking',
             'mainmenu'=>'monanalysevendeur',
-            'leftmenu'=>'monanalysevendeur_picking',
+            'leftmenu'=>'monanalysevendeur_picknew',
             'url'=>'/fichinter/card.php?action=create',
             // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'langs'=>'monanalysevendeur@monanalysevendeur',
@@ -563,7 +563,7 @@ class modMonAnalyseVendeur extends DolibarrModules
             'type'=>'left',
             'titre'=>'Statistique',
             'mainmenu'=>'monanalysevendeur',
-            'leftmenu'=>'monanalysevendeur_stats',
+            'leftmenu'=>'monanalysevendeur_pickstats',
             'url'=>'/monanalysevendeur/picking_stat.php',
             // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'langs'=>'monanalysevendeur@monanalysevendeur',
