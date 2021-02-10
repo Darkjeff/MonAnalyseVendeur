@@ -68,8 +68,8 @@ if ($result < 0) {
 	setEventMessage($stats->error, 'errors');
 }
 
-$data_traitement = $stats->data_traitement;
-$data_transfo = $stats->data_transfo;
+$data_pickcount = $stats->data_pickcount;
+//$data_transfo = $stats->data_transfo;
 $legend = array();
 foreach ($stats->data_legend as $i => $u) {
 	$user_static = new User($db);
@@ -77,8 +77,8 @@ foreach ($stats->data_legend as $i => $u) {
 	$legend[] = $user_static->getFullName($langs);
 }
 
-$filenamenb = $dir . '/monanalysevendeur' . $period_type . '-' . hash('md5', implode(',', $users)) . hash('md5', implode(',', $user_tags)) . '-' . $from_date . '-' . $to_date . '.png';
-$fileurlnb = DOL_URL_ROOT . '/viewimage.php?modulepart=monanalysevendeurstats&file=monanalysevendeur' . $period_type . '-' . hash('md5', implode(',', $users)) . hash('md5', implode(',', $user_tags)) . '-' . $from_date . '-' . $to_date . '.png';
+$filenamenb = $dir . '/monanalysevendeur_pick_count' . $period_type . '-' . hash('md5', implode(',', $users)) . hash('md5', implode(',', $user_tags)) . '-' . $from_date . '-' . $to_date . '.png';
+$fileurlnb = DOL_URL_ROOT . '/viewimage.php?modulepart=monanalysevendeurstats&file=monanalysevendeur_pick_count' . $period_type . '-' . hash('md5', implode(',', $users)) . hash('md5', implode(',', $user_tags)) . '-' . $from_date . '-' . $to_date . '.png';
 
 $px1 = new DolGraph();
 $mesg = $px1->isGraphKo();
@@ -89,16 +89,16 @@ if (!$mesg && !empty($data_traitement)) {
 	$px1->SetMinValue(min(0, $px1->GetFloorMinValue()));
 	$px1->SetWidth($WIDTH);
 	$px1->SetHeight($HEIGHT);
-	$px1->SetYLabel($langs->trans("Potentiel Box"));
+	$px1->SetYLabel($langs->trans("Nb Picking"));
 	$px1->SetShading(3);
 	$px1->SetHorizTickIncrement(1);
 	$px1->mode = 'depth';
-	$px1->SetTitle($langs->trans("Potentiel Box"));
+	$px1->SetTitle($langs->trans("Nb Picking"));
 
 	$px1->draw($filenamenb, $fileurlnb);
 }
 
-$filenamenbtx = $dir . '/monanalysevendeurtx' . $period_type . '-' . hash('md5', implode(',', $users)) . hash('md5', implode(',', $user_tags)) . '-' . $from_date . '-' . $to_date . '.png';
+/*$filenamenbtx = $dir . '/monanalysevendeurtx' . $period_type . '-' . hash('md5', implode(',', $users)) . hash('md5', implode(',', $user_tags)) . '-' . $from_date . '-' . $to_date . '.png';
 $fileurlnbtx = DOL_URL_ROOT . '/viewimage.php?modulepart=monanalysevendeurstats&file=monanalysevendeurtx' . $period_type . '-' . hash('md5', implode(',', $users)) . hash('md5', implode(',', $user_tags)) . '-' . $from_date . '-' . $to_date . '.png';
 
 $px2 = new DolGraph();
@@ -118,6 +118,27 @@ if (!$mesg && !empty($data_transfo)) {
 
 	$px2->draw($filenamenbtx, $fileurlnbtx);
 }
+
+$filenamenbtx = $dir . '/monanalysevendeurtx' . $period_type . '-' . hash('md5', implode(',', $users)) . hash('md5', implode(',', $user_tags)) . '-' . $from_date . '-' . $to_date . '.png';
+$fileurlnbtx = DOL_URL_ROOT . '/viewimage.php?modulepart=monanalysevendeurstats&file=monanalysevendeurtx' . $period_type . '-' . hash('md5', implode(',', $users)) . hash('md5', implode(',', $user_tags)) . '-' . $from_date . '-' . $to_date . '.png';
+
+$px3 = new DolGraph();
+$mesg = $px3->isGraphKo();
+if (!$mesg && !empty($data_transfo)) {
+	$px3->SetData($data_transfo);
+	$px3->SetLegend($legend);
+	$px3->SetMaxValue($px2->GetCeilMaxValue());
+	$px3->SetMinValue(min(0, $px2->GetFloorMinValue()));
+	$px3->SetWidth($WIDTH);
+	$px3->SetHeight($HEIGHT);
+	$px3->SetYLabel($langs->trans("Nb Picking"));
+	$px3->SetShading(3);
+	$px3->SetHorizTickIncrement(1);
+	$px3->mode = 'depth';
+	$px3->SetTitle($langs->trans("Nb Picking"));
+
+	$px3->draw($filenamenbtx, $fileurlnbtx);
+}*/
 
 $h = 0;
 $head = array();
@@ -211,7 +232,9 @@ if ($mesg) {
 } else {
 	print $px1->show();
 	print "<br>\n";
-	print $px2->show();
+	/*print $px2->show();
+	print "<br>\n";
+	print $px3->show();*/
 }
 print '</td></tr></table>';
 

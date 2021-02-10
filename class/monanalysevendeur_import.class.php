@@ -392,7 +392,7 @@ class MonAnalyseVendeur_import extends CommonObject
 			$nb_lines = $dol_impoprt_xlsx->import_get_nb_of_lines($file);
 
 			//For debug
-			$nb_lines = 50;
+			//$nb_lines = 50;
 
 			$dol_impoprt_xlsx->import_open_file($file);
 			$dol_impoprt_xlsx->import_read_header();

@@ -35,6 +35,7 @@ class PickingStats
     public $table_element;
 
     public $data_potentiel;
+    public $data_pickcount;
     public $data_valide;
     public $data_row;
     public $data_legend;
@@ -50,6 +51,7 @@ class PickingStats
 
         $this->data_potentiel=array();
 		$this->data_valide=array();
+		$this->data_pickcount=array();
 		$this->data_row=array();
 		$this->data_legend=array();
 
@@ -109,11 +111,11 @@ class PickingStats
 				$time_array[$i]=dol_print_date(dol_time_plus_duree($from_date,$i,'m'),'%m');
 			}
 		}
-			
+
 			///// todo avoir compte des oui ou non et pas la somme car valeur 1 ou 2 dans colonne
-			
-		$sql = "SELECT date_format(t.tms,'".$period_type."') as dm, t.vendeur, count(t.potentielbox) as potentiel, count(t.boxvalidee) as valide";
-		$sql .= " FROM llx_fichinter_extrafields as t";
+
+		$sql = "SELECT date_format(s.tms,'".$period_type."') as dm, t.vendeur, count(t.fk_object) as cntinter, count(t.potentielbox) as potentiel, count(t.boxvalidee) as valide";
+		$sql .= ' FROM '.MAIN_DB_PREIFX.'intervention as s INNER JOIN '.MAIN_DB_PREIFX.'fichinter_extrafields as t ON s.rowid=t.fk_object';
 		if (!empty($user_tags)) {
 			$sql .= ' INNER JOIN llx_categorie_user as tagu ON tagu.fk_user=t.vendeur';
 		}
@@ -177,14 +179,17 @@ class PickingStats
 				if ($data_src[0]==$data_st[0]) {
 					$data_r[$i][array_search($data_src[1], $user_data)]=$data_src[2];
 					if ($data_src[2]!=0) {
-						$data_tx[$i][array_search($data_src[1], $user_data)] = round(($data_src[3] / $data_src[2]) * 100);
+						$data_pick[$i][array_search($data_src[1], $user_data)] = $data_src[2];
+						$data_valid[$i][array_search($data_src[1], $user_data)] = $data_src[3];
+						$data_potentiel[$i][array_search($data_src[1], $user_data)] = $data_src[4];
 					}
 				}
 			}
 		}
 
-		$this->data_traitement = $data_r;
-		$this->data_transfo = $data_tx;
+		$this->data_pickcount = $data_pick;
+		$this->data_valide = $data_valid;
+		$this->data_potentiel = $data_potentiel;
 		$this->data_row = $result;
 		$this->data_legend = $user_data;
 		return 1;
