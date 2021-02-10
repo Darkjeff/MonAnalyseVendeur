@@ -618,9 +618,9 @@ class MonAnalyseVendeur_import extends CommonObject
 						$alreadydone[] = hash('md5', $obj->Nom . $obj->Prenom . $obj->address . $obj->zip . $obj->town);
 						$sql_upd = 'UPDATE ' . $this->tempTable . ' SET fk_soc=' . $soc->id . ' WHERE Nom=\'' . $this->db->escape($obj->Nom) . '\'';
 						$sql_upd .= ' AND Prenom=\'' . $this->db->escape($obj->Prenom) . '\'';
-						$sql_upd .= ' AND IFNULL(NumVoie1,NumVoie2)='.(empty($obj->address)?'NULL':'\'' . $this->db->escape($obj->address) . '\'');
-						$sql_upd .= ' AND IFNULL(Zip1,Zip2)='.(empty($obj->zip)?'NULL':'\'' . $this->db->escape($obj->zip) . '\'');
-						$sql_upd .= ' AND IFNULL(Town1,Town2)='.(empty($obj->town)?'NULL':'\'' . $this->db->escape($obj->town) . '\'');
+						$sql_upd .= ' AND IFNULL(NumVoie1,NumVoie2)='.(empty($soc->address)?'NULL':'\'' . $this->db->escape($soc->address) . '\'');
+						$sql_upd .= ' AND IFNULL(Zip1,Zip2)='.(empty($soc->zip)?'NULL':'\'' . $this->db->escape($soc->zip) . '\'');
+						$sql_upd .= ' AND IFNULL(Town1,Town2)='.(empty($soc->town)?'NULL':'\'' . $this->db->escape($soc->town) . '\'');
 						$resql_upd = $this->db->query($sql_upd);
 						if (!$resql_upd) {
 							$this->errors[] = $this->db->lasterror;
