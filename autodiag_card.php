@@ -164,7 +164,7 @@ $title = $langs->trans("Autodiag");
 $help_url = '';
 llxHeader('', $title, $help_url);
 dol_fiche_head(array(), '');
-if (!$user->rights->contacttracking->write) :
+if (empty($user->rights->contacttracking->write) && empty($user->rights->monanalysevendeur->write)) :
 	?>
 	<div class="error"><?php echo $langs->trans("contacttracking_NORIGHT") ?>.</div>
 <?php else: ?>

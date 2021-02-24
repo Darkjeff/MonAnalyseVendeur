@@ -248,36 +248,36 @@ class modMonAnalyseVendeur extends DolibarrModules
 		$this->rights[$r][5] = 'read'; // In php code, permission will be checked by test if ($user->rights->monanalysevendeur->level1->level2)
 		$r++;
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'Rapport Journalier of my subordante'; // Permission label
+		$this->rights[$r][1] = 'Voir les RJ, diag, relance des subordonnées'; // Permission label
 		$this->rights[$r][4] = 'rapportjournalier'; // In php code, permission will be checked by test if ($user->rights->monanalysevendeur->level1->level2)
     	$this->rights[$r][5] = 'rpv'; // In php code, permission will be checked by test if ($user->rights->monanalysevendeur->level1->level2)
 		$r++;
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'Create/Update Rapport Journalier'; // Permission label
+		$this->rights[$r][1] = 'Modifier Rapport Journalier'; // Permission label
 		$this->rights[$r][4] = 'rapportjournalier'; // In php code, permission will be checked by test if ($user->rights->monanalysevendeur->level1->level2)
 		$this->rights[$r][5] = 'write'; // In php code, permission will be checked by test if ($user->rights->monanalysevendeur->level1->level2)
 		$r++;
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = 'Delete objects Rapport Journalier'; // Permission label
+		$this->rights[$r][1] = 'Supprimer Rapport Journalier'; // Permission label
 		$this->rights[$r][4] = 'rapportjournalier'; // In php code, permission will be checked by test if ($user->rights->monanalysevendeur->level1->level2)
 		$this->rights[$r][5] = 'delete'; // In php code, permission will be checked by test if ($user->rights->monanalysevendeur->level1->level2)
 		$r++;
 		$this->rights[$r][0] = $this->numero . $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = $langs->trans("Contact Traking lire"); // Permission label
+		$this->rights[$r][1] = $langs->trans("Diag/Relance/ecoute lire"); // Permission label
 		$this->rights[$r][3] = 1;      // Permission by default for new user (0/1)
 		$this->rights[$r][4] = 'read';    // In php code, permission will be checked by test if ($user->rights->contacttracking->level1->level2)
 		$this->rights[$r][5] = '';        // In php code, permission will be checked by test if ($user->rights->contacttracking->level1->level2)
 
 		$r++;
 		$this->rights[$r][0] = $this->numero . $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = $langs->trans("Contact Traking Ecrire"); // Permission label
+		$this->rights[$r][1] = $langs->trans("Diag/Relance/ecoute Ecrire"); // Permission label
 		$this->rights[$r][3] = 1;      // Permission by default for new user (0/1)
 		$this->rights[$r][4] = 'write';    // In php code, permission will be checked by test if ($user->rights->contacttracking->level1->level2)
 		$this->rights[$r][5] = '';        // In php code, permission will be checked by test if ($user->rights->contacttracking->level1->level2)
 
 		$r++;
 		$this->rights[$r][0] = $this->numero . $r; // Permission id (must not be already used)
-		$this->rights[$r][1] = $langs->trans("Contact Traking Supprimer"); // Permission label
+		$this->rights[$r][1] = $langs->trans("Diag/Relance/ecoute Supprimer"); // Permission label
 		$this->rights[$r][3] = 1;      // Permission by default for new user (0/1)
 		$this->rights[$r][4] = 'delete';    // In php code, permission will be checked by test if ($user->rights->contacttracking->level1->level2)
 		$this->rights[$r][5] = '';

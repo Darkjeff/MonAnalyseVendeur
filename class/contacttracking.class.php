@@ -388,7 +388,7 @@ class Contacttracking extends CommonObject
         $label .= '<br>';
         $label .= '<b>' . $langs->trans('Ref') . ':</b> ' . $this->id;
 
-        $url = dol_buildpath('/contacttracking/contacttracking_card.php', 1) . '?id=' . $this->id;
+        $url = dol_buildpath('/monanalysevendeur/autodiag_card.php', 1) . '?id=' . $this->id;
 
         if ($option != 'nolink') {
             // Add param to save lastsearch_values or not

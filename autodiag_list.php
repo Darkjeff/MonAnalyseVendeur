@@ -375,7 +375,7 @@ if (is_array($extrafields->attribute_label) && count($extrafields->attribute_lab
 ////add link to table in order to recup relance date : ac.datep
 if (GETPOST('relance', 'int') == 1) {
 	$sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "actioncomm as ac on (ac.id = t.fk_event)";
-} 
+}
 
 
 if ($object->ismultientitymanaged == 1)
@@ -398,6 +398,19 @@ if (GETPOST('relance', 'int') == 1) {
 	$sql .= " AND t.fk_event IS NOT NULL";
 } else {
 	$sql .= " AND t.fk_event IS NULL";
+}
+
+if (empty($user->admin)) {
+	$user_to_read=array();
+	if (!empty($user->rights->monanalysevendeur->rapportjournalier->read)) {
+		//si droit read = venderu simple, il voie ses éléments
+		$user_to_read[$user->id] = $user->id;
+	}
+	if (!empty($user->rights->monanalysevendeur->rapportjournalier->rpv)) {
+		//si l'utilisateur à la permission rpv il vois les siens et ceux des vendeurs dont il est responsable
+		$user_to_read=array_merge($user_to_read, $user->getAllChildIds());
+	}
+	if (!empty($user_to_read)) $sql .= " AND t.fk_user_creat IN (".implode(',', $user_to_read).')';
 }
 
 ///  / Add where from extra fields
@@ -734,7 +747,7 @@ foreach ($object->fields as $key => $val) {
 
 			break;
 		case 'fk_user_creat':
-			if ($user->rights->contacttracking->readall)
+			if ($user->rights->contacttracking->readall || $user->rights->monanalysevendeur->readall)
 				print '<td class="liste_titre' . ($align ? ' ' . $align : '') . '">' . $form->select_dolusers($search['fk_user_creat'], 'search_fk_user_creat', 1, 1, null, null, null, null, null, null, null, null, null, 'maxwidth100') . '</td>';
 			else
 				print '<td class="liste_titre' . ($align ? ' ' . $align : '') . '"></td>';
@@ -806,12 +819,12 @@ foreach ($object->fields as $key => $val) {
 			print '<td>' . $langs->trans('Date Relance') . '</td>';
 		} else {
 			print getTitleFieldOfList($langs->trans($arrayfields['t.' . $key]['label']), 0, $_SERVER['PHP_SELF'], 't.' . $key, '', $param, ($align ? 'class="' . $align . '"' : ''), $sortfield, $sortorder, $align . ' ') . "\n";
-			
+
 		}
-		
-	
-		
-		
+
+
+
+
 }
 
 // Hook fields
@@ -1049,8 +1062,8 @@ if (in_array('builddoc', $arrayofmassactions) && ($nbtotalofrecords === '' || $n
 		$urlsource .= str_replace('&amp;', '&', $param);
 
 		$filedir = $diroutputmassaction;
-		$genallowed = $user->rights->contacttracking->read;
-		$delallowed = $user->rights->contacttracking->create;
+		$genallowed = $user->rights->contacttracking->read || $user->rights->monanalysevendeur->read;
+		$delallowed = $user->rights->contacttracking->create || $user->rights->monanalysevendeur->create;
 
 		print $formfile->showdocuments('massfilesarea_contacttracking', '', $filedir, $urlsource, 0, $delallowed, '', 1, 1, 0, 48, 1, $param, $title, '');
 	} else {
