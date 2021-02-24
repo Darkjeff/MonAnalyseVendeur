@@ -74,7 +74,7 @@ print "</table>\n";
 print '</td><td valign="top" width="70%" class="notopnoleftnoright"></td>';
 print '</tr><tr><td colspan=2>';
 print '<table class="noborder" width="100%">';
-print '<tr class="liste_titre"><td width=150>'.$langs->trans("NB traitement").'</td>';
+print '<tr class="liste_titre"><td width=150>'.$langs->trans("NB Picking").'</td>';
 print '<td align="center">'.$langs->trans("Armentières").'</td>';
 print '<td align="center">'.$langs->trans("Abbeville CV").'</td>';
 print '<td align="center">'.$langs->trans("Boulogne").'</td>';
@@ -88,25 +88,25 @@ print '<td align="center"><b>'.$langs->trans("Total").'</b></td></tr>';
 
 
 	
-$sql = "SELECT WEEK(rj.date_creation) AS Week,";
-$sql .= "  ROUND(SUM(IF(cat.label='Armentières',rj.nb_traitement,0)),2) AS 'Armentières',";
-$sql .= "  ROUND(SUM(IF(cat.label='Abbeville CV',rj.nb_traitement,0)),2) AS 'Abbeville CV',";
-$sql .= "  ROUND(SUM(IF(cat.label='Boulogne',rj.nb_traitement,0)),2) AS 'Boulogne',";
-$sql .= "  ROUND(SUM(IF(cat.label='Dury',rj.nb_traitement,0)),2) AS 'Dury',";
-$sql .= "  ROUND(SUM(IF(cat.label='Auchy les Mines',rj.nb_traitement,0)),2) AS 'Auchy les Mines',";
-$sql .= "  ROUND(SUM(IF(cat.label='Aire sur la Lys',rj.nb_traitement,0)),2) AS 'Aire sur la Lys',";
-$sql .= "  ROUND(SUM(IF(cat.label='Longuenesse',rj.nb_traitement,0)),2) AS 'Longuenesse',";
-$sql .= "  ROUND(SUM(IF(cat.label='Abbeville CC',rj.nb_traitement,0)),2) AS 'Abbeville CC',";
-$sql .= "  ROUND(SUM(IF(cat.label='Hazebrouck',rj.nb_traitement,0)),2) AS 'Hazebrouck',";
-$sql .= "  ROUND(SUM(rj.nb_traitement),2) as 'Total'";
-$sql .= " FROM " . MAIN_DB_PREFIX . "monanalysevendeur_rapportjournalier as rj";
+$sql = "SELECT WEEK(fi.datec) AS Week,";
+$sql .= "  ROUND(SUM(IF(cat.label='Armentières',fi.entity,0)),2) AS 'Armentières',";
+$sql .= "  ROUND(SUM(IF(cat.label='Abbeville CV',fi.entity,0)),2) AS 'Abbeville CV',";
+$sql .= "  ROUND(SUM(IF(cat.label='Boulogne',fi.entity,0)),2) AS 'Boulogne',";
+$sql .= "  ROUND(SUM(IF(cat.label='Dury',fi.entity,0)),2) AS 'Dury',";
+$sql .= "  ROUND(SUM(IF(cat.label='Auchy les Mines',fi.entity,0)),2) AS 'Auchy les Mines',";
+$sql .= "  ROUND(SUM(IF(cat.label='Aire sur la Lys',fi.entity,0)),2) AS 'Aire sur la Lys',";
+$sql .= "  ROUND(SUM(IF(cat.label='Longuenesse',fi.entity,0)),2) AS 'Longuenesse',";
+$sql .= "  ROUND(SUM(IF(cat.label='Abbeville CC',fi.entity,0)),2) AS 'Abbeville CC',";
+$sql .= "  ROUND(SUM(IF(cat.label='Hazebrouck',fi.entity,0)),2) AS 'Hazebrouck',";
+$sql .= "  ROUND(SUM(fi.datec),2) as 'Total'";
+$sql .= " FROM " . MAIN_DB_PREFIX . "fichinter as fi";
 $sql .= " , " . MAIN_DB_PREFIX . "categorie_user as cu";
 $sql .= " , " . MAIN_DB_PREFIX . "categorie as cat";
-$sql .= " WHERE rj.date_creation >= '" . $db->idate ( dol_get_first_day ( $y, 1, false ) ) . "'";
-$sql .= "  AND rj.date_creation <= '" . $db->idate ( dol_get_last_day ( $y, 12, false ) ) . "'";
-$sql .= "  AND rj.fk_user_creat = cu.fk_user ";
+$sql .= " WHERE fi.datec >= '" . $db->idate ( dol_get_first_day ( $y, 1, false ) ) . "'";
+$sql .= "  AND fi.datec <= '" . $db->idate ( dol_get_last_day ( $y, 12, false ) ) . "'";
+$sql .= "  AND fi.fk_user_author = cu.fk_user ";
 $sql .= "  AND cat.rowid = cu.fk_categorie ";
-$sql .= " GROUP BY WEEK(rj.date_creation)";
+$sql .= " GROUP BY WEEK(fi.datec)";
 
 $resql = $db->query ( $sql );
 if ($resql) {
