@@ -139,79 +139,6 @@ if ($resql) {
 	print $db->lasterror (); // affiche la derniere erreur sql
 }
 
-print "</table>\n";
-print '</td><td valign="top" width="70%" class="notopnoleftnoright">';
-print '</td><td valign="top" width="70%" class="notopnoleftnoright"></td>';
-print '</tr><tr><td colspan=2>';
-print "\n<br>\n";
-print '<table class="noborder" width="100%">';
-print '<tr class="liste_titre"><td width=150>'.$langs->trans("Total").'</td>';
-print '<td align="center">'.$langs->trans("January").'</td>';
-print '<td align="center">'.$langs->trans("February").'</td>';
-print '<td align="center">'.$langs->trans("March").'</td>';
-print '<td align="center">'.$langs->trans("April").'</td>';
-print '<td align="center">'.$langs->trans("May").'</td>';
-print '<td align="center">'.$langs->trans("June").'</td>';
-print '<td align="center">'.$langs->trans("July").'</td>';
-print '<td align="center">'.$langs->trans("August").'</td>';
-print '<td align="center">'.$langs->trans("September").'</td>';
-print '<td align="center">'.$langs->trans("October").'</td>';
-print '<td align="center">'.$langs->trans("November").'</td>';
-print '<td align="center">'.$langs->trans("December").'</td>';
-print '<td align="center"><b>'.$langs->trans("Total").'</b></td></tr>';
-
-$sql2 = "SELECT cu.fk_categorie AS Mag,";
-$sql2 .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=1,rj.nb_traitement,0)),2) AS 'Janvier',";
-$sql2 .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=2,rj.nb_traitement,0)),2) AS 'Fevrier',";
-$sql2 .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=3,rj.nb_traitement,0)),2) AS 'Mars',";
-$sql2 .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=4,rj.nb_traitement,0)),2) AS 'Avril',";
-$sql2 .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=5,rj.nb_traitement,0)),2) AS 'Mai',";
-$sql2 .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=6,rj.nb_traitement,0)),2) AS 'Juin',";
-$sql2 .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=7,rj.nb_traitement,0)),2) AS 'Juillet',";
-$sql2 .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=8,rj.nb_traitement,0)),2) AS 'Aout',";
-$sql2 .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=9,rj.nb_traitement,0)),2) AS 'Septembre',";
-$sql2 .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=10,rj.nb_traitement,0)),2) AS 'Octobre',";
-$sql2 .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=11,rj.nb_traitement,0)),2) AS 'Novembre',";
-$sql2 .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=12,rj.nb_traitement,0)),2) AS 'Decembre',";
-$sql2 .= "  ROUND(SUM(rj.nb_traitement),2) as 'Total'";
-$sql2 .= " FROM " . MAIN_DB_PREFIX . "monanalysevendeur_rapportjournalier as rj";
-$sql2 .= " , " . MAIN_DB_PREFIX . "categorie_user as cu";
-$sql2 .= " WHERE rj.date_creation >= '" . $db->idate ( dol_get_first_day ( $y, 1, false ) ) . "'";
-$sql2 .= "  AND rj.date_creation <= '" . $db->idate ( dol_get_last_day ( $y, 12, false ) ) . "'";
-$sql2 .= "  AND rj.fk_user_creat = cu.fk_user ";
-
-
-
-$resql2 = $db->query ( $sql2 );
-if ($resql2) {
-	$i = 0;
-	$num = $db->num_rows ( $resql2 );
-	
-	while ( $i < $num ) {
-		
-		$row = $db->fetch_row ( $resql2 );
-		
-		print '<tr><td>' . $row [0] . '</td>';
-		print '<td align="right">' . $row [1] . '</td>';
-		print '<td align="right">' . $row [2] . '</td>';
-		print '<td align="right">' . $row [3] . '</td>';
-		print '<td align="right">' . $row [4] . '</td>';
-		print '<td align="right">' . $row [5] . '</td>';
-		print '<td align="right">' . $row [6] . '</td>';
-		print '<td align="right">' . $row [7] . '</td>';
-		print '<td align="right">' . $row [8] . '</td>';
-		print '<td align="right">' . $row [9] . '</td>';
-		print '<td align="right">' . $row [10] . '</td>';
-		print '<td align="right">' . $row [11] . '</td>';
-		print '<td align="right">' . $row [12] . '</td>';
-		print '<td align="right"><b>' . $row [13] . '</b></td>';
-		print '</tr>';
-		$i ++;
-	}
-	$db->free ( $resql );
-} else {
-	print $db->lasterror (); // affiche la derniere erreur sql
-}
 
 
 
@@ -221,35 +148,29 @@ print '</td><td valign="top" width="70%" class="notopnoleftnoright"></td>';
 print '</tr><tr><td colspan=2>';
 print '<table class="noborder" width="100%">';
 print '<tr class="liste_titre"><td width=150>'.$langs->trans("NB box").'</td>';
-print '<td align="center">'.$langs->trans("January").'</td>';
-print '<td align="center">'.$langs->trans("February").'</td>';
-print '<td align="center">'.$langs->trans("March").'</td>';
-print '<td align="center">'.$langs->trans("April").'</td>';
-print '<td align="center">'.$langs->trans("May").'</td>';
-print '<td align="center">'.$langs->trans("June").'</td>';
-print '<td align="center">'.$langs->trans("July").'</td>';
-print '<td align="center">'.$langs->trans("August").'</td>';
-print '<td align="center">'.$langs->trans("September").'</td>';
-print '<td align="center">'.$langs->trans("October").'</td>';
-print '<td align="center">'.$langs->trans("November").'</td>';
-print '<td align="center">'.$langs->trans("December").'</td>';
+print '<td align="center">'.$langs->trans("Armentières").'</td>';
+print '<td align="center">'.$langs->trans("Abbeville CV").'</td>';
+print '<td align="center">'.$langs->trans("Boulogne").'</td>';
+print '<td align="center">'.$langs->trans("Dury").'</td>';
+print '<td align="center">'.$langs->trans("Auchy les Mines").'</td>';
+print '<td align="center">'.$langs->trans("Aire sur la Lys").'</td>';
+print '<td align="center">'.$langs->trans("Longuenesse").'</td>';
+print '<td align="center">'.$langs->trans("Abbeville CC").'</td>';
+print '<td align="center">'.$langs->trans("Hazebrouck").'</td>';
 print '<td align="center"><b>'.$langs->trans("Total").'</b></td></tr>';
 
 
 	
-$sql = "SELECT cat.label AS Mag,";
-$sql .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=1,rj.nb_box,0)),2) AS 'Janvier',";
-$sql .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=2,rj.nb_box,0)),2) AS 'Fevrier',";
-$sql .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=3,rj.nb_box,0)),2) AS 'Mars',";
-$sql .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=4,rj.nb_box,0)),2) AS 'Avril',";
-$sql .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=5,rj.nb_box,0)),2) AS 'Mai',";
-$sql .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=6,rj.nb_box,0)),2) AS 'Juin',";
-$sql .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=7,rj.nb_box,0)),2) AS 'Juillet',";
-$sql .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=8,rj.nb_box,0)),2) AS 'Aout',";
-$sql .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=9,rj.nb_box,0)),2) AS 'Septembre',";
-$sql .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=10,rj.nb_box,0)),2) AS 'Octobre',";
-$sql .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=11,rj.nb_box,0)),2) AS 'Novembre',";
-$sql .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=12,rj.nb_box,0)),2) AS 'Decembre',";
+$sql = "SELECT WEEK(rj.date_creation) AS Week,";
+$sql .= "  ROUND(SUM(IF(cat.label='Armentières',rj.nb_box,0)),2) AS 'Armentières',";
+$sql .= "  ROUND(SUM(IF(cat.label='Abbeville CV',rj.nb_box,0)),2) AS 'Abbeville CV',";
+$sql .= "  ROUND(SUM(IF(cat.label='Boulogne',rj.nb_box,0)),2) AS 'Boulogne',";
+$sql .= "  ROUND(SUM(IF(cat.label='Dury',rj.nb_box,0)),2) AS 'Dury',";
+$sql .= "  ROUND(SUM(IF(cat.label='Auchy les Mines',rj.nb_box,0)),2) AS 'Auchy les Mines',";
+$sql .= "  ROUND(SUM(IF(cat.label='Aire sur la Lys',rj.nb_box,0)),2) AS 'Aire sur la Lys',";
+$sql .= "  ROUND(SUM(IF(cat.label='Longuenesse',rj.nb_box,0)),2) AS 'Longuenesse',";
+$sql .= "  ROUND(SUM(IF(cat.label='Abbeville CC',rj.nb_box,0)),2) AS 'Abbeville CC',";
+$sql .= "  ROUND(SUM(IF(cat.label='Hazebrouck',rj.nb_box,0)),2) AS 'Hazebrouck',";
 $sql .= "  ROUND(SUM(rj.nb_box),2) as 'Total'";
 $sql .= " FROM " . MAIN_DB_PREFIX . "monanalysevendeur_rapportjournalier as rj";
 $sql .= " , " . MAIN_DB_PREFIX . "categorie_user as cu";
@@ -258,7 +179,7 @@ $sql .= " WHERE rj.date_creation >= '" . $db->idate ( dol_get_first_day ( $y, 1,
 $sql .= "  AND rj.date_creation <= '" . $db->idate ( dol_get_last_day ( $y, 12, false ) ) . "'";
 $sql .= "  AND rj.fk_user_creat = cu.fk_user ";
 $sql .= "  AND cat.rowid = cu.fk_categorie ";
-$sql .= " GROUP BY cu.fk_categorie";
+$sql .= " GROUP BY WEEK(rj.date_creation)";
 
 $resql = $db->query ( $sql );
 if ($resql) {
@@ -268,80 +189,6 @@ if ($resql) {
 	while ( $i < $num ) {
 		
 		$row = $db->fetch_row ( $resql );
-		
-		print '<tr><td>' . $row [0] . '</td>';
-		print '<td align="right">' . $row [1] . '</td>';
-		print '<td align="right">' . $row [2] . '</td>';
-		print '<td align="right">' . $row [3] . '</td>';
-		print '<td align="right">' . $row [4] . '</td>';
-		print '<td align="right">' . $row [5] . '</td>';
-		print '<td align="right">' . $row [6] . '</td>';
-		print '<td align="right">' . $row [7] . '</td>';
-		print '<td align="right">' . $row [8] . '</td>';
-		print '<td align="right">' . $row [9] . '</td>';
-		print '<td align="right">' . $row [10] . '</td>';
-		print '<td align="right">' . $row [11] . '</td>';
-		print '<td align="right">' . $row [12] . '</td>';
-		print '<td align="right"><b>' . $row [13] . '</b></td>';
-		print '</tr>';
-		$i ++;
-	}
-	$db->free ( $resql );
-} else {
-	print $db->lasterror (); // affiche la derniere erreur sql
-}
-
-print "</table>\n";
-print '</td><td valign="top" width="70%" class="notopnoleftnoright">';
-print '</td><td valign="top" width="70%" class="notopnoleftnoright"></td>';
-print '</tr><tr><td colspan=2>';
-print "\n<br>\n";
-print '<table class="noborder" width="100%">';
-print '<tr class="liste_titre"><td width=150>'.$langs->trans("Total").'</td>';
-print '<td align="center">'.$langs->trans("January").'</td>';
-print '<td align="center">'.$langs->trans("February").'</td>';
-print '<td align="center">'.$langs->trans("March").'</td>';
-print '<td align="center">'.$langs->trans("April").'</td>';
-print '<td align="center">'.$langs->trans("May").'</td>';
-print '<td align="center">'.$langs->trans("June").'</td>';
-print '<td align="center">'.$langs->trans("July").'</td>';
-print '<td align="center">'.$langs->trans("August").'</td>';
-print '<td align="center">'.$langs->trans("September").'</td>';
-print '<td align="center">'.$langs->trans("October").'</td>';
-print '<td align="center">'.$langs->trans("November").'</td>';
-print '<td align="center">'.$langs->trans("December").'</td>';
-print '<td align="center"><b>'.$langs->trans("Total").'</b></td></tr>';
-
-$sql2 = "SELECT cu.fk_categorie AS Mag,";
-$sql2 .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=1,rj.nb_box,0)),2) AS 'Janvier',";
-$sql2 .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=2,rj.nb_box,0)),2) AS 'Fevrier',";
-$sql2 .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=3,rj.nb_box,0)),2) AS 'Mars',";
-$sql2 .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=4,rj.nb_box,0)),2) AS 'Avril',";
-$sql2 .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=5,rj.nb_box,0)),2) AS 'Mai',";
-$sql2 .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=6,rj.nb_box,0)),2) AS 'Juin',";
-$sql2 .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=7,rj.nb_box,0)),2) AS 'Juillet',";
-$sql2 .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=8,rj.nb_box,0)),2) AS 'Aout',";
-$sql2 .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=9,rj.nb_box,0)),2) AS 'Septembre',";
-$sql2 .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=10,rj.nb_box,0)),2) AS 'Octobre',";
-$sql2 .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=11,rj.nb_box,0)),2) AS 'Novembre',";
-$sql2 .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=12,rj.nb_box,0)),2) AS 'Decembre',";
-$sql2 .= "  ROUND(SUM(rj.nb_box),2) as 'Total'";
-$sql2 .= " FROM " . MAIN_DB_PREFIX . "monanalysevendeur_rapportjournalier as rj";
-$sql2 .= " , " . MAIN_DB_PREFIX . "categorie_user as cu";
-$sql2 .= " WHERE rj.date_creation >= '" . $db->idate ( dol_get_first_day ( $y, 1, false ) ) . "'";
-$sql2 .= "  AND rj.date_creation <= '" . $db->idate ( dol_get_last_day ( $y, 12, false ) ) . "'";
-$sql2 .= "  AND rj.fk_user_creat = cu.fk_user ";
-
-
-
-$resql2 = $db->query ( $sql2 );
-if ($resql2) {
-	$i = 0;
-	$num = $db->num_rows ( $resql2 );
-	
-	while ( $i < $num ) {
-		
-		$row = $db->fetch_row ( $resql2 );
 		
 		print '<tr><td>' . $row [0] . '</td>';
 		print '<td align="right">' . $row [1] . '</td>';
