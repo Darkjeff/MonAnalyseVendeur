@@ -58,3 +58,7 @@ MyWidgetDescription = Description de mon widget
 #
 MavMarqueMobile=Marque Mobile
 MavModeleMobile=Modèle Mobile
+
+MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVFIX=Univers Fixe
+MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVADD=Univers Additionel
+MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVMOB=Univers Mobile

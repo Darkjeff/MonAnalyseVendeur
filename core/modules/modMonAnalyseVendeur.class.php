@@ -136,7 +136,9 @@ class modMonAnalyseVendeur extends DolibarrModules
 		// Example: $this->const=array(1 => array('MONANALYSEVENDEUR_MYNEWCONST1', 'chaine', 'myvalue', 'This is a constant to add', 1),
 		//                             2 => array('MONANALYSEVENDEUR_MYNEWCONST2', 'chaine', 'myvalue', 'This is another constant to add', 0, 'current', 1)
 		// );
-		$this->const = array();
+		$this->const = array(1 => array('MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVFIX', 'chaine', '', '', 0),
+			2 => array('MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVMOB', 'chaine', '', '', 0),
+			3 => array('MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVADD', 'chaine', '', '', 0));
 
 		// Some keys to add into the overwriting translation tables
 		/*$this->overwrite_translation = array(

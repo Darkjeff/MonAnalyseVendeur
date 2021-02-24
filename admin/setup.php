@@ -56,9 +56,11 @@ $backtopage = GETPOST('backtopage', 'alpha');
 $value = GETPOST('value', 'alpha');
 
 $arrayofparameters = array(
-	'MONANALYSEVENDEUR_MYPARAM1'=>array('css'=>'minwidth200', 'enabled'=>1),
-	'MONANALYSEVENDEUR_MYPARAM2'=>array('css'=>'minwidth500', 'enabled'=>1)
+	'MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVFIX'=>array('css'=>'minwidth500', 'enabled'=>1),
+	'MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVMOB'=>array('css'=>'minwidth500', 'enabled'=>1),
+	'MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVADD'=>array('css'=>'minwidth500', 'enabled'=>1)
 );
+
 
 $error = 0;
 $setupnotempty = 0;
@@ -210,6 +212,7 @@ if ($action == 'edit')
 
 	foreach ($arrayofparameters as $key => $val)
 	{
+		$setupnotempty++;
 		print '<tr class="oddeven"><td>';
 		$tooltiphelp = (($langs->trans($key.'Tooltip') != $key.'Tooltip') ? $langs->trans($key.'Tooltip') : '');
 		print $form->textwithpicto($langs->trans($key), $tooltiphelp);
@@ -226,6 +229,8 @@ if ($action == 'edit')
 } else {
 	if (!empty($arrayofparameters))
 	{
+		$setupnotempty++;
+
 		print '<table class="noborder centpercent">';
 		print '<tr class="liste_titre"><td class="titlefield">'.$langs->trans("Parameter").'</td><td>'.$langs->trans("Value").'</td></tr>';
 

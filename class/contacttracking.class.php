@@ -75,49 +75,48 @@ class Contacttracking extends CommonObject
      *  'showoncombobox' if field must be shown into the label of combobox
      */
     // BEGIN MODULEBUILDER PROPERTIES
-    /**
-     * @var array  Array with all fields and their property. Do not use it as a static var. It may be modified by constructor.
-     */
-    public $fields = array(
-        'rowid' => array('type' => 'integer', 'label' => 'TechnicalID', 'visible' => 1, 'enabled' => 1, 'position' => 1, 'notnull' => 1, 'index' => 1,),
-        'entity' => array('type' => 'integer', 'label' => 'Entity', 'visible' => -1, 'enabled' => 1, 'position' => 20, 'notnull' => 1, 'index' => 1,),
-        'date_creation' => array('type' => 'datetime', 'label' => 'DateCreation', 'visible' => 1, 'enabled' => 1, 'position' => 500, 'notnull' => 1,),
-        'type_contact' => array('type' => 'integer', 'label' => 'Type', 'visible' => 1, 'enabled' => 1, 'position' => 504, 'notnull' => 1, 'comment' => "Type de contact (entrant ou sortant)",),
-        'tms' => array('type' => 'timestamp', 'label' => 'DateModification', 'visible' => -2, 'enabled' => 1, 'position' => 501, 'notnull' => 1,),
-        'fk_user_modif' => array('type' => 'integer', 'label' => 'UserModif', 'visible' => -2, 'enabled' => 1, 'position' => 511, 'notnull' => -1,),
-        'import_key' => array('type' => 'varchar(14)', 'label' => 'ImportId', 'visible' => -2, 'enabled' => 1, 'position' => 1000, 'notnull' => -1,),
-        'mode_contact' => array('type' => 'varchar(255)', 'label' => 'ContactMode', 'visible' => 1, 'enabled' => 1, 'position' => 505, 'notnull' => -1, 'searchall' => 1, 'comment' => "Mode de contact",),
-        'fk_product' => array('type' => 'text', 'label' => 'Produits', 'visible' => 1, 'enabled' => 1, 'position' => 500, 'notnull' => -1, 'index' => 1),
-        'fk_soc' => array('type' => 'integer:Societe:societe/class/societe.class.php', 'label' => 'ThirdParty', 'visible' => 1, 'enabled' => 1, 'position' => 500, 'notnull' => 1, 'index' => 1, 'searchall' => 1, 'help' => "LinkToThirparty",),
-        'fk_contact' => array('type' => 'integer:Contact:contact/class/contact.class.php', 'label' => 'Contact', 'visible' => 0, 'enabled' => 1, 'position' => 503, 'notnull' => -1, 'searchall' => 1,),
-        'fk_user_creat' => array('type' => 'integer', 'label' => 'User', 'visible' => 1, 'enabled' => 1, 'position' => 501, 'notnull' => 1,),
-        'element_type' => array('type' => 'varchar(255)', 'label' => 'ElementType', 'visible' => 1, 'enabled' => 1, 'position' => 506, 'notnull' => -1, 'searchall' => 1, 'comment' => "Type de l'element concerné (exemple : propal, invoice, etc...)",),
-        'fk_element_id' => array('type' => 'integer', 'label' => 'ElementID', 'visible' => 1, 'enabled' => 1, 'position' => 506, 'notnull' => -1,),
-        'object' => array('type' => 'varchar(255)', 'label' => 'ObjectContact', 'visible' => 1, 'enabled' => 1, 'position' => 507, 'notnull' => -1, 'searchall' => 1, 'comment' => "Objet de l'échange",),
-        'comment' => array('type' => 'text', 'label' => 'Comment', 'visible' => 1, 'enabled' => 1, 'position' => 508, 'notnull' => -1, 'searchall' => 1, 'comment' => "Commentaire concernant l'echange",),
-        'type_event' => array('type' => 'varchar(255)', 'label' => "TypeEvent", 'visible' => 1, 'enabled' => 1, 'position' => 507, 'notnull' => 1, 'searchall' => 1, 'comment' => "Type de l'evenement"),
-        'fk_event' => array('type' => 'integer:ActionComm:comm/action/class/actioncomm.class.php', 'label' => "Event", 'visible' => 1, 'enabled' => 1, 'position' => 1000, 'notnull' => -1, 'searchall' => 1, 'index' => 1),
-    );
-    public $rowid;
-    public $entity;
-    public $fk_soc;
-    public $fk_product;
-    public $fk_event;
-    public $date_creation;
-    public $tms;
-    public $fk_user_creat;
-    public $fk_user_modif;
-    public $import_key;
-    public $type_contact;
-    public $mode_contact;
-    public $fk_contact;
-    public $element_type;
-    public $fk_element_id;
-    public $comment;
-    public $object;
-    public $type_event;
-
-    // END MODULEBUILDER PROPERTIES
+	/**
+	 * @var array  Array with all fields and their property. Do not use it as a static var. It may be modified by constructor.
+	 */
+	public $fields=array(
+		'rowid' => array('type'=>'integer', 'label'=>'TechnicalID', 'enabled'=>'1', 'position'=>1, 'notnull'=>1, 'visible'=>1, 'index'=>1,),
+		'entity' => array('type'=>'integer', 'label'=>'Entity', 'enabled'=>'0', 'position'=>20, 'notnull'=>1, 'visible'=>-1, 'index'=>1,),
+		'date_creation' => array('type'=>'datetime', 'label'=>'DateCreation', 'enabled'=>'1', 'position'=>500, 'notnull'=>1, 'visible'=>1,),
+		'type_contact' => array('type'=>'integer', 'label'=>'Type', 'enabled'=>'1', 'position'=>504, 'notnull'=>1, 'visible'=>1, 'comment'=>"Type de contact (entrant ou sortant)"),
+		'tms' => array('type'=>'timestamp', 'label'=>'DateModification', 'enabled'=>'1', 'position'=>501, 'notnull'=>1, 'visible'=>-2,),
+		'fk_user_modif' => array('type'=>'integer', 'label'=>'UserModif', 'enabled'=>'1', 'position'=>511, 'notnull'=>-1, 'visible'=>-2,),
+		'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>-2,),
+		'mode_contact' => array('type'=>'varchar(255)', 'label'=>'ContactMode', 'enabled'=>'1', 'position'=>505, 'notnull'=>-1, 'visible'=>1, 'searchall'=>1, 'comment'=>"Mode de contact"),
+		'fk_product' => array('type'=>'text', 'label'=>'Produits', 'enabled'=>'1', 'position'=>500, 'notnull'=>-1, 'visible'=>1, 'index'=>1,),
+		'fk_soc' => array('type'=>'integer:Societe:societe/class/societe.class.php', 'label'=>'ThirdParty', 'enabled'=>'1', 'position'=>500, 'notnull'=>1, 'visible'=>1, 'index'=>1, 'searchall'=>1, 'help'=>"LinkToThirparty",),
+		'fk_contact' => array('type'=>'integer:Contact:contact/class/contact.class.php', 'label'=>'Contact', 'enabled'=>'1', 'position'=>503, 'notnull'=>-1, 'visible'=>0, 'searchall'=>1,),
+		'fk_user_creat' => array('type'=>'integer', 'label'=>'User', 'enabled'=>'1', 'position'=>501, 'notnull'=>1, 'visible'=>1,),
+		'element_type' => array('type'=>'varchar(255)', 'label'=>'ElementType', 'enabled'=>'1', 'position'=>506, 'notnull'=>-1, 'visible'=>1, 'searchall'=>1, 'comment'=>"Type de l'element concerné (exemple : propal, invoice, etc...)"),
+		'fk_element_id' => array('type'=>'integer', 'label'=>'ElementID', 'enabled'=>'1', 'position'=>506, 'notnull'=>-1, 'visible'=>1,),
+		'object' => array('type'=>'varchar(255)', 'label'=>'ObjectContact', 'enabled'=>'1', 'position'=>507, 'notnull'=>-1, 'visible'=>1, 'searchall'=>1, 'comment'=>"Objet de l'échange"),
+		'comment' => array('type'=>'text', 'label'=>'Comment', 'enabled'=>'1', 'position'=>508, 'notnull'=>-1, 'visible'=>1, 'searchall'=>1, 'comment'=>"Commentaire concernant l'echange"),
+		'type_event' => array('type'=>'varchar(255)', 'label'=>'TypeEvent', 'enabled'=>'1', 'position'=>507, 'notnull'=>1, 'visible'=>1, 'searchall'=>1, 'comment'=>"Type de l'evenement"),
+		'fk_event' => array('type'=>'integer:ActionComm:comm/action/class/actioncomm.class.php', 'label'=>'Event', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>1, 'index'=>1, 'searchall'=>1,),
+	);
+	public $rowid;
+	public $entity;
+	public $date_creation;
+	public $type_contact;
+	public $tms;
+	public $fk_user_modif;
+	public $import_key;
+	public $mode_contact;
+	public $fk_product;
+	public $fk_soc;
+	public $fk_contact;
+	public $fk_user_creat;
+	public $element_type;
+	public $fk_element_id;
+	public $object;
+	public $comment;
+	public $type_event;
+	public $fk_event;
+	// END MODULEBUILDER PROPERTIES
     // If this object has a subtable with lines
 
     /**
