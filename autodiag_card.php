@@ -142,8 +142,12 @@ if (GETPOST('action') == 'add') {
 		if ($event < 0) {
 			$err++;
 		} else {
+			$object->fetch($object->id);
 			$object->fk_event = $event;
-			$object->update($user);
+			$result = $object->update($user);
+			if ($result<0) {
+				setEventMessages(null, $object->errors, 'errors');
+			}
 		}
 	}
 
