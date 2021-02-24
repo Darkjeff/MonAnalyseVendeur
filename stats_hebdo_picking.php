@@ -60,7 +60,7 @@ llxHeader ( '', 'Compta - Ventilation' );
 $textprevyear = "<a href=\"stats.php?year=" . ($year_current - 1) . "\">" . img_previous () . "</a>";
 $textnextyear = " <a href=\"stats.php?year=" . ($year_current + 1) . "\">" . img_next () . "</a>";
 
-print_fiche_titre ( $langs->trans("Rapport Hebdo Journalier")." ".$textprevyear." ".$langs->trans("Year")." ".$year_start." ".$textnextyear);
+print_fiche_titre ( $langs->trans("Rapport Picking Hebdomadaire")." ".$textprevyear." ".$langs->trans("Year")." ".$year_start." ".$textnextyear);
 
 print '<table border="0" width="100%" class="notopnoleftnoright">';
 print '<tr><td valign="top" width="30%" class="notopnoleft">';
@@ -98,13 +98,15 @@ $sql .= "  ROUND(SUM(IF(cat.label='Aire sur la Lys',fi.entity,0)),2) AS 'Aire su
 $sql .= "  ROUND(SUM(IF(cat.label='Longuenesse',fi.entity,0)),2) AS 'Longuenesse',";
 $sql .= "  ROUND(SUM(IF(cat.label='Abbeville CC',fi.entity,0)),2) AS 'Abbeville CC',";
 $sql .= "  ROUND(SUM(IF(cat.label='Hazebrouck',fi.entity,0)),2) AS 'Hazebrouck',";
-$sql .= "  ROUND(SUM(fi.datec),2) as 'Total'";
+$sql .= "  ROUND(SUM(fi.entity),2) as 'Total'";
 $sql .= " FROM " . MAIN_DB_PREFIX . "fichinter as fi";
+$sql .= " , " . MAIN_DB_PREFIX . "fichinter_extrafields as fix";
 $sql .= " , " . MAIN_DB_PREFIX . "categorie_user as cu";
 $sql .= " , " . MAIN_DB_PREFIX . "categorie as cat";
 $sql .= " WHERE fi.datec >= '" . $db->idate ( dol_get_first_day ( $y, 1, false ) ) . "'";
 $sql .= "  AND fi.datec <= '" . $db->idate ( dol_get_last_day ( $y, 12, false ) ) . "'";
-$sql .= "  AND fi.fk_user_author = cu.fk_user ";
+$sql .= "  AND fi.rowid = fix.fk_object ";
+$sql .= "  AND fix.vendeur = cu.fk_user ";
 $sql .= "  AND cat.rowid = cu.fk_categorie ";
 $sql .= " GROUP BY WEEK(fi.datec)";
 
@@ -141,76 +143,6 @@ if ($resql) {
 
 
 
-
-print '<table class="noborder" width="100%">';
-print "</table>\n";
-print '</td><td valign="top" width="70%" class="notopnoleftnoright"></td>';
-print '</tr><tr><td colspan=2>';
-print '<table class="noborder" width="100%">';
-print '<tr class="liste_titre"><td width=150>'.$langs->trans("NB box").'</td>';
-print '<td align="center">'.$langs->trans("Armentières").'</td>';
-print '<td align="center">'.$langs->trans("Abbeville CV").'</td>';
-print '<td align="center">'.$langs->trans("Boulogne").'</td>';
-print '<td align="center">'.$langs->trans("Dury").'</td>';
-print '<td align="center">'.$langs->trans("Auchy les Mines").'</td>';
-print '<td align="center">'.$langs->trans("Aire sur la Lys").'</td>';
-print '<td align="center">'.$langs->trans("Longuenesse").'</td>';
-print '<td align="center">'.$langs->trans("Abbeville CC").'</td>';
-print '<td align="center">'.$langs->trans("Hazebrouck").'</td>';
-print '<td align="center"><b>'.$langs->trans("Total").'</b></td></tr>';
-
-
-	
-$sql = "SELECT WEEK(rj.date_creation) AS Week,";
-$sql .= "  ROUND(SUM(IF(cat.label='Armentières',rj.nb_box,0)),2) AS 'Armentières',";
-$sql .= "  ROUND(SUM(IF(cat.label='Abbeville CV',rj.nb_box,0)),2) AS 'Abbeville CV',";
-$sql .= "  ROUND(SUM(IF(cat.label='Boulogne',rj.nb_box,0)),2) AS 'Boulogne',";
-$sql .= "  ROUND(SUM(IF(cat.label='Dury',rj.nb_box,0)),2) AS 'Dury',";
-$sql .= "  ROUND(SUM(IF(cat.label='Auchy les Mines',rj.nb_box,0)),2) AS 'Auchy les Mines',";
-$sql .= "  ROUND(SUM(IF(cat.label='Aire sur la Lys',rj.nb_box,0)),2) AS 'Aire sur la Lys',";
-$sql .= "  ROUND(SUM(IF(cat.label='Longuenesse',rj.nb_box,0)),2) AS 'Longuenesse',";
-$sql .= "  ROUND(SUM(IF(cat.label='Abbeville CC',rj.nb_box,0)),2) AS 'Abbeville CC',";
-$sql .= "  ROUND(SUM(IF(cat.label='Hazebrouck',rj.nb_box,0)),2) AS 'Hazebrouck',";
-$sql .= "  ROUND(SUM(rj.nb_box),2) as 'Total'";
-$sql .= " FROM " . MAIN_DB_PREFIX . "monanalysevendeur_rapportjournalier as rj";
-$sql .= " , " . MAIN_DB_PREFIX . "categorie_user as cu";
-$sql .= " , " . MAIN_DB_PREFIX . "categorie as cat";
-$sql .= " WHERE rj.date_creation >= '" . $db->idate ( dol_get_first_day ( $y, 1, false ) ) . "'";
-$sql .= "  AND rj.date_creation <= '" . $db->idate ( dol_get_last_day ( $y, 12, false ) ) . "'";
-$sql .= "  AND rj.fk_user_creat = cu.fk_user ";
-$sql .= "  AND cat.rowid = cu.fk_categorie ";
-$sql .= " GROUP BY WEEK(rj.date_creation)";
-
-$resql = $db->query ( $sql );
-if ($resql) {
-	$i = 0;
-	$num = $db->num_rows ( $resql );
-	
-	while ( $i < $num ) {
-		
-		$row = $db->fetch_row ( $resql );
-		
-		print '<tr><td>' . $row [0] . '</td>';
-		print '<td align="right">' . $row [1] . '</td>';
-		print '<td align="right">' . $row [2] . '</td>';
-		print '<td align="right">' . $row [3] . '</td>';
-		print '<td align="right">' . $row [4] . '</td>';
-		print '<td align="right">' . $row [5] . '</td>';
-		print '<td align="right">' . $row [6] . '</td>';
-		print '<td align="right">' . $row [7] . '</td>';
-		print '<td align="right">' . $row [8] . '</td>';
-		print '<td align="right">' . $row [9] . '</td>';
-		print '<td align="right">' . $row [10] . '</td>';
-		print '<td align="right">' . $row [11] . '</td>';
-		print '<td align="right">' . $row [12] . '</td>';
-		print '<td align="right"><b>' . $row [13] . '</b></td>';
-		print '</tr>';
-		$i ++;
-	}
-	$db->free ( $resql );
-} else {
-	print $db->lasterror (); // affiche la derniere erreur sql
-}
 
 print "</table>\n";
 
