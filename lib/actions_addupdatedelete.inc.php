@@ -76,7 +76,7 @@ if ($action == 'add' && !empty($permissiontoadd))
 		} elseif (preg_match('/^(integer|price|real|double)/', $object->fields[$key]['type'])) {
 			$value = price2num(GETPOST($key, 'none')); // To fix decimal separator according to lang setup
 		} elseif ($object->fields[$key]['type'] == 'boolean') {
-			$value = (GETPOST($key) == 'on' ? 1 : 0);
+			$value = ((GETPOST($key, 'aZ09') == 'on' || GETPOST($key, 'aZ09') == '1') ? 1 : 0);
 		} elseif(strpos($key, 'fk_product_univers')!==false) {
 			$value = GETPOST($key, 'array');
 			$value=implode(',', $value);
@@ -87,7 +87,6 @@ if ($action == 'add' && !empty($permissiontoadd))
 		if (preg_match('/^integer:/i', $object->fields[$key]['type']) && $value == '-1') $value = ''; // This is an implicit foreign key field
 		if (!empty($object->fields[$key]['foreignkey']) && $value == '-1') $value = ''; // This is an explicit foreign key field
 
-		//var_dump($key.' '.$value.' '.$object->fields[$key]['type']);
 		$object->$key = $value;
 		if ($val['notnull'] > 0 && $object->$key == '' && !is_null($val['default']) && $val['default'] == '(PROV)')
 		{
