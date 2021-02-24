@@ -88,19 +88,16 @@ print '<td align="center"><b>'.$langs->trans("Total").'</b></td></tr>';
 
 
 	
-$sql = "SELECT cat.label AS Week,";
-$sql .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=1,rj.nb_traitement,0)),2) AS 'Janvier',";
-$sql .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=2,rj.nb_traitement,0)),2) AS 'Fevrier',";
-$sql .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=3,rj.nb_traitement,0)),2) AS 'Mars',";
-$sql .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=4,rj.nb_traitement,0)),2) AS 'Avril',";
-$sql .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=5,rj.nb_traitement,0)),2) AS 'Mai',";
-$sql .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=6,rj.nb_traitement,0)),2) AS 'Juin',";
-$sql .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=7,rj.nb_traitement,0)),2) AS 'Juillet',";
-$sql .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=8,rj.nb_traitement,0)),2) AS 'Aout',";
-$sql .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=9,rj.nb_traitement,0)),2) AS 'Septembre',";
-$sql .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=10,rj.nb_traitement,0)),2) AS 'Octobre',";
-$sql .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=11,rj.nb_traitement,0)),2) AS 'Novembre',";
-$sql .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=12,rj.nb_traitement,0)),2) AS 'Decembre',";
+$sql = "SELECT WEEK(rj.date_creation) AS Week,";
+$sql .= "  ROUND(SUM(IF(cat.label='Armentières',rj.nb_traitement,0)),2) AS 'Armentières',";
+$sql .= "  ROUND(SUM(IF(cat.label='Abbeville CV',rj.nb_traitement,0)),2) AS 'Abbeville CV',";
+$sql .= "  ROUND(SUM(IF(cat.label='Boulogne',rj.nb_traitement,0)),2) AS 'Boulogne',";
+$sql .= "  ROUND(SUM(IF(cat.label='Dury',rj.nb_traitement,0)),2) AS 'Dury',";
+$sql .= "  ROUND(SUM(IF(cat.label='Auchy les Mines',rj.nb_traitement,0)),2) AS 'Auchy les Mines',";
+$sql .= "  ROUND(SUM(IF(cat.label='Aire sur la Lys',rj.nb_traitement,0)),2) AS 'Aire sur la Lys',";
+$sql .= "  ROUND(SUM(IF(cat.label='Longuenesse',rj.nb_traitement,0)),2) AS 'Longuenesse',";
+$sql .= "  ROUND(SUM(IF(cat.label='Abbeville CC',rj.nb_traitement,0)),2) AS 'Abbeville CC',";
+$sql .= "  ROUND(SUM(IF(cat.label='Hazebrouck',rj.nb_traitement,0)),2) AS 'Hazebrouck',";
 $sql .= "  ROUND(SUM(rj.nb_traitement),2) as 'Total'";
 $sql .= " FROM " . MAIN_DB_PREFIX . "monanalysevendeur_rapportjournalier as rj";
 $sql .= " , " . MAIN_DB_PREFIX . "categorie_user as cu";
@@ -109,7 +106,7 @@ $sql .= " WHERE rj.date_creation >= '" . $db->idate ( dol_get_first_day ( $y, 1,
 $sql .= "  AND rj.date_creation <= '" . $db->idate ( dol_get_last_day ( $y, 12, false ) ) . "'";
 $sql .= "  AND rj.fk_user_creat = cu.fk_user ";
 $sql .= "  AND cat.rowid = cu.fk_categorie ";
-$sql .= " GROUP BY cu.fk_categorie";
+$sql .= " GROUP BY WEEK(rj.date_creation)";
 
 $resql = $db->query ( $sql );
 if ($resql) {
