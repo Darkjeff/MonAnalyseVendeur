@@ -58,6 +58,7 @@ if (!$res) die("Include of main fails");
 
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formcompany.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/date.lib.php';
+require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
 
 // load monanalysevendeur libraries
@@ -524,7 +525,7 @@ while ($i < ($limit ? min($num, $limit) : $num))
 			print '<td'.($cssforfield ? ' class="'.$cssforfield.'"' : '').'>';
 			if ($key == 'status') {
 				print $object->getLibStatut(5);
-			} elseif(strpos($key, 'fk_product_univers')===false) {
+			} elseif(strpos($key, 'fk_product_univers')!==false) {
 				if ($key=='fk_product_univers_fix') {
 					$product_univ_done=explode(',', $object->fk_product_univers_fix);
 				} elseif($key=='fk_product_univers_mob') {
@@ -532,7 +533,13 @@ while ($i < ($limit ? min($num, $limit) : $num))
 				} elseif($key=='fk_product_univers_add') {
 					$product_univ_done=explode(',', $object->fk_product_univers_add);
 				}
-
+				if (!empty($product_univ_done)) {
+					foreach ($product_univ_done as $p) {
+						$pr = new Product($db);
+						$pr->fetch($p);
+						echo $pr->getNomUrl(1) . "</br>";
+					}
+				}
 			} else print $object->showOutputField($val, $key, $object->$key, '');
 			print '</td>';
 			if (!$i) $totalarray['nbfield']++;
