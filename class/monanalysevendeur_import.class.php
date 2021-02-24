@@ -27,6 +27,7 @@ require_once DOL_DOCUMENT_ROOT . '/core/class/commonobject.class.php';
 require_once DOL_DOCUMENT_ROOT . '/societe/class/societe.class.php';
 require_once DOL_DOCUMENT_ROOT . '/contact/class/contact.class.php';
 require_once DOL_DOCUMENT_ROOT . '/comm/action/class/actioncomm.class.php';
+require_once DOL_DOCUMENT_ROOT.'/categories/class/categorie.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/modules/import/import_xlsx.modules.php';
 
 /**
@@ -163,8 +164,8 @@ class MonAnalyseVendeur_import extends CommonObject
 			'Shop2' => array('key' => '<EXTRACTCOMMANDE><NOMPOINTVENTE>', 'index' => null),
 			'DateAction' => array('key' => 'DATE', 'index' => null),
 			'LabelAction' => array('key' => '<CONTRAT><TYPEACTE>', 'index' => null),
-			'MarqueMobile' => array('key' => '<:MARQUEMOBILE>', 'index' => null),
-			'ModeleMobile' => array('key' => '<:MODELEMOBILE>', 'index' => null),
+			'MarqueMobile' => array('key' => '<MARQUEMOBILE>', 'index' => null),
+			'ModeleMobile' => array('key' => '<MODELEMOBILE>', 'index' => null),
 			'EligeFibre' => array('key' => '<LIGNEADSLELIGIBILITETHD>', 'index' => null),
 		);
 
@@ -412,9 +413,10 @@ class MonAnalyseVendeur_import extends CommonObject
 					}
 					foreach ($this->indexColData as $dataname => $datacolumnname) {
 						if ($datacolumnname['index'] == null) {
-							$this->errors[] = $langs->trans('MAVIndexNotFound', $datacolumnname['key']);
+							$this->errors[] = $langs->transnoentities('MAVIndexNotFound', dol_htmlentities($datacolumnname['key']));
 							$error++;
 						}
+
 					}
 				}
 				if (!empty($error)) {
@@ -434,6 +436,7 @@ class MonAnalyseVendeur_import extends CommonObject
 						if (empty($record[$datacolumnname['index']]['val'])) {
 							$values[] = 'NULL';
 						} else {
+							//var_dump($datacolumnname['key'],$record[$datacolumnname['index']]);
 							$values[] = '\'' . $this->db->escape(trim($record[$datacolumnname['index']]['val'])) . '\'';
 						}
 					}
@@ -460,6 +463,7 @@ class MonAnalyseVendeur_import extends CommonObject
 
 			$result=$this->createThirdparty();
 			if ($result < 0) {
+				var_dump($result);
 				return $result;
 			}
 
@@ -519,7 +523,7 @@ class MonAnalyseVendeur_import extends CommonObject
 			while ($obj = $this->db->fetch_object($resql)) {
 				$phone=(!empty($obj->Phone1)?$obj->Phone1:$obj->Phone2);
 				$sql_phone = 'SELECT rowid, lastname, fk_soc, phone FROM '.MAIN_DB_PREFIX.'socpeople';
-				$sql_phone .= ' WHERE LPAD(phone,10,\'0\')=\''.str_pad(trim($phone),10,'0', STR_PAD_LEFT).'\'';
+				$sql_phone .= ' WHERE LPAD(phone,10,\'0\')=\''.str_pad(trim($phone), 10, '0',STR_PAD_LEFT).'\'';
 				$resql_phone = $this->db->query($sql_phone);
 				if (!$resql_phone) {
 					$this->errors[] = $this->db->lasterror;
@@ -534,13 +538,15 @@ class MonAnalyseVendeur_import extends CommonObject
 							$error++;
 						} else {
 							if ($obj_cnt = $this->db->fetch_object($resql_cnt)) {
-								$name=$langs->trans('Phone'). " #".(((int)$obj_cnt->cnt)+1);
+								$name=$langs->trans('Phone'). " #".(((int) $obj_cnt->cnt)+1);
 							}
 							$contact = new Contact($this->db);
-							$contact->phone_pro=str_pad(trim($phone),10,'0', STR_PAD_LEFT);
+							$contact->phone_pro=str_pad(trim($phone), 10, '0', STR_PAD_LEFT);
 							$contact->socid=$obj->fk_soc;
 							$contact->lastname=$name;
 							$contact->import_key = dol_now();
+							$contact->array_options['options_mav_contact_brandmob'] = $obj->MarqueMobile;
+							$contact->array_options['options_mav_contact_modelmobile'] = $obj->ModeleMobile;
 							$result = $contact->create($user);
 							if ($result < 0) {
 								$this->errors[] = $contact->error;
@@ -553,7 +559,7 @@ class MonAnalyseVendeur_import extends CommonObject
 				}
 			}
 		}
-		var_dump($contact_created);
+
 		if (empty($error)) {
 			$this->db->commit();
 			return $contact_created;
@@ -583,7 +589,7 @@ class MonAnalyseVendeur_import extends CommonObject
 			return -1;
 		} else {
 			while ($obj=$this->db->fetch_object($resql)) {
-				if (!in_array(hash('md5',$obj->Nom.$obj->Prenom.$obj->address.$obj->zip.$obj->town),$alreadydone)) {
+				if (!in_array(hash('md5', $obj->Nom.$obj->Prenom.$obj->address.$obj->zip.$obj->town), $alreadydone) && !empty($obj->Nom . $obj->Prenom)) {
 					$soc = new Societe($this->db);
 					$soc->name = $obj->Nom . ' ' . $obj->Prenom;
 					$soc->client = 1;
@@ -598,6 +604,7 @@ class MonAnalyseVendeur_import extends CommonObject
 
 					//date bitrh
 					/*if (!empty($obj->BirthDay1)) {
+						var_dump($obj->BirthDay1);
 						$timeZone = new DateTimeZone('Europe/Paris');
 						$dateSrc = $obj->BirthDay1;
 						$dtBirth = new DateTime($dateSrc ,$timeZone);
@@ -606,8 +613,8 @@ class MonAnalyseVendeur_import extends CommonObject
 						$dtBirth = new DateTime($obj->BirthDay2);
 						$dtBirth=dol_mktime(0, 0, 0, $dtBirth->format('%m'), $dtBirth->format('%d'), $dtBirth->format('%Y'));
 					}
-					$soc->array_options['options_mav_thirdparty_birthday'] = $dtBirth;
-					$soc->array_options['options_mav_thirdparty_eligbfilter'] = (!empty($obj->EligeFibre)?1:null);*/
+					$soc->array_options['options_mav_thirdparty_birthday'] = $dtBirth;*/
+					$soc->array_options['options_mav_thirdparty_eligbfilter'] = (!empty($obj->EligeFibre)?1:null);
 
 					$result = $soc->create($user);
 					if ($result < 0) {
@@ -625,6 +632,36 @@ class MonAnalyseVendeur_import extends CommonObject
 						if (!$resql_upd) {
 							$this->errors[] = $this->db->lasterror;
 							$error++;
+						}
+
+						$shop=  (!empty($obj->Shop1) ? $obj->Shop1 : $obj->Shop2);
+						if (!empty($shop)) {
+							$cat = new Categorie($this->db);
+							$result = $cat->fetch(0, $shop, Categorie::TYPE_CUSTOMER);
+							if ($result<0) {
+								$this->errors[]=$this->db->lasterror;
+								$this->errors[]=$cat->error;
+								$error++;
+							}
+							if (empty($cat->id)) {
+								$cat = new Categorie($this->db);
+								$cat->label=$shop;
+								$cat->type=Categorie::TYPE_CUSTOMER;
+								$result = $cat->create($user);
+								if ($result<0) {
+									$this->errors[]=$this->db->lasterror;
+									$this->errors[]=$cat->error;
+									$error++;
+								}
+							}
+							if (!empty($cat->id)) {
+								$result=$soc->setCategories(array($cat->id), Categorie::TYPE_CUSTOMER);
+								if ($result<0) {
+									$this->errors[]=$soc->error;
+									$error++;
+								}
+							}
+
 						}
 					}
 				}

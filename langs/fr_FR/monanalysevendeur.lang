@@ -39,7 +39,7 @@ MonAnalyseVendeurAboutPage = Page à propos de MonAnalyseVendeur
 #
 # import
 #
-MAVIndexNotFound=La colonne %s n'a pas été trouver dans le fichier
+MAVIndexNotFound=La colonne %s n'a pas été trouvée dans le fichier
 
 #
 # Page d'exemple
