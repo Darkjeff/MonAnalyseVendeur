@@ -16,8 +16,8 @@
 
 CREATE TABLE llx_monanalysevendeur_ecoute(
 	-- BEGIN MODULEBUILDER FIELDS
-	rowid integer AUTO_INCREMENT PRIMARY KEY NOT NULL, 
-	ref varchar(128) DEFAULT '(PROV)' NOT NULL, 
+	rowid integer AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    ref varchar(128) DEFAULT '(PROV)' NOT NULL,
 	salesman integer NOT NULL, 
 	potenteil_box boolean, 
 	realise boolean, 

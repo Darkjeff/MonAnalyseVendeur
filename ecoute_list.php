@@ -114,6 +114,12 @@ $search = array();
 foreach ($object->fields as $key => $val)
 {
 	if (GETPOST('search_'.$key, 'alpha') !== '') $search[$key] = GETPOST('search_'.$key, 'alpha');
+
+	if (preg_match('/^(date|timestamp)/', $val['type']))  {
+		$search[$key.'_from'] = dol_mktime(0, 0, 0, GETPOST('search_'.$key.'_frommonth', 'int'), GETPOST('search_'.$key.'_fromday', 'int'), GETPOST('search_'.$key.'_fromyear', 'int'));
+		$search[$key.'_to'] = dol_mktime(23, 59, 59, GETPOST('search_'.$key.'_tomonth', 'int'), GETPOST('search_'.$key.'_today', 'int'), GETPOST('search_'.$key.'_toyear', 'int'));
+	}
+
 }
 
 // List of fields to search into when doing a "search in all"
@@ -243,6 +249,17 @@ else $sql .= " WHERE 1 = 1";
 foreach ($search as $key => $val)
 {
 	if ($key == 'status' && $search[$key] == -1) continue;
+	if (preg_match('/_from$/', $key) || preg_match('/_to$/', $key) && $val<>'')  {
+		$fieldFromDateName=preg_replace('/_from$/', '', $key);
+		$fieldToDateName=preg_replace('/_to$/', '', $key);
+		if (array_key_exists($fieldFromDateName, $object->fields) && preg_match('/^(date|timestamp)/', $object->fields[$fieldFromDateName]['type'])) {
+			$sql .= ' AND t.'.$fieldFromDateName.' >= \''.$db->idate($val).'\'';
+		}
+		if (array_key_exists($fieldToDateName, $object->fields) && preg_match('/^(date|timestamp)/', $object->fields[$fieldToDateName]['type'])) {
+			$sql .= ' AND t.'.$fieldToDateName.' <= \''.$db->idate($val).'\'';
+		}
+		continue;
+	}
 	$mode_search = (($object->isInt($object->fields[$key]) || $object->isFloat($object->fields[$key])) ? 1 : 0);
 	if (strpos($object->fields[$key]['type'], 'integer:') === 0) {
 		if ($search[$key] == '-1') $search[$key] = '';
@@ -250,6 +267,7 @@ foreach ($search as $key => $val)
 	}
 	if ($search[$key] != '') $sql .= natural_search($key, $search[$key], (($key == 'status') ? 2 : $mode_search));
 }
+
 if ($search_all) $sql .= natural_search(array_keys($fieldstosearchall), $search_all);
 //$sql.= dolSqlDateFilter("t.field", $search_xxxday, $search_xxxmonth, $search_xxxyear);
 // Add where from extra fields
@@ -421,7 +439,6 @@ print '<table class="tagtable nobottomiftotal liste'.($moreforfilter ? " listwit
 print '<tr class="liste_titre">';
 foreach ($object->fields as $key => $val)
 {
-
 	$cssforfield = (empty($val['css']) ? '' : $val['css']);
 	if ($key == 'status') $cssforfield .= ($cssforfield ? ' ' : '') . 'center';
 	elseif (in_array($val['type'], array('date', 'datetime', 'timestamp'))) $cssforfield .= ($cssforfield ? ' ' : '') . 'center';
@@ -433,7 +450,18 @@ foreach ($object->fields as $key => $val)
 			if (is_array($val['arrayofkeyval'])) print $form->selectarray('search_' . $key, $val['arrayofkeyval'], $search[$key], $val['notnull'], 0, 0, '', 1, 0, 0, '', 'maxwidth75');
 			elseif (strpos($val['type'], 'integer:') === 0) {
 				print $object->showInputField($val, $key, $search[$key], '', '', 'search_', 'maxwidth150', 1);
-			} elseif (!preg_match('/^(date|timestamp)/', $val['type'])) print '<input type="text" class="flat maxwidth75" name="search_' . $key . '" value="' . dol_escape_htmltag($search[$key]) . '">';
+			} elseif (!preg_match('/^(date|timestamp)/', $val['type']))  {
+				print '<input type="text" class="flat maxwidth75" name="search_' . $key . '" value="' . dol_escape_htmltag($search[$key]) . '">';
+			} elseif (preg_match('/^(date|timestamp)/', $val['type']))  {
+				print '<div class="nowrap">';
+				print $langs->trans('From').' ';
+				print $form->selectDate($search[$key.'_from'] ? $search[$key.'_from'] : -1, 'search_'.$key.'_from', 0, 0, 1);
+				print '</div>';
+				print '<div class="nowrap">';
+				print $langs->trans('to').' ';
+				print $form->selectDate($search[$key.'_to'] ? $search[$key.'_to'] : -1, 'search_'.$key.'_to', 0, 0, 1);
+				print '</div>';
+			}
 		}
 		print '</td>';
 	}
