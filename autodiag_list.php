@@ -183,6 +183,13 @@ foreach ($object->fields as $key => $val) {
 				$search[$key] = GETPOST('search_' . $key, 'alpha');
 			}
 	}
+
+	if (preg_match('/^(date|timestamp)/', $val['type'])) {
+		$search[$key . '_from'] = dol_mktime(0, 0, 0, GETPOST('search_' . $key . '_frommonth', 'int'), GETPOST('search_' . $key . '_fromday', 'int'), GETPOST('search_' . $key . '_fromyear', 'int'));
+		$search[$key . '_to'] = dol_mktime(23, 59, 59, GETPOST('search_' . $key . '_tomonth', 'int'), GETPOST('search_' . $key . '_today', 'int'), GETPOST('search_' . $key . '_toyear', 'int'));
+		break;
+	}
+
 }
 
 $object->fields['fk_event']['enabled'] = GETPOST('relance', 'int');
@@ -377,7 +384,6 @@ if (GETPOST('relance', 'int') == 1) {
 	$sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "actioncomm as ac on (ac.id = t.fk_event)";
 }
 
-
 if ($object->ismultientitymanaged == 1)
 	$sql .= " WHERE t.entity IN (" . getEntity('contacttracking') . ")";
 else
@@ -387,8 +393,19 @@ foreach ($search as $key => $val) {
 		$mode_search = (($object->isInt($object->fields[$key]) || $object->isFloat($object->fields[$key])) ? 1 : 0);
 	}
 
-	if ($search[$key] != '')
+	if (preg_match('/_from$/', $key) || preg_match('/_to$/', $key) && $val<>'')  {
+		$fieldFromDateName=preg_replace('/_from$/', '', $key);
+		$fieldToDateName=preg_replace('/_to$/', '', $key);
+		if (array_key_exists($fieldFromDateName, $object->fields) && preg_match('/^(date|timestamp)/', $object->fields[$fieldFromDateName]['type'])) {
+			$sql .= ' AND t.'.$fieldFromDateName.' >= \''.$db->idate($val).'\'';
+		}
+		if (array_key_exists($fieldToDateName, $object->fields) && preg_match('/^(date|timestamp)/', $object->fields[$fieldToDateName]['type'])) {
+			$sql .= ' AND t.'.$fieldToDateName.' <= \''.$db->idate($val).'\'';
+		}
+		continue;
+	} elseif ($search[$key] != '') {
 		$sql .= natural_search($key, $search[$key], (($key == 'status') ? 2 : $mode_search));
+	}
 }
 
 if ($search_all)
@@ -599,7 +616,7 @@ print '<input type="hidden" name="sortfield" value="' . $sortfield . '">';
 print '<input type="hidden" name="sortorder" value="' . $sortorder . '">';
 print '<input type="hidden" name="page" value="' . $page . '">';
 print '<input type="hidden" name="contextpage" value="' . $contextpage . '">';
-print '<input type="hidden" name="contextpage" value="' . $contextpage . '">';
+print '<input type="hidden" name="relance" value="' . GETPOST('relance', 'int') . '">';
 print '<input type="hidden" name="element_type" value="' . GETPOST('element_type') . '">';
 print '<input type="hidden" name="socid" value="' . GETPOST('socid') . '">';
 print '<input type="hidden" name="id" value="' . GETPOST('id') . '">';
@@ -647,7 +664,7 @@ print '<table class="tagtable liste' . ($moreforfilter ? " listwithfilterbefore"
 
 // Fields title search
 // --------------------------------------------------------------------
-print '<tr class="liste_titre">';
+//print '<tr class="liste_titre">';
 /*
   foreach($object->fields as $key => $val)
   {
@@ -702,7 +719,6 @@ foreach ($object->fields as $key => $val) {
 				print '</select>';
 			}
 			break;
-
 		case 'fk_product':
 			if (!empty($conf->global->contacttracking_CONTACTPRODUCT)) {
 				print '<td></td>';
@@ -710,13 +726,14 @@ foreach ($object->fields as $key => $val) {
 			break;
 
 		case 'fk_contact':
+
 			print '<td></td>';
 			break;
 
 		case 'type_event':
 			//if (!empty($conf->global->AGENDA_USE_EVENT_TYPE)) {
-			print '<td></td>';
-			print '<td></td>';
+			//print '<td></td>';
+			//print '<td></td>';
 			//}
 
 			/*
@@ -755,9 +772,20 @@ foreach ($object->fields as $key => $val) {
 
 		case 'fk_event':
 			print '<td></td>';
-			//print '<td></td>';
-			break;
+			/*if (GETPOST('relance', 'int') == 1 ) {
 
+				print '<td>';
+				print '<div class="nowrap">';
+				print $langs->trans('From') . ' ';
+				print $form->selectDate($search[$key . '_from'] ? $search[$key . '_from'] : -1, 'search_' . $key . '_from', 0, 0, 1);
+				print '</div>';
+				print '<div class="nowrap">';
+				print $langs->trans('to') . ' ';
+				print $form->selectDate($search[$key . '_to'] ? $search[$key . '_to'] : -1, 'search_' . $key . '_to', 0, 0, 1);
+				print '</div>';
+				print '</td>';
+			}*/
+			break;
 		default:
 			$align = '';
 
@@ -767,8 +795,24 @@ foreach ($object->fields as $key => $val) {
 				$align .= ($align ? ' ' : '') . 'nowrap';
 			if ($key == 'status')
 				$align .= ($align ? ' ' : '') . 'center';
-			if (!empty($arrayfields['t.' . $key]['checked']))
-				print '<td class="liste_titre' . ($align ? ' ' . $align : '') . '"><input type="text" class="flat maxwidth75" name="search_' . $key . '" value="' . dol_escape_htmltag($search[$key]) . '"></td>';
+			if (!empty($arrayfields['t.' . $key]['checked'])) {
+				if (preg_match('/^(date|timestamp)/', $val['type'])) {
+					print '<td  class="liste_titre' . ($align ? ' ' . $align : '') . '">';
+					print '<div class="nowrap">';
+					print $langs->trans('From') . ' ';
+					print $form->selectDate($search[$key . '_from'] ? $search[$key . '_from'] : -1, 'search_' . $key . '_from', 0, 0, 1);
+					print '</div>';
+					print '<div class="nowrap">';
+					print $langs->trans('to') . ' ';
+					print $form->selectDate($search[$key . '_to'] ? $search[$key . '_to'] : -1, 'search_' . $key . '_to', 0, 0, 1);
+					print '</div>';
+					print '</td>';
+				} else {
+					print '<td class="liste_titre' . ($align ? ' ' . $align : '') . '"><input type="text" class="flat maxwidth75" name="search_' . $key . '" value="' . dol_escape_htmltag($search[$key]) . '"></td>';
+				}
+			}
+
+
 
 			break;
 	}
@@ -819,12 +863,7 @@ foreach ($object->fields as $key => $val) {
 			print '<td>' . $langs->trans('Date Relance') . '</td>';
 		} else {
 			print getTitleFieldOfList($langs->trans($arrayfields['t.' . $key]['label']), 0, $_SERVER['PHP_SELF'], 't.' . $key, '', $param, ($align ? 'class="' . $align . '"' : ''), $sortfield, $sortorder, $align . ' ') . "\n";
-
 		}
-
-
-
-
 }
 
 // Hook fields
