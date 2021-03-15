@@ -119,8 +119,8 @@ foreach ($object->fields as $key => $val)
 		$search[$key.'_from'] = dol_mktime(0, 0, 0, GETPOST('search_'.$key.'_frommonth', 'int'), GETPOST('search_'.$key.'_fromday', 'int'), GETPOST('search_'.$key.'_fromyear', 'int'));
 		$search[$key.'_to'] = dol_mktime(23, 59, 59, GETPOST('search_'.$key.'_tomonth', 'int'), GETPOST('search_'.$key.'_today', 'int'), GETPOST('search_'.$key.'_toyear', 'int'));
 	}
-
 }
+$search_users_tags = GETPOST('users_tags', 'array');
 
 // List of fields to search into when doing a "search in all"
 $fieldstosearchall = array();
@@ -244,6 +244,10 @@ $sql .= preg_replace('/^,/', '', $hookmanager->resPrint);
 $sql = preg_replace('/,\s*$/', '', $sql);
 $sql .= " FROM ".MAIN_DB_PREFIX.$object->table_element." as t";
 if (is_array($extrafields->attributes[$object->table_element]['label']) && count($extrafields->attributes[$object->table_element]['label'])) $sql .= " LEFT JOIN ".MAIN_DB_PREFIX.$object->table_element."_extrafields as ef on (t.rowid = ef.fk_object)";
+if (!empty($search_users_tags)) {
+	$sql .= ' INNER JOIN '.MAIN_DB_PREFIX.'categorie_user as tagu ON tagu.fk_user=t.salesman';
+	$sql .= ' AND tagu.fk_categorie IN (' . implode(',', $search_users_tags) . ')';
+}
 if ($object->ismultientitymanaged == 1) $sql .= " WHERE t.entity IN (".getEntity($object->element).")";
 else $sql .= " WHERE 1 = 1";
 foreach ($search as $key => $val)
@@ -267,6 +271,7 @@ foreach ($search as $key => $val)
 	}
 	if ($search[$key] != '') $sql .= natural_search($key, $search[$key], (($key == 'status') ? 2 : $mode_search));
 }
+
 
 if ($search_all) $sql .= natural_search(array_keys($fieldstosearchall), $search_all);
 //$sql.= dolSqlDateFilter("t.field", $search_xxxday, $search_xxxmonth, $search_xxxyear);
@@ -410,9 +415,12 @@ if ($search_all)
 }
 
 $moreforfilter = '';
-/*$moreforfilter.='<div class="divsearchfield">';
-$moreforfilter.= $langs->trans('MyFilter') . ': <input type="text" name="search_myfield" value="'.dol_escape_htmltag($search_myfield).'">';
-$moreforfilter.= '</div>';*/
+$moreforfilter.='<div class="divsearchfield">';
+$moreforfilter.= $langs->trans('Agence') . ':';
+
+$cate_arbo = $form->select_all_categories('user', null, 'parent', null, null, 1);
+$moreforfilter.= $form->multiselectarray('users_tags', $cate_arbo, $search_users_tags, null, null, null, null, '100%');
+$moreforfilter.= '</div>';
 
 $parameters = array();
 $reshook = $hookmanager->executeHooks('printFieldPreListTitle', $parameters, $object); // Note that $action and $object may have been modified by hook
