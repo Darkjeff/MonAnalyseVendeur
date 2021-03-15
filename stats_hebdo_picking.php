@@ -89,16 +89,16 @@ print '<td align="center"><b>'.$langs->trans("Total").'</b></td></tr>';
 
 	
 $sql = "SELECT WEEK(fi.datec) AS Week,";
-$sql .= "  ROUND(SUM(IF(cat.label='Armentières',fi.entity,0)),2) AS 'Armentières',";
-$sql .= "  ROUND(SUM(IF(cat.label='Abbeville CV',fi.entity,0)),2) AS 'Abbeville CV',";
-$sql .= "  ROUND(SUM(IF(cat.label='Boulogne',fi.entity,0)),2) AS 'Boulogne',";
-$sql .= "  ROUND(SUM(IF(cat.label='Dury',fi.entity,0)),2) AS 'Dury',";
-$sql .= "  ROUND(SUM(IF(cat.label='Auchy les Mines',fi.entity,0)),2) AS 'Auchy les Mines',";
-$sql .= "  ROUND(SUM(IF(cat.label='Aire sur la Lys',fi.entity,0)),2) AS 'Aire sur la Lys',";
-$sql .= "  ROUND(SUM(IF(cat.label='Longuenesse',fi.entity,0)),2) AS 'Longuenesse',";
-$sql .= "  ROUND(SUM(IF(cat.label='Abbeville CC',fi.entity,0)),2) AS 'Abbeville CC',";
-$sql .= "  ROUND(SUM(IF(cat.label='Hazebrouck',fi.entity,0)),2) AS 'Hazebrouck',";
-$sql .= "  ROUND(SUM(fi.entity),2) as 'Total'";
+$sql .= "  ROUND(SUM(IF(cat.label='Armentières',fi.entity,0)),0) AS 'Armentières',";
+$sql .= "  ROUND(SUM(IF(cat.label='Abbeville CV',fi.entity,0)),0) AS 'Abbeville CV',";
+$sql .= "  ROUND(SUM(IF(cat.label='Boulogne',fi.entity,0)),0) AS 'Boulogne',";
+$sql .= "  ROUND(SUM(IF(cat.label='Dury',fi.entity,0)),0) AS 'Dury',";
+$sql .= "  ROUND(SUM(IF(cat.label='Auchy les Mines',fi.entity,0)),0) AS 'Auchy les Mines',";
+$sql .= "  ROUND(SUM(IF(cat.label='Aire sur la Lys',fi.entity,0)),0) AS 'Aire sur la Lys',";
+$sql .= "  ROUND(SUM(IF(cat.label='Longuenesse',fi.entity,0)),0) AS 'Longuenesse',";
+$sql .= "  ROUND(SUM(IF(cat.label='Abbeville CC',fi.entity,0)),0) AS 'Abbeville CC',";
+$sql .= "  ROUND(SUM(IF(cat.label='Hazebrouck',fi.entity,0)),0) AS 'Hazebrouck',";
+$sql .= "  ROUND(SUM(fi.entity),0) as 'Total'";
 $sql .= " FROM " . MAIN_DB_PREFIX . "fichinter as fi";
 $sql .= " , " . MAIN_DB_PREFIX . "fichinter_extrafields as fix";
 $sql .= " , " . MAIN_DB_PREFIX . "categorie_user as cu";
