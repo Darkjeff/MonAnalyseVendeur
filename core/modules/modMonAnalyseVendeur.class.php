@@ -505,7 +505,7 @@ class modMonAnalyseVendeur extends DolibarrModules
             'type'=>'left',
             'titre'=>'Nouveau Auto Diagnostic',
             'mainmenu'=>'monanalysevendeur',
-            'leftmenu'=>'monanalysevendeur_autodiag',
+            'leftmenu'=>'monanalysevendeur_autodiagnew',
             'url'=>'/monanalysevendeur/autodiag_card.php?action=create&relance=0',
             // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'langs'=>'monanalysevendeur@monanalysevendeur',
@@ -525,7 +525,7 @@ class modMonAnalyseVendeur extends DolibarrModules
             'type'=>'left',
             'titre'=>'Statistique Hebdo',
             'mainmenu'=>'monanalysevendeur',
-            'leftmenu'=>'monanalysevendeur_autodiag',
+            'leftmenu'=>'monanalysevendeur_statautodiag',
             'url'=>'/monanalysevendeur/stats_hebdo_autodiag.php',
             // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'langs'=>'monanalysevendeur@monanalysevendeur',
@@ -565,7 +565,7 @@ class modMonAnalyseVendeur extends DolibarrModules
             'type'=>'left',
             'titre'=>'Nouvelle Relance',
             'mainmenu'=>'monanalysevendeur',
-            'leftmenu'=>'monanalysevendeur_relance',
+            'leftmenu'=>'monanalysevendeur_relancenew',
             'url'=>'/monanalysevendeur/autodiag_card.php?action=create&relance=1',
             // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'langs'=>'monanalysevendeur@monanalysevendeur',
@@ -585,7 +585,7 @@ class modMonAnalyseVendeur extends DolibarrModules
             'type'=>'left',
             'titre'=>'Statistique Hebdo',
             'mainmenu'=>'monanalysevendeur',
-            'leftmenu'=>'monanalysevendeur_relance',
+            'leftmenu'=>'monanalysevendeur_statrelance',
             'url'=>'/monanalysevendeur/stats_hebdo_relance.php',
             // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'langs'=>'monanalysevendeur@monanalysevendeur',
@@ -625,7 +625,7 @@ class modMonAnalyseVendeur extends DolibarrModules
 			'type'=>'left',
 			'titre'=>'Nouvelle Ecoute',
 			'mainmenu'=>'monanalysevendeur',
-			'leftmenu'=>'monanalysevendeur_ecoute',
+			'leftmenu'=>'monanalysevendeur_ecoutenew',
 			'url'=>'/monanalysevendeur/ecoute_card.php?action=create',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'langs'=>'monanalysevendeur@monanalysevendeur',
@@ -645,7 +645,7 @@ class modMonAnalyseVendeur extends DolibarrModules
 			'type'=>'left',
 			'titre'=>'Statistique Hebdo',
 			'mainmenu'=>'monanalysevendeur',
-			'leftmenu'=>'monanalysevendeur_ecoute',
+			'leftmenu'=>'monanalysevendeur_statecoute',
 			'url'=>'/monanalysevendeur/stats_hebdo_ecoute.php',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'langs'=>'monanalysevendeur@monanalysevendeur',
