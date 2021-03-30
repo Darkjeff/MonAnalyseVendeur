@@ -32,6 +32,8 @@ CREATE TABLE llx_contacttracking(
     object varchar(255),
     fk_product varchar(255) NULL,
     type_event varchar(255) NULL,
-    fk_event integer(11) NULL
+    fk_event integer(11) NULL,
+    relance_done smallint NULL,
+    sales_done smallint NULL
     -- END MODULEBUILDER FIELDS
 ) ENGINE=innodb;

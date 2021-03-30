@@ -873,6 +873,18 @@ class modMonAnalyseVendeur extends DolibarrModules
 			return -1;
 		}
 
+		$extrafields = new ExtraFields($this->db);
+		$result=$extrafields->addExtraField('mav_relance_done', "Relance effectuée", 'boolean', 1003,  '255', 'actioncomm',   0, 0, '', array('options'=>array(''=>null)), 1, '', 1, 0, '', '', 'monanalysevendeur@monanalysevendeur', '$conf->monanalysevendeur->enabled');
+		if ($result<0) {
+			return -1;
+		}
+
+		$extrafields = new ExtraFields($this->db);
+		$result=$extrafields->addExtraField('mav_sales_done', "Vente réalisée", 'boolean', 1004,  '255', 'actioncomm',   0, 0, '', array('options'=>array(''=>null)), 1, '', 1, 0, '', '', 'monanalysevendeur@monanalysevendeur', '$conf->monanalysevendeur->enabled');
+		if ($result<0) {
+			return -1;
+		}
+
 		//$result1=$extrafields->addExtraField('monanalysevendeur_myattr1', "New Attr 1 label", 'boolean', 1,  3, 'thirdparty',   0, 0, '', '', 1, '', 0, 0, '', '', 'monanalysevendeur@monanalysevendeur', '$conf->monanalysevendeur->enabled');
 		//$result2=$extrafields->addExtraField('monanalysevendeur_myattr2', "New Attr 2 label", 'varchar', 1, 10, 'project',      0, 0, '', '', 1, '', 0, 0, '', '', 'monanalysevendeur@monanalysevendeur', '$conf->monanalysevendeur->enabled');
 		//$result3=$extrafields->addExtraField('monanalysevendeur_myattr3', "New Attr 3 label", 'varchar', 1, 10, 'bank_account', 0, 0, '', '', 1, '', 0, 0, '', '', 'monanalysevendeur@monanalysevendeur', '$conf->monanalysevendeur->enabled');

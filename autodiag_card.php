@@ -65,8 +65,6 @@ if (method_exists($langs, 'loadLangs')) {
 }
 // AJout
 if ($action == 'add') {
-	// Actions cancel, add, update or delete
-	include DOL_DOCUMENT_ROOT . '/core/actions_addupdatedelete.inc.php';
 
 	$object->date_creation = strtotime(GETPOST('date_creationyear') . '-' . GETPOST('date_creationmonth') . '-' . GETPOST('date_creationday') . ' ' . GETPOST('date_creationhour') . ':' . GETPOST('date_creationmin') . ':00');
 	$object->mode_contact = GETPOST('mode_contact');
@@ -150,6 +148,9 @@ if ($action == 'add') {
 		else
 			$actionComm->note = GETPOST('comment');
 
+		$actionComm->array_options['options_relance_done'] = GETPOST('relance_done');
+		$actionComm->array_options['options_sales_done'] = GETPOST('sales_done');
+
 		$event = $actionComm->create($user);
 		if ($event < 0) {
 			$err++;
@@ -170,6 +171,32 @@ if ($action == 'add') {
 		Header("Location: autodiag_list.php?relance=" . GETPOST('relance', 'int'));
 		exit();
 	}
+}
+
+if ($action == 'update') {
+
+	//$object->date_creation = strtotime(GETPOST('date_creationyear') . '-' . GETPOST('date_creationmonth') . '-' . GETPOST('date_creationday') . ' ' . GETPOST('date_creationhour') . ':' . GETPOST('date_creationmin') . ':00');
+	$object->mode_contact = GETPOST('mode_contact');
+	$object->object = GETPOST('object');
+	$object->fk_soc = GETPOST('fk_soc');
+	//$object->fk_user_creat = GETPOST('fk_user_creat');
+	$object->fk_contact = !GETPOST('fk_contact') ? 'NULL' : GETPOST('fk_contact');
+	$object->comment = GETPOST('comment');
+	if (!empty($conf->global->AGENDA_USE_EVENT_TYPE)) {
+		$object->type_event = GETPOST('actioncode');
+	} else {
+		$object->type_event = "AC_RDV";
+	}
+
+	$object->type_contact = GETPOST('type_contact');
+	if (GETPOST('product') != null) {
+		foreach (GETPOST('product') as $pr => $empty) {
+			if (!empty($object->fk_product))
+				$object->fk_product .= ',';
+			$object->fk_product .= $pr;
+		}
+	}
+
 }
 
 $title = $langs->trans("Autodiag");
@@ -451,7 +478,7 @@ if ($action == 'create') {
 					print $langs->trans($val['label']);
 					print '</td>';
 					print '<td>';
-					if (in_array($val['type'], array('int', 'integer')))
+					if (in_array($val['type'], array('int', 'integer', 'booolean')))
 						$value = GETPOST($key, 'int');
 					elseif ($val['type'] == 'text' || $val['type'] == 'html')
 						$value = GETPOST($key, 'none');
@@ -469,6 +496,24 @@ if ($action == 'create') {
 						case 'comment' :
 							print '<textarea name="comment" class="flat minwidth300" rows="5">';
 							print '</textarea>';
+							break;
+						case 'relance_done' :
+							$checked = '';
+							if (!empty($value)) {
+								$checked = ' checked value="1" ';
+							} else {
+								$checked = ' value="1" ';
+							}
+							print '<input type="checkbox" class="flat maxwidthonsmartphone" name="'.$key.'" id="'.$key.'" '.$checked.'>';
+							break;
+						case 'sales_done' :
+							$checked = '';
+							if (!empty($value)) {
+								$checked = ' checked value="1" ';
+							} else {
+								$checked = ' value="1" ';
+							}
+							print '<input type="checkbox" class="flat maxwidthonsmartphone" name="'.$key.'" id="'.$key.'" '.$checked.'>';
 							break;
 					}
 
@@ -552,7 +597,7 @@ if (($id || $ref) && $action == 'edit') {
 
 	//print '<center><h2>' . $langs->trans('Exchanges') . '</h2></center>';
 	print '<table class="border centpercent">' . "\n";
-
+//var_dump($object->fields);
 	foreach ($object->fields as $key => $val) {
 		// Discard if extrafield is a hidden field on form
 		if (abs($val['visible']) != 1)
@@ -661,11 +706,12 @@ if (($id || $ref) && $action == 'edit') {
 				print '"';
 				print '>';
 				print $langs->trans($val['label']);
-				print '</td>';
+				print 'sss</td>';
 
 				print '<td>';
 				print '<select name="' . $key . '" class="minwidth200">';
 				$modes = explode(PHP_EOL, $conf->global->contacttracking_CONTACTMODE);
+
 				foreach ($modes as $mode) {
 					if ($mode == $object->$key) {
 						$select = "selected";
@@ -751,8 +797,6 @@ if (($id || $ref) && $action == 'edit') {
 					} else {
 						$select = "";
 					}
-
-
 					if (rtrim(trim($mode)) != '') {
 						print '<option>' . $mode . '</option>';
 					}
