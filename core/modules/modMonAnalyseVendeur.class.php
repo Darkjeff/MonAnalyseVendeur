@@ -580,7 +580,7 @@ class modMonAnalyseVendeur extends DolibarrModules
         );
 		$this->menu[$r++]=array(
             // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-            'fk_menu'=>'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_relance',
+            'fk_menu'=>'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_relancestats',
             // This is a Left menu entry
             'type'=>'left',
             'titre'=>'Statistique Hebdo',
@@ -640,7 +640,7 @@ class modMonAnalyseVendeur extends DolibarrModules
 		);
 		$this->menu[$r++]=array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_ecoute',
+			'fk_menu'=>'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_ecoutestats',
 			// This is a Left menu entry
 			'type'=>'left',
 			'titre'=>'Statistique Hebdo',
