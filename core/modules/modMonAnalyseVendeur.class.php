@@ -525,7 +525,7 @@ class modMonAnalyseVendeur extends DolibarrModules
             'type'=>'left',
             'titre'=>'Statistique Hebdo',
             'mainmenu'=>'monanalysevendeur',
-            'leftmenu'=>'monanalysevendeur_autodiagstats',
+            'leftmenu'=>'monanalysevendeur_autodiag',
             'url'=>'/monanalysevendeur/stats_hebdo_autodiag.php',
             // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'langs'=>'monanalysevendeur@monanalysevendeur',
@@ -580,12 +580,12 @@ class modMonAnalyseVendeur extends DolibarrModules
         );
 		$this->menu[$r++]=array(
             // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-            'fk_menu'=>'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_relancestats',
+            'fk_menu'=>'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_relance',
             // This is a Left menu entry
             'type'=>'left',
             'titre'=>'Statistique Hebdo',
             'mainmenu'=>'monanalysevendeur',
-            'leftmenu'=>'monanalysevendeur_relancestats',
+            'leftmenu'=>'monanalysevendeur_relance',
             'url'=>'/monanalysevendeur/stats_hebdo_relance.php',
             // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'langs'=>'monanalysevendeur@monanalysevendeur',
@@ -640,12 +640,12 @@ class modMonAnalyseVendeur extends DolibarrModules
 		);
 		$this->menu[$r++]=array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_ecoutestats',
+			'fk_menu'=>'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_ecoute',
 			// This is a Left menu entry
 			'type'=>'left',
 			'titre'=>'Statistique Hebdo',
 			'mainmenu'=>'monanalysevendeur',
-			'leftmenu'=>'monanalysevendeur_ecoutestats',
+			'leftmenu'=>'monanalysevendeur_ecoute',
 			'url'=>'/monanalysevendeur/stats_hebdo_ecoute.php',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'langs'=>'monanalysevendeur@monanalysevendeur',

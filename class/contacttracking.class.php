@@ -97,6 +97,8 @@ class Contacttracking extends CommonObject
 		'comment' => array('type'=>'text', 'label'=>'Comment', 'enabled'=>'1', 'position'=>508, 'notnull'=>-1, 'visible'=>1, 'searchall'=>1, 'comment'=>"Commentaire concernant l'echange"),
 		'type_event' => array('type'=>'varchar(255)', 'label'=>'TypeEvent', 'enabled'=>'1', 'position'=>507, 'notnull'=>1, 'visible'=>1, 'searchall'=>1, 'comment'=>"Type de l'evenement"),
 		'fk_event' => array('type'=>'integer:ActionComm:comm/action/class/actioncomm.class.php', 'label'=>'Event', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>1, 'index'=>1, 'searchall'=>1,),
+		//'fk_event' => array('type'=>'integer:ActionComm:comm/action/class/actioncomm.class.php', 'label'=>'Event', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>1, 'index'=>1, 'searchall'=>1,),
+		//'fk_event' => array('type'=>'integer:ActionComm:comm/action/class/actioncomm.class.php', 'label'=>'Event', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>1, 'index'=>1, 'searchall'=>1,),
 	);
 	public $rowid;
 	public $entity;
