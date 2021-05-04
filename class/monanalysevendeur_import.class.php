@@ -167,6 +167,10 @@ class MonAnalyseVendeur_import extends CommonObject
 			'MarqueMobile' => array('key' => '<MARQUEMOBILE>', 'index' => null),
 			'ModeleMobile' => array('key' => '<MODELEMOBILE>', 'index' => null),
 			'EligeFibre' => array('key' => '<LIGNEADSLELIGIBILITETHD>', 'index' => null),
+            'TypeActe' => array('key' => '<CONTRAT><TYPEACTE>', 'index' => null),
+            'CodeOffre' => array('key' => '<CODEOFFREFIXE>', 'index' => null),
+            'LibelleOffre' => array('key' => '<LIBELLEOFFREFIXE>', 'index' => null),
+            'LibellePta' => array('key' => '<LIBELLEPTA>', 'index' => null),
 		);
 
 		$this->import_type = '3gwin';
@@ -601,20 +605,26 @@ class MonAnalyseVendeur_import extends CommonObject
 					$soc->email = $obj->Email;
 					$soc->code_client = 'auto';
 					$soc->import_key = dol_now();
+                	               
+                
+                	//date bitrh
+                	$soc->array_options['options_mav_thirdparty_birthday'] = (!empty($obj->BirthDay1) ? $obj->BirthDay1 : $obj->BirthDay2);
 
 					//date bitrh
-					/*if (!empty($obj->BirthDay1)) {
-						var_dump($obj->BirthDay1);
-						$timeZone = new DateTimeZone('Europe/Paris');
-						$dateSrc = $obj->BirthDay1;
-						$dtBirth = new DateTime($dateSrc ,$timeZone);
-						$dtBirth=dol_mktime(0, 0, 0, $dtBirth->format('%m'), $dtBirth->format('%d'), $dtBirth->format('%Y'));
-					} elseif (!empty($obj->BirthDay2)) {
-						$dtBirth = new DateTime($obj->BirthDay2);
-						$dtBirth=dol_mktime(0, 0, 0, $dtBirth->format('%m'), $dtBirth->format('%d'), $dtBirth->format('%Y'));
-					}
-					$soc->array_options['options_mav_thirdparty_birthday'] = $dtBirth;*/
-					$soc->array_options['options_mav_thirdparty_eligbfilter'] = (!empty($obj->EligeFibre)?1:null);
+                	
+					//if (!empty($obj->BirthDay1)) {
+					//	var_dump($obj->BirthDay1);
+					//	$timeZone = new DateTimeZone('Europe/Paris');
+					//	$dateSrc = $obj->BirthDay1;
+					//	$dtBirth = new DateTime($dateSrc ,$timeZone);
+					//	$dtBirth=dol_mktime(0, 0, 0, $dtBirth->format('%m'), $dtBirth->format('%d'), $dtBirth->format('%Y'));
+				//	} elseif (!empty($obj->BirthDay2)) {
+				//		$dtBirth = new DateTime($obj->BirthDay2);
+				//		$dtBirth=dol_mktime(0, 0, 0, $dtBirth->format('%m'), $dtBirth->format('%d'), $dtBirth->format('%Y'));
+				//	}
+				//	$soc->array_options['options_mav_thirdparty_birthday'] = $dtBirth;
+                    
+					$soc->array_options['options_mav_thirdparty_eligbfilter'] = $obj->EligeFibre;
 
 					$result = $soc->create($user);
 					if ($result < 0) {
