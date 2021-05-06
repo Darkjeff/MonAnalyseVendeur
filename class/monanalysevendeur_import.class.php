@@ -607,8 +607,11 @@ class MonAnalyseVendeur_import extends CommonObject
 					$soc->import_key = dol_now();
                 	               
                 
-                	//date bitrh
-                	$soc->array_options['options_mav_thirdparty_birthday'] = (!empty($obj->BirthDay1) ? $obj->BirthDay1 : $obj->BirthDay2);
+                	//date bitrh (problem with m/d/y)
+					$dtBirth = (!empty($obj->BirthDay1) ? $obj->BirthDay1 : $obj->BirthDay2);
+					//$dtBirth = dol_mktime(0, 0, 0, $dtBirth->format('%m'), $dtBirth->format('%d'), $dtBirth->format('%Y'));
+					
+                	$soc->array_options['options_mav_thirdparty_birthday'] = $dtBirth ;
 
 					//date bitrh
                 	
@@ -624,7 +627,10 @@ class MonAnalyseVendeur_import extends CommonObject
 				//	}
 				//	$soc->array_options['options_mav_thirdparty_birthday'] = $dtBirth;
                     
+					// todo add txt with N si pas eligible 
 					$soc->array_options['options_mav_thirdparty_eligbfilter'] = $obj->EligeFibre;
+					$soc->note_public = $obj->TypeActe . ' ' . $obj->CodeOffre . ' ' . $obj->LibelleOffre. ' ' . $obj->LibellePta;
+					
 
 					$result = $soc->create($user);
 					if ($result < 0) {
