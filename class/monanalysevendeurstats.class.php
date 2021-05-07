@@ -115,8 +115,11 @@ class MonAnayseVendeurStats
 				return -1;
 			}
 
-			//Picking
-			$sql = 'SELECT count(fi.rowid),ext.potentielbox,ext.boxvalidee as nb FROM ' . MAIN_DB_PREFIX . 'fichinter as fi';
+			//Picking potbox box
+			$sql = 'SELECT count(fi.rowid) as nb';
+			$sql .= ',IFNULL(SUM(CASE WHEN ext.potentielbox LIKE \'%1%\' THEN 1 ELSE 0 END),0) as potbox';
+			$sql .= ',IFNULL(SUM(CASE WHEN ext.boxvalidee LIKE \'%1%\' THEN 1 ELSE 0 END),0) as box';
+			$sql .= ' FROM ' . MAIN_DB_PREFIX . 'fichinter as fi';
 			$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'fichinter_extrafields as ext ON (ext.fk_object = fi.rowid)';
 			$sql .= ' WHERE ext.vendeur='.$key;
 			$resql = $this->db->query($sql);
@@ -124,24 +127,25 @@ class MonAnayseVendeurStats
 			{
 				while ($obj = $this->db->fetch_object($resql))
 				{
+					$data[$key]['potbox'] = $obj->potbox;
 					$data[$key]['picking'] = $obj->nb;
+					$data[$key]['box'] = $obj->box;
+					$data[$key]['txbb']=round(($data[$key]['box'] / (empty($data[$key]['potbox'])?1:$data[$key]['potbox'])) * 100);
 				}
 			} else {
 				$this->error=$this->db->lasterror;
 				return -1;
 			}
 
-			//potbox et ecoute
+			//ecoute
 			$sql = 'SELECT count(ec.rowid) as nb  FROM ' . MAIN_DB_PREFIX . 'monanalysevendeur_ecoute as ec';
 			//$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'ficheinter_extrafields as ext ON (ext.fk_object = fi.rowid)';
-			$sql .= ' WHERE ext.vendeur='.$key;
+			$sql .= ' WHERE ec.salesman='.$key;
 			$resql = $this->db->query($sql);
 			if ($resql)
 			{
 				while ($obj = $this->db->fetch_object($resql))
 				{
-					//$data[$key]['potbox'] = $obj->potbox;
-					//$data[$key]['box'] = $obj->potbox;
 					$data[$key]['ecoute'] = $obj->nb;
 				}
 			} else {
@@ -150,7 +154,6 @@ class MonAnayseVendeurStats
 			}
 
 		}
-
 
 		return $data;
 	}
