@@ -48,6 +48,7 @@ if (!$res) die("Include of main fails");
 require_once DOL_DOCUMENT_ROOT . '/core/class/html.formfile.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
 dol_include_once('/monanalysevendeur/class/monanalysevendeur_import.class.php');
+dol_include_once('/monanalysevendeur/class/html.monanalysevendeur.class.php');
 
 $langs->loadLangs(array("monanalysevendeur@monanalysevendeur", "other"));
 
@@ -81,10 +82,10 @@ $now = dol_now();
  * Actions
  */
 
-if ($action=='editfile') {
+if ($action=='import') {
 	$action='';
 	$import = new MonAnalyseVendeur_import($db);
-	$result = $import->importFile($upload_dir.'/'.GETPOST("urlfile"));
+	$result = $import->importFile($upload_dir.'/'.GETPOST("urlfile"), GETPOST('type'));
 	if ($result < 0) {
 		setEventMessages($import->error, $import->errors, 'errors');
 	} else {
@@ -105,6 +106,7 @@ include_once DOL_DOCUMENT_ROOT.'/core/actions_linkedfiles.inc.php';
  */
 
 $form = new Form($db);
+$formMonALV = new FormMonAnalyseVendeur($db);
 $formfile = new FormFile($db);
 
 llxHeader("", $langs->trans("MonAnalyseVendeurArea"));
@@ -146,7 +148,7 @@ $formfile->form_attach_new_file(
 $filearray = dol_dir_list($upload_dir, "files", 0, '', '(\.meta|_preview.*\.png)$', $sortfield, (strtolower($sortorder) == 'desc' ?SORT_DESC:SORT_ASC), 1);
 
 // List of document
-$formfile->list_of_documents(
+$formMonALV->list_of_documents(
 	$filearray,
 	null,
 	'monanalysevendeur',

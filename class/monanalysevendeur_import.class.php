@@ -370,7 +370,7 @@ class MonAnalyseVendeur_import extends CommonObject
 	}
 
 
-	public function importFile($file)
+	public function importFile($file, $importType='customer')
 	{
 		global $conf, $langs;
 
@@ -465,15 +465,19 @@ class MonAnalyseVendeur_import extends CommonObject
 				return $result;
 			}
 
-			$result=$this->createThirdparty();
-			if ($result < 0) {
-				var_dump($result);
-				return $result;
+			if ($importType=='customer') {
+				$result = $this->createThirdparty();
+				if ($result < 0) {
+					var_dump($result);
+					return $result;
+				}
 			}
 
-			$result=$this->createContactPhone();
-			if ($result < 0) {
-				return $result;
+			if ($importType=='phone') {
+				$result = $this->createContactPhone();
+				if ($result < 0) {
+					return $result;
+				}
 			}
 
 		} else {
@@ -491,9 +495,9 @@ class MonAnalyseVendeur_import extends CommonObject
 		$sql = 'UPDATE ' . $this->tempTable . ' as dest, ' . MAIN_DB_PREFIX . 'societe as src';
 		$sql .= ' SET dest.fk_soc=src.rowid ';
 		$sql .= ' WHERE src.nom=CONCAT(dest.Nom,\' \',dest.Prenom)';
-		$sql .= ' AND src.zip=IFNULL(dest.Zip1,dest.Zip2)';
-		$sql .= ' AND src.town=IFNULL(dest.Town1,dest.Town2)';
-		$sql .= ' AND src.address=IFNULL(dest.NumVoie1,dest.NumVoie2)';
+		$sql .= ' AND IFNULL(src.zip,\'\')=IFNULL(IFNULL(dest.Zip1,dest.Zip2),\'\')';
+		//$sql .= ' AND IFNULL(src.town,\'\')=IFNULL(IFNULL(dest.Town1,dest.Town2),\'\')';
+		$sql .= ' AND IFNULL(src.address,\'\')=IFNULL(IFNULL(dest.NumVoie1,dest.NumVoie2),\'\')';
 
 		$resql = $this->db->query($sql);
 		if (!$resql) {
@@ -502,6 +506,22 @@ class MonAnalyseVendeur_import extends CommonObject
 		} else {
 			return 1;
 		}
+
+		//Cas des ville ville
+		/*$sql = 'UPDATE ' . $this->tempTable . ' as dest, ' . MAIN_DB_PREFIX . 'societe as src';
+		$sql .= ' SET dest.fk_soc=src.rowid ';
+		$sql .= ' WHERE src.nom=CONCAT(dest.Nom,\' \',dest.Prenom)';
+		$sql .= ' AND IFNULL(src.zip,\'\')=IFNULL(IFNULL(dest.Zip1,dest.Zip2),\'\')';
+		$sql .= ' AND IFNULL(dest.Town1,dest.Town2) IS NULL';
+		$sql .= ' AND IFNULL(src.address,\'\')=IFNULL(IFNULL(dest.NumVoie1,dest.NumVoie2),\'\')';
+
+		$resql = $this->db->query($sql);
+		if (!$resql) {
+			$this->errors[] = $this->db->lasterror;
+			return -1;
+		} else {
+			return 1;
+		}*/
 	}
 
 	/**
@@ -526,37 +546,48 @@ class MonAnalyseVendeur_import extends CommonObject
 		} else {
 			while ($obj = $this->db->fetch_object($resql)) {
 				$phone=(!empty($obj->Phone1)?$obj->Phone1:$obj->Phone2);
-				$sql_phone = 'SELECT rowid, lastname, fk_soc, phone FROM '.MAIN_DB_PREFIX.'socpeople';
-				$sql_phone .= ' WHERE LPAD(phone,10,\'0\')=\''.str_pad(trim($phone), 10, '0',STR_PAD_LEFT).'\'';
-				$resql_phone = $this->db->query($sql_phone);
-				if (!$resql_phone) {
-					$this->errors[] = $this->db->lasterror;
-					return -1;
-				} else {
-					$num=$this->db->num_rows($resql_phone);
-					if ($num==0) {
-						$sql_cnt='select count(rowid) as cnt from '.MAIN_DB_PREFIX.'socpeople WHERE fk_soc='.$obj->fk_soc;
-						$resql_cnt = $this->db->query($sql_cnt);
-						if (!$resql_cnt) {
-							$this->errors[] = $this->db->lasterror;
-							$error++;
-						} else {
-							if ($obj_cnt = $this->db->fetch_object($resql_cnt)) {
-								$name=$langs->trans('Phone'). " #".(((int) $obj_cnt->cnt)+1);
-							}
-							$contact = new Contact($this->db);
-							$contact->phone_pro=str_pad(trim($phone), 10, '0', STR_PAD_LEFT);
-							$contact->socid=$obj->fk_soc;
-							$contact->lastname=$name;
-							$contact->import_key = dol_now();
-							$contact->array_options['options_mav_contact_brandmob'] = $obj->MarqueMobile;
-							$contact->array_options['options_mav_contact_modelmobile'] = $obj->ModeleMobile;
-							$result = $contact->create($user);
-							if ($result < 0) {
-								$this->errors[] = $contact->error;
+				if (!empty($phone)) {
+					if (strpos($phone,'+')==false) {
+						$sql_phone = 'SELECT rowid, lastname, fk_soc, phone FROM '.MAIN_DB_PREFIX.'socpeople';
+						$sql_phone .= ' WHERE phone=\''.trim($phone).'\'';
+					} else {
+						$sql_phone = 'SELECT rowid, lastname, fk_soc, phone FROM '.MAIN_DB_PREFIX.'socpeople';
+						$sql_phone .= ' WHERE LPAD(phone,10,\'0\')=\''.str_pad(trim($phone), 10, '0',STR_PAD_LEFT).'\'';
+					}
+					$resql_phone = $this->db->query($sql_phone);
+					if (!$resql_phone) {
+						$this->errors[] = $this->db->lasterror;
+						return -1;
+					} else {
+						$num=$this->db->num_rows($resql_phone);
+						if ($num==0) {
+							$sql_cnt='select count(rowid) as cnt from '.MAIN_DB_PREFIX.'socpeople WHERE fk_soc='.$obj->fk_soc;
+							$resql_cnt = $this->db->query($sql_cnt);
+							if (!$resql_cnt) {
+								$this->errors[] = $this->db->lasterror;
 								$error++;
 							} else {
-								$contact_created++;
+								if ($obj_cnt = $this->db->fetch_object($resql_cnt)) {
+									$name=$langs->trans('Phone'). " #".(((int) $obj_cnt->cnt)+1);
+								}
+								$contact = new Contact($this->db);
+								if (strpos($phone,'+')!==false) {
+									$contact->phone_pro=$phone;
+								} else {
+									$contact->phone_pro=str_pad(trim($phone), 10, '0', STR_PAD_LEFT);
+								}
+								$contact->socid=$obj->fk_soc;
+								$contact->lastname=$name;
+								$contact->import_key = dol_now();
+								$contact->array_options['options_mav_contact_brandmob'] = $obj->MarqueMobile;
+								$contact->array_options['options_mav_contact_modelmobile'] = $obj->ModeleMobile;
+								$result = $contact->create($user);
+								if ($result < 0) {
+									$this->errors[] = $contact->error;
+									$error++;
+								} else {
+									$contact_created++;
+								}
 							}
 						}
 					}
@@ -593,7 +624,8 @@ class MonAnalyseVendeur_import extends CommonObject
 			return -1;
 		} else {
 			while ($obj=$this->db->fetch_object($resql)) {
-				if (!in_array(hash('md5', $obj->Nom.$obj->Prenom.$obj->address.$obj->zip.$obj->town), $alreadydone) && !empty($obj->Nom . $obj->Prenom)) {
+				//if (!in_array(hash('md5', $obj->Nom.$obj->Prenom.$obj->address.$obj->zip.$obj->town), $alreadydone) && !empty($obj->Nom . $obj->Prenom)) {
+				if (!in_array(hash('md5', $obj->Nom.$obj->Prenom.$obj->address.$obj->zip), $alreadydone) && !empty($obj->Nom . $obj->Prenom)) {
 					$soc = new Societe($this->db);
 					$soc->name = $obj->Nom . ' ' . $obj->Prenom;
 					$soc->client = 1;
@@ -605,32 +637,20 @@ class MonAnalyseVendeur_import extends CommonObject
 					$soc->email = $obj->Email;
 					$soc->code_client = 'auto';
 					$soc->import_key = dol_now();
-                	               
-                
+
+
                 	//date bitrh (problem with m/d/y)
 					$dtBirth = (!empty($obj->BirthDay1) ? $obj->BirthDay1 : $obj->BirthDay2);
-					//$dtBirth = dol_mktime(0, 0, 0, $dtBirth->format('%m'), $dtBirth->format('%d'), $dtBirth->format('%Y'));
-					
+					if (!empty($dtBirth)) {
+						$dtBirthArray=explode('/',$dtBirth);
+					}
+					$dtBirth = dol_mktime(0, 0, 0, $dtBirthArray[1], $dtBirthArray[0], $dtBirthArray[2]);
                 	$soc->array_options['options_mav_thirdparty_birthday'] = $dtBirth ;
 
-					//date bitrh
-                	
-					//if (!empty($obj->BirthDay1)) {
-					//	var_dump($obj->BirthDay1);
-					//	$timeZone = new DateTimeZone('Europe/Paris');
-					//	$dateSrc = $obj->BirthDay1;
-					//	$dtBirth = new DateTime($dateSrc ,$timeZone);
-					//	$dtBirth=dol_mktime(0, 0, 0, $dtBirth->format('%m'), $dtBirth->format('%d'), $dtBirth->format('%Y'));
-				//	} elseif (!empty($obj->BirthDay2)) {
-				//		$dtBirth = new DateTime($obj->BirthDay2);
-				//		$dtBirth=dol_mktime(0, 0, 0, $dtBirth->format('%m'), $dtBirth->format('%d'), $dtBirth->format('%Y'));
-				//	}
-				//	$soc->array_options['options_mav_thirdparty_birthday'] = $dtBirth;
-                    
-					// todo add txt with N si pas eligible 
+					// todo add txt with N si pas eligible
 					$soc->array_options['options_mav_thirdparty_eligbfilter'] = $obj->EligeFibre;
 					$soc->note_public = $obj->TypeActe . ' ' . $obj->CodeOffre . ' ' . $obj->LibelleOffre. ' ' . $obj->LibellePta;
-					
+
 
 					$result = $soc->create($user);
 					if ($result < 0) {
@@ -638,12 +658,13 @@ class MonAnalyseVendeur_import extends CommonObject
 						$error++;
 					} else {
 						$soc_created++;
-						$alreadydone[] = hash('md5', $obj->Nom . $obj->Prenom . $obj->address . $obj->zip . $obj->town);
+						//$alreadydone[] = hash('md5', $obj->Nom . $obj->Prenom . $obj->address . $obj->zip . $obj->town);
+						$alreadydone[] = hash('md5', $obj->Nom . $obj->Prenom . $obj->address . $obj->zip);
 						$sql_upd = 'UPDATE ' . $this->tempTable . ' SET fk_soc=' . $soc->id . ' WHERE Nom=\'' . $this->db->escape($obj->Nom) . '\'';
 						$sql_upd .= ' AND Prenom=\'' . $this->db->escape($obj->Prenom) . '\'';
-						$sql_upd .= ' AND IFNULL(NumVoie1,NumVoie2)='.(empty($soc->address)?'NULL':'\'' . $this->db->escape($soc->address) . '\'');
-						$sql_upd .= ' AND IFNULL(Zip1,Zip2)='.(empty($soc->zip)?'NULL':'\'' . $this->db->escape($soc->zip) . '\'');
-						$sql_upd .= ' AND IFNULL(Town1,Town2)='.(empty($soc->town)?'NULL':'\'' . $this->db->escape($soc->town) . '\'');
+						$sql_upd .= ' AND IFNULL(IFNULL(NumVoie1,NumVoie2),\'\')='.(empty($soc->address)?'\'\'':'\'' . $this->db->escape($soc->address) . '\'');
+						$sql_upd .= ' AND IFNULL(IFNULL(Zip1,Zip2),\'\')='.(empty($soc->zip)?'\'\'':'\'' . $this->db->escape($soc->zip) . '\'');
+						//$sql_upd .= ' AND IFNULL(IFNULL(Town1,Town2),\'\')='.(empty($soc->town)?'\'\'':'\'' . $this->db->escape($soc->town) . '\'');
 						$resql_upd = $this->db->query($sql_upd);
 						if (!$resql_upd) {
 							$this->errors[] = $this->db->lasterror;
