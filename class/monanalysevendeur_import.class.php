@@ -480,9 +480,81 @@ class MonAnalyseVendeur_import extends CommonObject
 				}
 			}
 
+			if ($importType=='event') {
+				$result = $this->createEvent();
+				if ($result < 0) {
+					return $result;
+				}
+			}
+
 		} else {
 			$this->error = $langs->trans('FileNotFound');
 			return -1;
+		}
+	}
+
+	public function createEvent() {
+
+		global $user, $langs;
+		$event_created = 0;
+		$error=0;
+
+		$this->db->begin();
+
+		$sql = "SELECT rowid,fk_soc,";
+		foreach ($this->indexColData as $dataname => $datacolumnname) {
+			$colname[] = $dataname;
+		}
+		$sql .= implode(',', $colname);
+		$sql .= ' FROM ' . $this->tempTable . ' WHERE fk_soc IS NOT NULL AND DateAction IS NOT NULL AND DateAction<>\'\'';
+		$resql = $this->db->query($sql);
+		if (!$resql) {
+			$this->errors[] = $this->db->lasterror;
+			return -1;
+		} else {
+			while ($obj = $this->db->fetch_object($resql)) {
+				$dateActionStr = $obj->DateAction;
+				$dateAction = dol_mktime(12, 0, 0, substr($obj->DateAction, 4, 2), substr($obj->DateAction, 6, 2), substr($obj->DateAction, 0, 4));
+				$description = (empty($obj->TypeActe) ? '' : $obj->TypeActe) . ' ' . (empty($obj->CodeOffre) ? '' : $obj->CodeOffre) . ' ' . (empty($obj->LibelleOffre) ? '' : $obj->LibelleOffre) . ' ' . (empty($obj->LibellePta) ? '' : $obj->LibellePta);
+				if (!empty($description)) {
+					$sql_event = 'SELECT id, fk_soc FROM ' . MAIN_DB_PREFIX . 'actioncomm';
+					$sql_event .= ' WHERE fk_soc=' . $obj->fk_soc;
+					$sql_event .= ' AND datep=\'' . $this->db->idate($dateAction) . '\'';
+					$sql_event .= ' AND note=\'' . $this->db->escape($description) . '\'';
+					$resql_event = $this->db->query($sql_event);
+					if (!$resql_event) {
+						$this->errors[] = $this->db->lasterror;
+						return -1;
+					} else {
+						$num = $this->db->num_rows($resql_event);
+						if ($num == 0) {
+							$event = new ActionComm($this->db);
+							$event->label = (empty($obj->TypeActe) ? 'Action Comm' : $obj->TypeActe);
+							$event->percentage = 100;
+							$event->datep = $dateAction;
+							$event->datef = $dateAction;
+							$event->socid = $obj->fk_soc;
+							$event->userownerid = $user->id;
+							$event->type_code = 'AC_OTH';
+							$event->note_private = $description;
+							$result = $event->create($user);
+							if ($result < 0) {
+								$this->errors[] = $event->error;
+								$error++;
+							} else {
+								$event_created++;
+							}
+						}
+					}
+				}
+			}
+		}
+		if (empty($error)) {
+			$this->db->commit();
+			return $event_created;
+		} else {
+			$this->db->rollback();
+			return -1 * $error;
 		}
 	}
 
@@ -532,6 +604,8 @@ class MonAnalyseVendeur_import extends CommonObject
 		global $user, $langs;
 		$contact_created = 0;
 		$error=0;
+
+		$this->db->begin();
 
 		$sql = "SELECT rowid,fk_soc,";
 		foreach ($this->indexColData as $dataname => $datacolumnname) {
@@ -649,8 +723,6 @@ class MonAnalyseVendeur_import extends CommonObject
 
 					// todo add txt with N si pas eligible
 					$soc->array_options['options_mav_thirdparty_eligbfilter'] = $obj->EligeFibre;
-					$soc->note_public = $obj->TypeActe . ' ' . $obj->CodeOffre . ' ' . $obj->LibelleOffre. ' ' . $obj->LibellePta;
-
 
 					$result = $soc->create($user);
 					if ($result < 0) {
