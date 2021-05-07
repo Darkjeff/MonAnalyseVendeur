@@ -69,6 +69,92 @@ class MonAnayseVendeurStats
 		return $result;
 	}
 
+	public function getDataStatVendeur($from_date, $to_date) {
+    	$data = array();
+
+    	$sql = 'SELECT fk_user_creat, SUM(IFNULL(nb_traitement,0)) as nbt, SUM(IFNULL(nb_box,0)) as nbb FROM '.MAIN_DB_PREFIX.'monanalysevendeur_rapportjournalier';
+		$sql .= " WHERE date_creation BETWEEN '".$this->db->idate($from_date)."' AND '".$this->db->idate($to_date)."' AND fk_user_creat IS NOT NULL";
+		$sql .= " GROUP BY fk_user_creat";
+		//$sql .= $this->db->order('dm,t.fk_user_creat', 'DESC');
+
+		$resql = $this->db->query($sql);
+		if ($resql)
+		{
+			while ($obj = $this->db->fetch_object($resql))
+			{
+				$data[$obj->fk_user_creat] = array(
+					'nbt'=>$obj->nbt,
+					'txtb'=>round(($obj->nbb / (empty($obj->nbt)?1:$obj->nbt)) * 100),
+					'relance'=>0,
+					'picking'=>0,
+					'potbox'=>0,
+					'box'=>0,
+					'txbb'=>0,
+					'ecoute'=>0
+				);
+			}
+		} else {
+			$this->error=$this->db->lasterror;
+			return -1;
+		}
+
+		foreach($data as $key=>$detail) {
+			//Relance
+			$sql = 'SELECT count(ct.rowid) as nb FROM ' . MAIN_DB_PREFIX . 'contacttracking as ct';
+			$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'actioncomm as ac ON (ac.id = ct.fk_event)';
+			$sql .= ' WHERE ct.fk_user_creat='.$key;
+			$resql = $this->db->query($sql);
+			if ($resql)
+			{
+				while ($obj = $this->db->fetch_object($resql))
+				{
+					$data[$key]['relance'] = $obj->nb;
+				}
+			} else {
+				$this->error=$this->db->lasterror;
+				return -1;
+			}
+
+			//Picking
+			$sql = 'SELECT count(fi.rowid),ext.potentielbox,ext.boxvalidee as nb FROM ' . MAIN_DB_PREFIX . 'fichinter as fi';
+			$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'fichinter_extrafields as ext ON (ext.fk_object = fi.rowid)';
+			$sql .= ' WHERE ext.vendeur='.$key;
+			$resql = $this->db->query($sql);
+			if ($resql)
+			{
+				while ($obj = $this->db->fetch_object($resql))
+				{
+					$data[$key]['picking'] = $obj->nb;
+				}
+			} else {
+				$this->error=$this->db->lasterror;
+				return -1;
+			}
+
+			//potbox et ecoute
+			$sql = 'SELECT count(ec.rowid) as nb  FROM ' . MAIN_DB_PREFIX . 'monanalysevendeur_ecoute as ec';
+			//$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'ficheinter_extrafields as ext ON (ext.fk_object = fi.rowid)';
+			$sql .= ' WHERE ext.vendeur='.$key;
+			$resql = $this->db->query($sql);
+			if ($resql)
+			{
+				while ($obj = $this->db->fetch_object($resql))
+				{
+					//$data[$key]['potbox'] = $obj->potbox;
+					//$data[$key]['box'] = $obj->potbox;
+					$data[$key]['ecoute'] = $obj->nb;
+				}
+			} else {
+				$this->error=$this->db->lasterror;
+				return -1;
+			}
+
+		}
+
+
+		return $data;
+	}
+
 	/**
 	 * Return intervention number by month for a year
 	 *
