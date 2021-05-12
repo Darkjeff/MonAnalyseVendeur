@@ -101,8 +101,9 @@ class MonAnayseVendeurStats
 		foreach($data as $key=>$detail) {
 			//Relance
 			$sql = 'SELECT count(ct.rowid) as nb FROM ' . MAIN_DB_PREFIX . 'contacttracking as ct';
-			$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'actioncomm as ac ON (ac.id = ct.fk_event)';
+			$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'actioncomm as ac ON (ac.id = ct.fk_event) ';
 			$sql .= ' WHERE ct.fk_user_creat='.$key;
+			$sql .= "AND ac.datec BETWEEN '".$this->db->idate($from_date)."' AND '".$this->db->idate($to_date)."'";
 			$resql = $this->db->query($sql);
 			if ($resql)
 			{
@@ -122,6 +123,7 @@ class MonAnayseVendeurStats
 			$sql .= ' FROM ' . MAIN_DB_PREFIX . 'fichinter as fi';
 			$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'fichinter_extrafields as ext ON (ext.fk_object = fi.rowid)';
 			$sql .= ' WHERE ext.vendeur='.$key;
+			$sql .= "AND fi.dateo BETWEEN '".$this->db->idate($from_date)."' AND '".$this->db->idate($to_date)."'";
 			$resql = $this->db->query($sql);
 			if ($resql)
 			{
@@ -141,6 +143,7 @@ class MonAnayseVendeurStats
 			$sql = 'SELECT count(ec.rowid) as nb  FROM ' . MAIN_DB_PREFIX . 'monanalysevendeur_ecoute as ec';
 			//$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'ficheinter_extrafields as ext ON (ext.fk_object = fi.rowid)';
 			$sql .= ' WHERE ec.salesman='.$key;
+			$sql .= "AND ec.date_creation BETWEEN '".$this->db->idate($from_date)."' AND '".$this->db->idate($to_date)."'";
 			$resql = $this->db->query($sql);
 			if ($resql)
 			{
