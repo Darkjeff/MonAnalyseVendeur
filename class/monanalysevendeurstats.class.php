@@ -102,8 +102,9 @@ class MonAnayseVendeurStats
 			//Relance
 			$sql = 'SELECT count(ct.rowid) as nb FROM ' . MAIN_DB_PREFIX . 'contacttracking as ct';
 			$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'actioncomm as ac ON (ac.id = ct.fk_event) ';
-			$sql .= ' WHERE ct.fk_user_creat='.$key;
-			$sql .= "AND ac.datec BETWEEN '".$this->db->idate($from_date)."' AND '".$this->db->idate($to_date)."'";
+			//$sql .= ' WHERE ct.fk_user_creat='.$key;
+			$sql .= " WHERE ac.datec BETWEEN '".$this->db->idate($from_date)."' AND '".$this->db->idate($to_date)."'";
+			$sql .= ' AND ct.fk_user_creat='.$key;
 			$resql = $this->db->query($sql);
 			if ($resql)
 			{
@@ -122,8 +123,9 @@ class MonAnayseVendeurStats
 			$sql .= ',IFNULL(SUM(CASE WHEN ext.boxvalidee LIKE \'%1%\' THEN 1 ELSE 0 END),0) as box';
 			$sql .= ' FROM ' . MAIN_DB_PREFIX . 'fichinter as fi';
 			$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'fichinter_extrafields as ext ON (ext.fk_object = fi.rowid)';
-			$sql .= ' WHERE ext.vendeur='.$key;
-			$sql .= "AND fi.dateo BETWEEN '".$this->db->idate($from_date)."' AND '".$this->db->idate($to_date)."'";
+			//$sql .= ' WHERE ext.vendeur='.$key;
+			$sql .= "WHERE fi.dateo BETWEEN '".$this->db->idate($from_date)."' AND '".$this->db->idate($to_date)."'";
+			$sql .= ' AND ext.vendeur='.$key;
 			$resql = $this->db->query($sql);
 			if ($resql)
 			{
@@ -142,8 +144,9 @@ class MonAnayseVendeurStats
 			//ecoute
 			$sql = 'SELECT count(ec.rowid) as nb  FROM ' . MAIN_DB_PREFIX . 'monanalysevendeur_ecoute as ec';
 			//$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'ficheinter_extrafields as ext ON (ext.fk_object = fi.rowid)';
-			$sql .= ' WHERE ec.salesman='.$key;
-			$sql .= "AND ec.date_creation BETWEEN '".$this->db->idate($from_date)."' AND '".$this->db->idate($to_date)."'";
+			//$sql .= ' WHERE ec.salesman='.$key;
+			$sql .= " WHERE ec.date_creation BETWEEN '".$this->db->idate($from_date)."' AND '".$this->db->idate($to_date)."'";
+			$sql .= ' AND ec.salesman='.$key;
 			$resql = $this->db->query($sql);
 			if ($resql)
 			{
