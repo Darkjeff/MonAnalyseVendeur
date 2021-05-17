@@ -138,7 +138,15 @@ class modMonAnalyseVendeur extends DolibarrModules
 		// );
 		$this->const = array(1 => array('MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVFIX', 'chaine', '', '', 0),
 			2 => array('MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVMOB', 'chaine', '', '', 0),
-			3 => array('MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVADD', 'chaine', '', '', 0));
+			3 => array('MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVADD', 'chaine', '', '', 0),
+			4 => array('MONANALYSEVENDEUR_MAG_1', 'chaine', '', '', 0),
+			5 => array('MONANALYSEVENDEUR_MAG_2', 'chaine', '', '', 0),
+			6 => array('MONANALYSEVENDEUR_MAG_3', 'chaine', '', '', 0),
+			7 => array('MONANALYSEVENDEUR_MAG_4', 'chaine', '', '', 0),
+			8 => array('MONANALYSEVENDEUR_MAG_5', 'chaine', '', '', 0),
+			9 => array('MONANALYSEVENDEUR_MAG_6', 'chaine', '', '', 0),
+			10 => array('MONANALYSEVENDEUR_MAG_7', 'chaine', '', '', 0),
+			11 => array('MONANALYSEVENDEUR_MAG_8', 'chaine', '', '', 0));
 
 		// Some keys to add into the overwriting translation tables
 		/*$this->overwrite_translation = array(
