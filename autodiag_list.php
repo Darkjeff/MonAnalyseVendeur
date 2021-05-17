@@ -152,7 +152,7 @@ $hookmanager->initHooks(array('contacttrackinglist'));     // Note that conf->ho
 // Fetch optionals attributes and labels
 $extralabels = $extrafields->fetch_name_optionals_label('contacttracking');
 $search_array_options = $extrafields->getOptionalsFromPost($extralabels, '', 'search_');
-
+$search_users_tags = GETPOST('users_tags', 'array');
 // Default sort order (if not yet defined by previous GETPOST)
 if (!$sortfield)
 	$sortfield = "t.date_creation";   // Set here default search field. By default 1st field in definition.
@@ -383,6 +383,13 @@ if (is_array($extrafields->attribute_label) && count($extrafields->attribute_lab
 if (GETPOST('relance', 'int') == 1) {
 	$sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "actioncomm as ac on (ac.id = t.fk_event)";
 }
+
+if (!empty($search_users_tags)) {
+	$sql .= ' INNER JOIN '.MAIN_DB_PREFIX.'categorie_user as tagu ON tagu.fk_user=t.fk_user_creat';
+	$sql .= ' AND tagu.fk_categorie IN (' . implode(',', $search_users_tags) . ')';
+}
+
+
 
 if ($object->ismultientitymanaged == 1)
 	$sql .= " WHERE t.entity IN (" . getEntity('contacttracking') . ")";
@@ -637,6 +644,14 @@ if ($sall) {
 }
 
 $moreforfilter = '';
+$moreforfilter.='<div class="divsearchfield">';
+$moreforfilter.= $langs->trans('Agence') . ':';
+
+$cate_arbo = $form->select_all_categories('user', null, 'parent', null, null, 1);
+$moreforfilter.= $form->multiselectarray('users_tags', $cate_arbo, $search_users_tags, null, null, null, null, '100%');
+$moreforfilter.= '</div>';
+
+
 /* $moreforfilter.='<div class="divsearchfield">';
   $moreforfilter.= $langs->trans('MyFilter') . ': <input type="text" name="search_myfield" value="'.dol_escape_htmltag($search_myfield).'">';
   $moreforfilter.= '</div>'; */
