@@ -83,7 +83,7 @@ print '<td align="center">'.$conf->global->MONANALYSEVENDEUR_MAG_5.'</td>';
 print '<td align="center">'.$conf->global->MONANALYSEVENDEUR_MAG_6.'</td>';
 print '<td align="center">'.$conf->global->MONANALYSEVENDEUR_MAG_7.'</td>';
 print '<td align="center">'.$conf->global->MONANALYSEVENDEUR_MAG_8.'</td>';
-print '<td align="center">'.$langs->trans("Hazebrouck").'</td>';
+print '<td align="center">'.$conf->global->MONANALYSEVENDEUR_MAG_9.'</td>';
 print '<td align="center"><b>'.$langs->trans("Total").'</b></td></tr>';
 
 
@@ -97,7 +97,7 @@ $sql .= "  ROUND(SUM(IF(cat.label='".$conf->global->MONANALYSEVENDEUR_MAG_5."',r
 $sql .= "  ROUND(SUM(IF(cat.label='".$conf->global->MONANALYSEVENDEUR_MAG_6."',rj.nb_traitement,0)),0) AS '".$conf->global->MONANALYSEVENDEUR_MAG_6."',";
 $sql .= "  ROUND(SUM(IF(cat.label='".$conf->global->MONANALYSEVENDEUR_MAG_7."',rj.nb_traitement,0)),0) AS '".$conf->global->MONANALYSEVENDEUR_MAG_7."',";
 $sql .= "  ROUND(SUM(IF(cat.label='".$conf->global->MONANALYSEVENDEUR_MAG_8."',rj.nb_traitement,0)),0) AS '".$conf->global->MONANALYSEVENDEUR_MAG_8."',";
-$sql .= "  ROUND(SUM(IF(cat.label='Hazebrouck',rj.nb_traitement,0)),0) AS 'Hazebrouck',";
+$sql .= "  ROUND(SUM(IF(cat.label='".$conf->global->MONANALYSEVENDEUR_MAG_9."',rj.nb_traitement,0)),0) AS '".$conf->global->MONANALYSEVENDEUR_MAG_9."',";
 $sql .= "  ROUND(SUM(rj.nb_traitement),0) as 'Total'";
 $sql .= " FROM " . MAIN_DB_PREFIX . "monanalysevendeur_rapportjournalier as rj";
 $sql .= " , " . MAIN_DB_PREFIX . "categorie_user as cu";
@@ -156,7 +156,7 @@ print '<td align="center">'.$conf->global->MONANALYSEVENDEUR_MAG_5.'</td>';
 print '<td align="center">'.$conf->global->MONANALYSEVENDEUR_MAG_6.'</td>';
 print '<td align="center">'.$conf->global->MONANALYSEVENDEUR_MAG_7.'</td>';
 print '<td align="center">'.$conf->global->MONANALYSEVENDEUR_MAG_8.'</td>';
-print '<td align="center">'.$langs->trans("Hazebrouck").'</td>';
+print '<td align="center">'.$conf->global->MONANALYSEVENDEUR_MAG_9.'</td>';
 print '<td align="center"><b>'.$langs->trans("Total").'</b></td></tr>';
 
 
@@ -170,7 +170,7 @@ $sql .= "  ROUND(SUM(IF(cat.label='".$conf->global->MONANALYSEVENDEUR_MAG_5."',r
 $sql .= "  ROUND(SUM(IF(cat.label='".$conf->global->MONANALYSEVENDEUR_MAG_6."',rj.nb_box,0)),0) AS '".$conf->global->MONANALYSEVENDEUR_MAG_6."',";
 $sql .= "  ROUND(SUM(IF(cat.label='".$conf->global->MONANALYSEVENDEUR_MAG_7."',rj.nb_box,0)),0) AS '".$conf->global->MONANALYSEVENDEUR_MAG_7."',";
 $sql .= "  ROUND(SUM(IF(cat.label='".$conf->global->MONANALYSEVENDEUR_MAG_8."',rj.nb_box,0)),0) AS '".$conf->global->MONANALYSEVENDEUR_MAG_8."',";
-$sql .= "  ROUND(SUM(IF(cat.label='Hazebrouck',rj.nb_box,0)),0) AS 'Hazebrouck',";
+$sql .= "  ROUND(SUM(IF(cat.label='".$conf->global->MONANALYSEVENDEUR_MAG_9."',rj.nb_box,0)),0) AS '".$conf->global->MONANALYSEVENDEUR_MAG_9."',";
 $sql .= "  ROUND(SUM(rj.nb_box),0) as 'Total'";
 $sql .= " FROM " . MAIN_DB_PREFIX . "monanalysevendeur_rapportjournalier as rj";
 $sql .= " , " . MAIN_DB_PREFIX . "categorie_user as cu";
