@@ -66,7 +66,8 @@ $arrayofparameters = array(
 	'MONANALYSEVENDEUR_MAG_5'=>array('css'=>'minwidth500', 'enabled'=>1),
 	'MONANALYSEVENDEUR_MAG_6'=>array('css'=>'minwidth500', 'enabled'=>1),
 	'MONANALYSEVENDEUR_MAG_7'=>array('css'=>'minwidth500', 'enabled'=>1),
-	'MONANALYSEVENDEUR_MAG_8'=>array('css'=>'minwidth500', 'enabled'=>1)
+	'MONANALYSEVENDEUR_MAG_8'=>array('css'=>'minwidth500', 'enabled'=>1),
+	'MONANALYSEVENDEUR_MAG_9'=>array('css'=>'minwidth500', 'enabled'=>1)
 );
 
 

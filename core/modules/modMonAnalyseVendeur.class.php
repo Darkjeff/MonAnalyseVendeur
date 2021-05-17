@@ -146,7 +146,8 @@ class modMonAnalyseVendeur extends DolibarrModules
 			8 => array('MONANALYSEVENDEUR_MAG_5', 'chaine', '', '', 0),
 			9 => array('MONANALYSEVENDEUR_MAG_6', 'chaine', '', '', 0),
 			10 => array('MONANALYSEVENDEUR_MAG_7', 'chaine', '', '', 0),
-			11 => array('MONANALYSEVENDEUR_MAG_8', 'chaine', '', '', 0));
+			11 => array('MONANALYSEVENDEUR_MAG_8', 'chaine', '', '', 0),
+			12 => array('MONANALYSEVENDEUR_MAG_9', 'chaine', '', '', 0));
 
 		// Some keys to add into the overwriting translation tables
 		/*$this->overwrite_translation = array(
