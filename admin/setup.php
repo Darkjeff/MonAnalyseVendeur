@@ -58,7 +58,15 @@ $value = GETPOST('value', 'alpha');
 $arrayofparameters = array(
 	'MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVFIX'=>array('css'=>'minwidth500', 'enabled'=>1),
 	'MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVMOB'=>array('css'=>'minwidth500', 'enabled'=>1),
-	'MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVADD'=>array('css'=>'minwidth500', 'enabled'=>1)
+	'MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVADD'=>array('css'=>'minwidth500', 'enabled'=>1),
+	'MONANALYSEVENDEUR_MAG_1'=>array('css'=>'minwidth500', 'enabled'=>1),
+	'MONANALYSEVENDEUR_MAG_2'=>array('css'=>'minwidth500', 'enabled'=>1),
+	'MONANALYSEVENDEUR_MAG_3'=>array('css'=>'minwidth500', 'enabled'=>1),
+	'MONANALYSEVENDEUR_MAG_4'=>array('css'=>'minwidth500', 'enabled'=>1),
+	'MONANALYSEVENDEUR_MAG_5'=>array('css'=>'minwidth500', 'enabled'=>1),
+	'MONANALYSEVENDEUR_MAG_6'=>array('css'=>'minwidth500', 'enabled'=>1),
+	'MONANALYSEVENDEUR_MAG_7'=>array('css'=>'minwidth500', 'enabled'=>1),
+	'MONANALYSEVENDEUR_MAG_8'=>array('css'=>'minwidth500', 'enabled'=>1)
 );
 
 
