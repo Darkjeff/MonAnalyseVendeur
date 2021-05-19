@@ -138,16 +138,7 @@ class modMonAnalyseVendeur extends DolibarrModules
 		// );
 		$this->const = array(1 => array('MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVFIX', 'chaine', '', '', 0),
 			2 => array('MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVMOB', 'chaine', '', '', 0),
-			3 => array('MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVADD', 'chaine', '', '', 0),
-			4 => array('MONANALYSEVENDEUR_MAG_1', 'chaine', '', '', 0),
-			5 => array('MONANALYSEVENDEUR_MAG_2', 'chaine', '', '', 0),
-			6 => array('MONANALYSEVENDEUR_MAG_3', 'chaine', '', '', 0),
-			7 => array('MONANALYSEVENDEUR_MAG_4', 'chaine', '', '', 0),
-			8 => array('MONANALYSEVENDEUR_MAG_5', 'chaine', '', '', 0),
-			9 => array('MONANALYSEVENDEUR_MAG_6', 'chaine', '', '', 0),
-			10 => array('MONANALYSEVENDEUR_MAG_7', 'chaine', '', '', 0),
-			11 => array('MONANALYSEVENDEUR_MAG_8', 'chaine', '', '', 0),
-			12 => array('MONANALYSEVENDEUR_MAG_9', 'chaine', '', '', 0));
+			3 => array('MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVADD', 'chaine', '', '', 0));
 
 		// Some keys to add into the overwriting translation tables
 		/*$this->overwrite_translation = array(
@@ -802,7 +793,7 @@ class modMonAnalyseVendeur extends DolibarrModules
 			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
 			'enabled'=>'$conf->monanalysevendeur->enabled',
 			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
-			'perms'=>'$user->rights->monanalysevendeur->import',
+			'perms'=>'1',
 			'target'=>'',
 			// 0=Menu for internal users, 1=external users, 2=both
 			'user'=>2
