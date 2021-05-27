@@ -102,11 +102,12 @@ if (empty($action) && empty($id) && empty($ref)) $action = 'view';
 include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be include, not include_once.
 
 
-$permissiontoread = $user->rights->monanalysevendeur->dilax->read;
-$permissiontoadd = $user->rights->monanalysevendeur->dilax->write; // Used by the include of actions_addupdatedelete.inc.php and actions_lineupdown.inc.php
-$permissiontodelete = $user->rights->monanalysevendeur->dilax->delete || ($permissiontoadd && isset($object->status) && $object->status == $object::STATUS_DRAFT);
-$permissionnote = $user->rights->monanalysevendeur->dilax->write; // Used by the include of actions_setnotes.inc.php
-$permissiondellink = $user->rights->monanalysevendeur->dilax->write; // Used by the include of actions_dellink.inc.php
+
+$permissiontoread = $user->rights->monanalysevendeur->read;
+$permissiontoadd = $user->rights->monanalysevendeur->write; // Used by the include of actions_addupdatedelete.inc.php and actions_lineupdown.inc.php
+$permissiontodelete = $user->rights->monanalysevendeur->delete || ($permissiontoadd && isset($object->status) && $object->status == $object::STATUS_DRAFT);
+$permissionnote = $user->rights->monanalysevendeur->write; // Used by the include of actions_setnotes.inc.php
+$permissiondellink = $user->rights->monanalysevendeur->write; // Used by the include of actions_dellink.inc.php
 $upload_dir = $conf->monanalysevendeur->multidir_output[isset($object->entity) ? $object->entity : 1];
 
 // Security check - Protection if external user
