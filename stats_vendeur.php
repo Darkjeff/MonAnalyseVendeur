@@ -83,7 +83,9 @@ print '<table class="tagtable nobottomiftotal liste">'."\n";
 print '<tr class="liste_titre">';
 print '<td>Vendeur</td>';
 print '<td>Nb Traitement</td>';
-print '<td>Tx Transfo</td>';
+print '<td>Tx Box</td>';
+print '<td>Tx AboHV</td>';
+print '<td>Tx Service</td>';
 print '<td>Relance</td>';
 print '<td>Picking</td>';
 print '<td>Pot Box</td>';
@@ -114,9 +116,19 @@ if (!empty($from_date) && !empty($to_date)) {
 			print $data['nbt'];
 			print '</td>';
 
-			//Tx Transfo
+			//Tx Transfo Box
 			print '<td>';
 			print $data['txtb'];
+			print '</td>';
+			
+			//Tx Transfo AboHV
+			print '<td>';
+			print $data['txta'];
+			print '</td>';
+			
+			//Tx Transfo Service
+			print '<td>';
+			print $data['txts'];
 			print '</td>';
 
 			//relance
