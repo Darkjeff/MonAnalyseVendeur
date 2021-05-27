@@ -196,6 +196,8 @@ foreach ($stats->data_row as $val) {
 	print '<td class="center">' . $user_static->getFullName($langs). '</td>';
 	print '<td class="right">' . $val[2] . '</td>';
 	print '<td class="right">' . ($val[2]!=0?round(($val[3] / $val[2]) * 100):'') . '</td>';
+	print '<td class="right">' . ($val[2]!=0?round(($val[4] / $val[2]) * 100):'') . '</td>';
+	print '<td class="right">' . ($val[2]!=0?round(($val[5] / $val[2]) * 100):'') . '</td>';
 	print '</tr>';
 }
 
