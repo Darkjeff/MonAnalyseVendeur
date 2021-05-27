@@ -181,7 +181,9 @@ print '<tr class="liste_titre" height="24">';
 print '<td class="center">' . $langs->trans($type_period_array[$period_type]) . '</td>';
 print '<td class="center">' . $langs->trans('User') . '</td>';
 print '<td class="right">' . $langs->trans("Nombre Traitement") . '</td>';
-print '<td class="right">' . $langs->trans("Tx Transformation") . '</td>';
+print '<td class="right">' . $langs->trans("Tx Transformation Box") . '</td>';
+print '<td class="right">' . $langs->trans("Tx Transformation Abo HV") . '</td>';
+print '<td class="right">' . $langs->trans("Tx Transformation Service") . '</td>';
 print '</tr>';
 
 

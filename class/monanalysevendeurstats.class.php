@@ -72,7 +72,7 @@ class MonAnayseVendeurStats
 	public function getDataStatVendeur($from_date, $to_date) {
     	$data = array();
 
-    	$sql = 'SELECT fk_user_creat, SUM(IFNULL(nb_traitement,0)) as nbt, SUM(IFNULL(nb_box,0)) as nbb FROM '.MAIN_DB_PREFIX.'monanalysevendeur_rapportjournalier';
+    	$sql = 'SELECT fk_user_creat, SUM(IFNULL(nb_traitement,0)) as nbt, SUM(IFNULL(nb_box,0)) as nbb, SUM(IFNULL(nb_abohv,0)) as nba, SUM(IFNULL(nb_service,0)) as nbs FROM '.MAIN_DB_PREFIX.'monanalysevendeur_rapportjournalier';
 		$sql .= " WHERE date BETWEEN '".$this->db->idate($from_date)."' AND '".$this->db->idate($to_date)."' AND fk_user_creat IS NOT NULL";
 		$sql .= " GROUP BY fk_user_creat";
 		//$sql .= $this->db->order('dm,t.fk_user_creat', 'DESC');
@@ -85,6 +85,8 @@ class MonAnayseVendeurStats
 				$data[$obj->fk_user_creat] = array(
 					'nbt'=>$obj->nbt,
 					'txtb'=>round(($obj->nbb / (empty($obj->nbt)?1:$obj->nbt)) * 100),
+					'txta'=>round(($obj->nba / (empty($obj->nbt)?1:$obj->nbt)) * 100),
+					'txts'=>round(($obj->nbs / (empty($obj->nbt)?1:$obj->nbt)) * 100),
 					'relance'=>0,
 					'picking'=>0,
 					'potbox'=>0,
@@ -204,7 +206,7 @@ class MonAnayseVendeurStats
 			}
 		}
 
-		$sql = "SELECT date_format(t.date,'".$period_type."') as dm, t.fk_user_creat, SUM(t.nb_traitement) as nb, SUM(t.nb_box) as nbbox";
+		$sql = "SELECT date_format(t.date,'".$period_type."') as dm, t.fk_user_creat, SUM(t.nb_traitement) as nb, SUM(t.nb_box) as nbbox, SUM(t.nb_abohv) as nbabohv, SUM(t.nb_service) as nbservice";
 		$sql .= " FROM ".MAIN_DB_PREFIX.$object_static->table_element . ' as t';
 		if (!empty($user_tags)) {
 			$sql .= ' INNER JOIN '.MAIN_DB_PREFIX.'categorie_user as tagu ON tagu.fk_user=t.fk_user_creat';
