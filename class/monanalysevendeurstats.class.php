@@ -73,7 +73,7 @@ class MonAnayseVendeurStats
     	$data = array();
 
     	$sql = 'SELECT fk_user_creat, SUM(IFNULL(nb_traitement,0)) as nbt, SUM(IFNULL(nb_box,0)) as nbb FROM '.MAIN_DB_PREFIX.'monanalysevendeur_rapportjournalier';
-		$sql .= " WHERE date_creation BETWEEN '".$this->db->idate($from_date)."' AND '".$this->db->idate($to_date)."' AND fk_user_creat IS NOT NULL";
+		$sql .= " WHERE date BETWEEN '".$this->db->idate($from_date)."' AND '".$this->db->idate($to_date)."' AND fk_user_creat IS NOT NULL";
 		$sql .= " GROUP BY fk_user_creat";
 		//$sql .= $this->db->order('dm,t.fk_user_creat', 'DESC');
 
