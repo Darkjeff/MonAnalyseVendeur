@@ -45,7 +45,7 @@ $langs->load ( "other" );
 
 $from_date = dol_mktime(0, 0, 0, GETPOST('frmdtmonth', 'int'), GETPOST('frmdtday', 'int'), GETPOST('frmdtyear', 'int'));
 $to_date = dol_mktime(23, 59, 59, GETPOST('todtmonth', 'int'), GETPOST('todtday', 'int'), GETPOST('todtyear', 'int'));
-
+$categid=GETPOST('categuser','int');
 
 /*
  * View
@@ -73,7 +73,7 @@ print '<tr><td class="left">' . $langs->trans("To") . '</td><td class="left">';
 print $form->selectDate($to_date, 'todt', 0, 0, 1, 'stats', 1, 0);
 print '</td></tr>';
 print '<tr><td class="left">' . $langs->trans("Agence") . '</td><td class="left">';
-print $form->select_all_categories('user', null, 'parent', null, null, 1);
+print $form->select_all_categories('user', $categid, 'categuser', null, null, 0);
 print '</td></tr>';
 print '<tr><td class="center" colspan="2"><input type="submit" name="submit" class="button" value="' . $langs->trans("Refresh") . '"></td></tr>';
 print '</table>';
@@ -98,7 +98,7 @@ print '<td>Ecoute</td>';
 print '</tr>';
 // Build graphic number of object
 if (!empty($from_date) && !empty($to_date)) {
-	$result = $stats->getDataStatVendeur($from_date, $to_date);
+	$result = $stats->getDataStatVendeur($from_date, $to_date, $categid);
 	if (!is_array($result) && $result < 0) {
 		setEventMessage($stats->error, 'errors');
 	} else {
@@ -123,12 +123,12 @@ if (!empty($from_date) && !empty($to_date)) {
 			print '<td>';
 			print $data['txtb'];
 			print '</td>';
-			
+
 			//Tx Transfo AboHV
 			print '<td>';
 			print $data['txta'];
 			print '</td>';
-			
+
 			//Tx Transfo Service
 			print '<td>';
 			print $data['txts'];
