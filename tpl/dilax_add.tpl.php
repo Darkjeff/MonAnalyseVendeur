@@ -54,7 +54,12 @@ foreach ($object->fields as $key => $val)
 	print '</td>';
 	print '<td>';
 	if ($key== 'fk_category_user')  {
-		print $form->select_all_categories('user', GETPOST($key,'int') , $key, null, null, 0);
+		$cat = New Categorie($db);
+		$cats=$cat->containing($user->id,'user');
+		if (!empty($cats)) {
+			$defaultVal = reset($cats)->id;
+		}
+		print $form->select_all_categories('user', $defaultVal , $key, null, null, 0);
 	} else {
 		if (in_array($val['type'], array('int', 'integer'))) $value = GETPOST($key, 'int');
 		elseif ($val['type'] == 'text' || $val['type'] == 'html') $value = GETPOST($key, 'none');
