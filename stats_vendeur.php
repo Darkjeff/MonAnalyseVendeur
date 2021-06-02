@@ -46,6 +46,9 @@ $langs->load ( "other" );
 $from_date = dol_mktime(0, 0, 0, GETPOST('frmdtmonth', 'int'), GETPOST('frmdtday', 'int'), GETPOST('frmdtyear', 'int'));
 $to_date = dol_mktime(23, 59, 59, GETPOST('todtmonth', 'int'), GETPOST('todtday', 'int'), GETPOST('todtyear', 'int'));
 $categid=GETPOST('categuser','int');
+if ($categid==-1) {
+	$categid=0;
+}
 
 /*
  * View

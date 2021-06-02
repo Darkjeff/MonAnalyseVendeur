@@ -20,6 +20,7 @@ CREATE TABLE llx_monanalysevendeur_dilax(
 	ref varchar(128) DEFAULT '(PROV)' NOT NULL, 
 	qty real, 
 	description text, 
+	fk_category_user int, 
 	date_creation datetime NOT NULL, 
 	tms timestamp, 
 	fk_user_creat integer NOT NULL, 
