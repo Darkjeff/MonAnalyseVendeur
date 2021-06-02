@@ -46,6 +46,14 @@ function monanalysevendeurAdminPrepareHead()
 	$head[$h][2] = 'monanalysevendeur_extrafields';
 	$h++;
 */
+
+
+	$head[$h][0] = dol_buildpath("/monanalysevendeur/admin/ecoute_extrafields.php", 1);
+	$head[$h][1] = $langs->trans("ExtraFields"). ' ('.$langs->trans("Ecoute").')';
+	$head[$h][2] = 'ecoute_extrafields';
+	$h++;
+
+
 	$head[$h][0] = dol_buildpath("/monanalysevendeur/admin/about.php", 1);
 	$head[$h][1] = $langs->trans("About");
 	$head[$h][2] = 'about';

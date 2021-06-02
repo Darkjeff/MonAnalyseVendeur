@@ -123,10 +123,6 @@ foreach ($object->fields as $key => $val)
 	print '</tr>';
 }
 
-print '</table>';
-
-// We close div and reopen for second column
-print '</div>';
 
 ?>
 <!-- END PHP TEMPLATE commonfields_view.tpl.php -->
