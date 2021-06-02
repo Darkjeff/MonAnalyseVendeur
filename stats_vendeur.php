@@ -49,6 +49,15 @@ $categid=GETPOST('categuser','int');
 if ($categid==-1) {
 	$categid=0;
 }
+/////action to export to excel
+
+if ( $action == "exl" ) {
+	$filename="rapport_vendeur_".sprintf("%02d", $from_date)."-".$to_date.".xls";
+	require_once dol_buildpath('/monanalysevendeur/tpl/rapport_vendeur_xsl.php');
+	die();
+}
+
+
 
 /*
  * View
@@ -78,6 +87,7 @@ print '</td></tr>';
 print '<tr><td class="left">' . $langs->trans("Agence") . '</td><td class="left">';
 print $form->select_all_categories('user', $categid, 'categuser', null, null, 0);
 print '</td></tr>';
+print '<input type="submit" name="submit" class="butAction" value="Export Excel" style="font-weight: bold;float:right;text-shadow: none;">';
 print '<tr><td class="center" colspan="2"><input type="submit" name="submit" class="button" value="' . $langs->trans("Refresh") . '"></td></tr>';
 print '</table>';
 print '</form>';
