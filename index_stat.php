@@ -114,7 +114,7 @@ if (!$mesg && !empty($data_transfo)) {
 	$px2->SetShading(3);
 	$px2->SetHorizTickIncrement(1);
 	$px2->mode = 'depth';
-	$px2->SetTitle($langs->trans("Tx Transformation"));
+	$px2->SetTitle($langs->trans("Tx Transformation Box"));
 
 	$px2->draw($filenamenbtx, $fileurlnbtx);
 }
@@ -181,8 +181,11 @@ print '<tr class="liste_titre" height="24">';
 print '<td class="center">' . $langs->trans($type_period_array[$period_type]) . '</td>';
 print '<td class="center">' . $langs->trans('User') . '</td>';
 print '<td class="right">' . $langs->trans("Nombre Traitement") . '</td>';
+print '<td class="right">' . $langs->trans("Nombre Box") . '</td>';
 print '<td class="right">' . $langs->trans("Tx Transformation Box") . '</td>';
+print '<td class="right">' . $langs->trans("Nombre Abo HV") . '</td>';
 print '<td class="right">' . $langs->trans("Tx Transformation Abo HV") . '</td>';
+print '<td class="right">' . $langs->trans("Nombre Service") . '</td>';
 print '<td class="right">' . $langs->trans("Tx Transformation Service") . '</td>';
 print '</tr>';
 
@@ -195,8 +198,11 @@ foreach ($stats->data_row as $val) {
 	$user_static->fetch($val[1]);
 	print '<td class="center">' . $user_static->getFullName($langs). '</td>';
 	print '<td class="right">' . $val[2] . '</td>';
+	print '<td class="right">' . $val[3] . '</td>';
 	print '<td class="right">' . ($val[2]!=0?round(($val[3] / $val[2]) * 100):'') . '</td>';
+	print '<td class="right">' . $val[4] . '</td>';
 	print '<td class="right">' . ($val[2]!=0?round(($val[4] / $val[2]) * 100):'') . '</td>';
+	print '<td class="right">' . $val[5] . '</td>';
 	print '<td class="right">' . ($val[2]!=0?round(($val[5] / $val[2]) * 100):'') . '</td>';
 	print '</tr>';
 }
