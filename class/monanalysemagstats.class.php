@@ -72,7 +72,7 @@ class MonAnayseVendeurStats
 	public function getDataStatVendeur($from_date, $to_date) {
     	$data = array();
 
-    	$sql = 'SELECT cat.label as mag, SUM(IFNULL(rpj.nb_traitement,0)) as nbt, SUM(IFNULL(rpj.nb_box,0)) as nbb, ';
+    	$sql = 'SELECT catu.fk_categorie as cate, cat.label as mag, SUM(IFNULL(rpj.nb_traitement,0)) as nbt, SUM(IFNULL(rpj.nb_box,0)) as nbb, ';
 		$sql .= ' SUM(IFNULL(rpj.nb_abohv,0)) as nba, SUM(IFNULL(rpj.nb_service,0)) as nbs ';
 		$sql .= ' FROM '.MAIN_DB_PREFIX.'monanalysevendeur_rapportjournalier as rpj';
 		$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'categorie_user as catu ON rpj.fk_user_creat=catu.fk_user ';
@@ -86,7 +86,7 @@ class MonAnayseVendeurStats
 		{
 			while ($obj = $this->db->fetch_object($resql))
 			{
-				$data[$obj->mag] = array(
+				$data[$obj->cate] = array(
 					'mag'=>$obj->mag,
 					'nbt'=>$obj->nbt,
 					'nbb'=>$obj->nbb,
@@ -100,6 +100,7 @@ class MonAnayseVendeurStats
 					'potbox'=>0,
 					'box'=>0,
 					'txbb'=>0,
+					'dilax'=>0,
 					'ecoute'=>0
 				);
 			}
@@ -107,7 +108,7 @@ class MonAnayseVendeurStats
 			$this->error=$this->db->lasterror;
 			return -1;
 		}
-/*
+
 		foreach($data as $key=>$detail) {
 			//Relance
 			$sql = 'SELECT count(ct.rowid) as nb FROM ' . MAIN_DB_PREFIX . 'contacttracking as ct';
@@ -127,7 +128,27 @@ class MonAnayseVendeurStats
 				$this->error=$this->db->lasterror;
 				return -1;
 			}
-
+			
+			//dilax
+			$sql = 'SELECT SUM(IFNULL(dil.qty,0)) as nbd FROM ' . MAIN_DB_PREFIX . 'monanalysevendeur_dilax as dil';
+			//$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'categorie_user as catu ON dil.fk_category_user=catu.fk_categorie ';
+			//$sql .= ' WHERE ct.fk_user_creat='.$key;
+			$sql .= " WHERE dil.date BETWEEN '".$this->db->idate($from_date)."' AND '".$this->db->idate($to_date)."'";
+			$sql .= ' AND dil.fk_category_user='.$key;
+			$sql .= " GROUP BY dil.fk_category_user";
+			$resql = $this->db->query($sql);
+			if ($resql)
+			{
+				while ($obj = $this->db->fetch_object($resql))
+				{
+					$data[$key]['dilax'] = $obj->nbd;
+				}
+			} else {
+				$this->error=$this->db->lasterror;
+				return -1;
+			}
+			
+/*
 			//Picking potbox box
 			$sql = 'SELECT count(fi.rowid) as nb';
 			$sql .= ',IFNULL(SUM(CASE WHEN ext.potentielbox LIKE \'%1%\' THEN 1 ELSE 0 END),0) as potbox';
@@ -171,9 +192,9 @@ class MonAnayseVendeurStats
 				$this->error=$this->db->lasterror;
 				return -1;
 			}
-
-		}
 */
+		}
+
 		return $data;
 		
 	}
