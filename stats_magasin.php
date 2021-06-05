@@ -113,7 +113,7 @@ print '</tr>';
 
 // Build graphic number of object
 if (!empty($from_date) && !empty($to_date)) {
-	$result = $stats->getDataStatVendeur($from_date, $to_date, $categid);
+	$result = $stats->getDataStatVendeur($from_date, $to_date);
 	print var_dump($result);
 	if (!is_array($result) && $result < 0) {
 		setEventMessage($stats->error, 'errors');

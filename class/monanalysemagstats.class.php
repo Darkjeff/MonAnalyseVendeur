@@ -69,10 +69,10 @@ class MonAnayseVendeurStats
 		return $result;
 	}
 
-	public function getDataStatVendeur($from_date, $to_date, $categid=0) {
+	public function getDataStatVendeur($from_date, $to_date) {
     	$data = array();
 
-    	$sql = 'SELECT catu.fk_categorie, SUM(IFNULL(rpj.nb_traitement,0)) as nbt, SUM(IFNULL(rpj.nb_box,0)) as nbb, ';
+    	$sql = 'SELECT catu.fk_categorie as cat, SUM(IFNULL(rpj.nb_traitement,0)) as nbt, SUM(IFNULL(rpj.nb_box,0)) as nbb, ';
 		$sql .= ' SUM(IFNULL(rpj.nb_abohv,0)) as nba, SUM(IFNULL(rpj.nb_service,0)) as nbs ';
 		$sql .= ' FROM '.MAIN_DB_PREFIX.'monanalysevendeur_rapportjournalier as rpj';
 		$sql .= ' JOIN ' . MAIN_DB_PREFIX . 'categorie_user as catu ON rpj.fk_user_creat=catu.fk_user ';
@@ -85,7 +85,7 @@ class MonAnayseVendeurStats
 		{
 			while ($obj = $this->db->fetch_object($resql))
 			{
-				$data[$obj->catu.fk_categorie] = array(
+				$data[$obj->cat] = array(
 					'nbt'=>$obj->nbt,
 					'nbb'=>$obj->nbb,
 					'nba'=>$obj->nba,
