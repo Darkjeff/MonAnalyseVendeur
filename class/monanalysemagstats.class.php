@@ -171,9 +171,9 @@ class MonAnayseVendeurStats
 			}
 
 		}
-
+*/
 		return $data;
-		*/
+		
 	}
 
 	/**
