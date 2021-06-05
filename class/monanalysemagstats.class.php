@@ -75,8 +75,8 @@ class MonAnayseVendeurStats
     	$sql = 'SELECT catu.fk_categorie, SUM(IFNULL(rpj.nb_traitement,0)) as nbt, SUM(IFNULL(rpj.nb_box,0)) as nbb, ';
 		$sql .= ' SUM(IFNULL(rpj.nb_abohv,0)) as nba, SUM(IFNULL(rpj.nb_service,0)) as nbs ';
 		$sql .= ' FROM '.MAIN_DB_PREFIX.'monanalysevendeur_rapportjournalier as rpj';
-		$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'categorie_user as catu ON rpj.fk_user_creat=catu.fk_user ';
-		$sql .= " WHERE rpj.date BETWEEN '".$this->db->idate($from_date)."' AND '".$this->db->idate($to_date)."' AND rpj.fk_user_creat IS NOT NULL";
+		$sql .= ' JOIN ' . MAIN_DB_PREFIX . 'categorie_user as catu ON rpj.fk_user_creat=catu.fk_user ';
+		$sql .= " WHERE rpj.date BETWEEN '".$this->db->idate($from_date)."' AND '".$this->db->idate($to_date)."' ";
 		$sql .= " GROUP BY catu.fk_categorie";
 		//$sql .= $this->db->order('dm,t.fk_user_creat', 'DESC');
 
@@ -105,7 +105,7 @@ class MonAnayseVendeurStats
 			$this->error=$this->db->lasterror;
 			return -1;
 		}
-
+/*
 		foreach($data as $key=>$detail) {
 			//Relance
 			$sql = 'SELECT count(ct.rowid) as nb FROM ' . MAIN_DB_PREFIX . 'contacttracking as ct';
@@ -173,6 +173,7 @@ class MonAnayseVendeurStats
 		}
 
 		return $data;
+		*/
 	}
 
 	/**

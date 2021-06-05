@@ -36,7 +36,7 @@ if (! $res) die("Include of main fails");
 
 // Class
 require_once (DOL_DOCUMENT_ROOT . "/core/lib/date.lib.php");
-dol_include_once('/monanalysevendeur/class/monanalysevendeurstats.class.php');
+dol_include_once('/monanalysevendeur/class/monanalysemagstats.class.php');
 
 // Langs
 $langs->load ( "immobilier@immobilier" );
@@ -84,8 +84,8 @@ print '</td></tr>';
 print '<tr><td class="left">' . $langs->trans("To") . '</td><td class="left">';
 print $form->selectDate($to_date, 'todt', 0, 0, 1, 'stats', 1, 0);
 print '</td></tr>';
-//print '<tr><td class="left">' . $langs->trans("Agence") . '</td><td class="left">';
-//print $form->select_all_categories('user', $categid, 'categuser', null, null, 0);
+print '<tr><td class="left">' . $langs->trans("Agence") . '</td><td class="left">';
+print $form->select_all_categories('user', $categid, 'categuser', null, null, 0);
 print '</td></tr>';
 print '<input type="submit" name="submit" class="butAction" value="Export Excel" style="font-weight: bold;float:right;text-shadow: none;">';
 print '<tr><td class="center" colspan="2"><input type="submit" name="submit" class="button" value="' . $langs->trans("Refresh") . '"></td></tr>';
@@ -109,9 +109,12 @@ print '<td>Box</td>';
 print '<td>Tx Transfo</td>';
 print '<td>Ecoute</td>';
 print '</tr>';
+
+
 // Build graphic number of object
 if (!empty($from_date) && !empty($to_date)) {
 	$result = $stats->getDataStatVendeur($from_date, $to_date, $categid);
+	print var_dump($result);
 	if (!is_array($result) && $result < 0) {
 		setEventMessage($stats->error, 'errors');
 	} else {
@@ -119,12 +122,10 @@ if (!empty($from_date) && !empty($to_date)) {
 		foreach($result as $userId=>$data) {
 			print '<tr class="oddeven">';
 
-			//User
-			print '<td>';
-			$saleman=new User($db);
-			$saleman->fetch($userId);
-			print $saleman->getNomUrl();
-			print '</td>';
+			//mag
+			//print '<td>';
+			//print $obj->catu.fk_categorie;
+			//print '</td>';
 
 
 			//Nb Traitment
