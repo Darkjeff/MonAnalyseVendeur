@@ -72,10 +72,11 @@ class MonAnayseVendeurStats
 	public function getDataStatVendeur($from_date, $to_date) {
     	$data = array();
 
-    	$sql = 'SELECT catu.fk_categorie as cat, SUM(IFNULL(rpj.nb_traitement,0)) as nbt, SUM(IFNULL(rpj.nb_box,0)) as nbb, ';
+    	$sql = 'SELECT cat.label as mag, SUM(IFNULL(rpj.nb_traitement,0)) as nbt, SUM(IFNULL(rpj.nb_box,0)) as nbb, ';
 		$sql .= ' SUM(IFNULL(rpj.nb_abohv,0)) as nba, SUM(IFNULL(rpj.nb_service,0)) as nbs ';
 		$sql .= ' FROM '.MAIN_DB_PREFIX.'monanalysevendeur_rapportjournalier as rpj';
-		$sql .= ' JOIN ' . MAIN_DB_PREFIX . 'categorie_user as catu ON rpj.fk_user_creat=catu.fk_user ';
+		$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'categorie_user as catu ON rpj.fk_user_creat=catu.fk_user ';
+		$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'categorie as cat ON catu.fk_categorie=cat.rowid ';
 		$sql .= " WHERE rpj.date BETWEEN '".$this->db->idate($from_date)."' AND '".$this->db->idate($to_date)."' ";
 		$sql .= " GROUP BY catu.fk_categorie";
 		//$sql .= $this->db->order('dm,t.fk_user_creat', 'DESC');
@@ -85,7 +86,8 @@ class MonAnayseVendeurStats
 		{
 			while ($obj = $this->db->fetch_object($resql))
 			{
-				$data[$obj->cat] = array(
+				$data[$obj->mag] = array(
+					'mag'=>$obj->mag,
 					'nbt'=>$obj->nbt,
 					'nbb'=>$obj->nbb,
 					'nba'=>$obj->nba,

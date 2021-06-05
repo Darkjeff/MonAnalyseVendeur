@@ -99,6 +99,7 @@ print '<table class="tagtable nobottomiftotal liste">'."\n";
 print '<tr class="liste_titre">';
 print '<td>Magasin</td>';
 print '<td>Dilax</td>';
+print '<td>Nb traitement</td>';
 print '<td>Nb Box</td>';
 print '<td>Nb AboHV</td>';
 print '<td>Nb Service</td>';
@@ -123,11 +124,17 @@ if (!empty($from_date) && !empty($to_date)) {
 			print '<tr class="oddeven">';
 
 			//mag
-			//print '<td>';
-			//print $obj->catu.fk_categorie;
-			//print '</td>';
+			print '<td>';
+			print $data['mag'];
+			print '</td>';
 
 
+			//Dilax
+			print '<td>';
+			print $data['mag'];
+			print '</td>';
+			
+			
 			//Nb Traitment
 			print '<td>';
 			print $data['nbt'];
@@ -135,17 +142,17 @@ if (!empty($from_date) && !empty($to_date)) {
 
 			//Tx Transfo Box
 			print '<td>';
-			print $data['txtb'];
+			print $data['nbb'];
 			print '</td>';
 
 			//Tx Transfo AboHV
 			print '<td>';
-			print $data['txta'];
+			print $data['nba'];
 			print '</td>';
 
 			//Tx Transfo Service
 			print '<td>';
-			print $data['txts'];
+			print $data['nbs'];
 			print '</td>';
 
 			//relance
