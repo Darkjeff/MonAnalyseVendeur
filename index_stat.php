@@ -180,13 +180,13 @@ print '<table class="noborder centpercent">';
 print '<tr class="liste_titre" height="24">';
 print '<td class="center">' . $langs->trans($type_period_array[$period_type]) . '</td>';
 print '<td class="center">' . $langs->trans('User') . '</td>';
-print '<td class="right">' . $langs->trans("Nombre Traitement") . '</td>';
-print '<td class="right">' . $langs->trans("Nombre Box") . '</td>';
-print '<td class="right">' . $langs->trans("Tx Transformation Box") . '</td>';
-print '<td class="right">' . $langs->trans("Nombre Abo HV") . '</td>';
-print '<td class="right">' . $langs->trans("Tx Transformation Abo HV") . '</td>';
-print '<td class="right">' . $langs->trans("Nombre Service") . '</td>';
-print '<td class="right">' . $langs->trans("Tx Transformation Service") . '</td>';
+print '<td class="right">' . $langs->trans("Nbre Traitement") . '</td>';
+print '<td class="right">' . $langs->trans("Nbre Box") . '</td>';
+print '<td class="right">' . $langs->trans("Tx Transfo Box") . '</td>';
+print '<td class="right">' . $langs->trans("Nbre Abo HV") . '</td>';
+print '<td class="right">' . $langs->trans("Tx Transfo Abo HV") . '</td>';
+print '<td class="right">' . $langs->trans("Nbre Service") . '</td>';
+print '<td class="right">' . $langs->trans("Tx Transfo Service") . '</td>';
 print '</tr>';
 
 
