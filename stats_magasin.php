@@ -84,9 +84,9 @@ print '</td></tr>';
 print '<tr><td class="left">' . $langs->trans("To") . '</td><td class="left">';
 print $form->selectDate($to_date, 'todt', 0, 0, 1, 'stats', 1, 0);
 print '</td></tr>';
-print '<tr><td class="left">' . $langs->trans("Agence") . '</td><td class="left">';
-print $form->select_all_categories('user', $categid, 'categuser', null, null, 0);
-print '</td></tr>';
+//print '<tr><td class="left">' . $langs->trans("Agence") . '</td><td class="left">';
+//print $form->select_all_categories('user', $categid, 'categuser', null, null, 0);
+//print '</td></tr>';
 print '<input type="submit" name="submit" class="butAction" value="Export Excel" style="font-weight: bold;float:right;text-shadow: none;">';
 print '<tr><td class="center" colspan="2"><input type="submit" name="submit" class="button" value="' . $langs->trans("Refresh") . '"></td></tr>';
 print '</table>';
@@ -100,6 +100,7 @@ print '<tr class="liste_titre">';
 print '<td>Magasin</td>';
 print '<td>Dilax</td>';
 print '<td>Nb traitement</td>';
+print '<td>Tx traitement</td>';
 print '<td>Nb Box</td>';
 print '<td>Nb AboHV</td>';
 print '<td>Nb Service</td>';
@@ -138,6 +139,11 @@ if (!empty($from_date) && !empty($to_date)) {
 			//Nb Traitment
 			print '<td>';
 			print $data['nbt'];
+			print '</td>';
+			
+			//Tx Traitment
+			print '<td>';
+			print round($data['nbt']/$data['dilax'],2);
 			print '</td>';
 
 			//Tx Transfo Box
