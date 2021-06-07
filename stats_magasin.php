@@ -51,10 +51,28 @@ if ($categid==-1) {
 }
 /////action to export to excel
 
-if ( $action == "exl" ) {
-	$filename="rapport_vendeur_".sprintf("%02d", $from_date)."-".$to_date.".xls";
-	require_once dol_buildpath('/monanalysevendeur/tpl/rapport_vendeur_xsl.php');
-	die();
+if ( $action == "exportcsv" ) {
+	$sep = ';';
+	$filename = 'rapport';
+	include DOL_DOCUMENT_ROOT.'/custom/monanalysecendeur/tpl/export_mag.tpl.php';  /////change this
+	$result = $stats->getDataStatVendeur($from_date, $to_date);
+	foreach($result as $userId=>$data) {
+			
+			print '"'.$data['mag'].'"'.$sep;
+			print '"'.$data['dilax'].'"'.$sep;
+			print '"'.$data['nbt'].'"'.$sep;
+			print '"'.$data['nbt'].'"'.$sep;
+			print '"'.$data['nba'].'"'.$sep;
+			print '"'.$data['nbs'].'"'.$sep;
+			print "\n";
+			
+			
+			
+	
+		}
+	
+	
+	
 }
 
 
@@ -87,8 +105,24 @@ print '</td></tr>';
 //print '<tr><td class="left">' . $langs->trans("Agence") . '</td><td class="left">';
 //print $form->select_all_categories('user', $categid, 'categuser', null, null, 0);
 //print '</td></tr>';
+print '<input type="button" class="butAction" name="exportcsv" value="'.$langs->trans("ExportCSV").'" onclick="launch_export();" />';
 print '<input type="submit" name="submit" class="butAction" value="Export Excel" style="font-weight: bold;float:right;text-shadow: none;">';
 print '<tr><td class="center" colspan="2"><input type="submit" name="submit" class="button" value="' . $langs->trans("Refresh") . '"></td></tr>';
+
+// TODO Avoid using js. We can use a direct link with $param
+	print '
+	<script type="text/javascript">
+		function launch_export() {
+			$("div.fiche form input[name=\"action\"]").val("exportcsv");
+			$("div.fiche form input[type=\"submit\"]").click();
+			$("div.fiche form input[name=\"action\"]").val("");
+		}
+		
+	</script>';
+
+
+
+
 print '</table>';
 print '</form>';
 print '<br><br>';
