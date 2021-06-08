@@ -49,30 +49,29 @@ $categid=GETPOST('categuser','int');
 if ($categid==-1) {
 	$categid=0;
 }
-/////action to export to excel
+$submit=GETPOST('submit', 'alpha');
+if ($submit=='Export Excel') {
+	$action='exportcsv';
+}
 
+/////action to export to excel
+$stats = new MonAnayseVendeurStats($db);
 if ( $action == "exportcsv" ) {
 	$sep = ';';
 	$filename = 'rapport';
-	include DOL_DOCUMENT_ROOT.'/custom/monanalysecendeur/tpl/export_mag.tpl.php';  /////change this
+	dol_include_once('/monanalysevendeur/tpl/export_mag.tpl.php');
 	$result = $stats->getDataStatVendeur($from_date, $to_date);
 	foreach($result as $userId=>$data) {
-			
-			print '"'.$data['mag'].'"'.$sep;
-			print '"'.$data['dilax'].'"'.$sep;
-			print '"'.$data['nbt'].'"'.$sep;
-			print '"'.$data['nbt'].'"'.$sep;
-			print '"'.$data['nba'].'"'.$sep;
-			print '"'.$data['nbs'].'"'.$sep;
-			print "\n";
-			
-			
-			
-	
-		}
-	
-	
-	
+		print '"'.$data['mag'].'"'.$sep;
+		print '"'.$data['dilax'].'"'.$sep;
+		print '"'.$data['nbt'].'"'.$sep;
+		print '"'.$data['nbt'].'"'.$sep;
+		print '"'.$data['nba'].'"'.$sep;
+		print '"'.$data['nbs'].'"'.$sep;
+		print "\n";
+	}
+
+	exit;
 }
 
 
@@ -80,12 +79,13 @@ if ( $action == "exportcsv" ) {
 /*
  * View
  */
+
 llxHeader ( '', 'Stats Magasin' );
 
 
 dol_fiche_head($head, 'stats', $langs->trans("Statistics"), -1);
 
-$stats = new MonAnayseVendeurStats($db);
+
 
 //if (empty($socid))
 //{
@@ -117,7 +117,7 @@ print '<tr><td class="center" colspan="2"><input type="submit" name="submit" cla
 			$("div.fiche form input[type=\"submit\"]").click();
 			$("div.fiche form input[name=\"action\"]").val("");
 		}
-		
+
 	</script>';
 
 
@@ -168,16 +168,20 @@ if (!empty($from_date) && !empty($to_date)) {
 			print '<td>';
 			print $data['dilax'];
 			print '</td>';
-			
-			
+
+
 			//Nb Traitment
 			print '<td>';
 			print $data['nbt'];
 			print '</td>';
-			
+
 			//Tx Traitment
 			print '<td>';
-			print round($data['nbt']/$data['dilax'],2);
+			if (!empty($data['dilax'])) {
+				print round($data['nbt'] / $data['dilax'], 2);
+			} else {
+				print 'N/A';
+			}
 			print '</td>';
 
 			//Tx Transfo Box

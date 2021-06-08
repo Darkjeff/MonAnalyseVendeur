@@ -24,15 +24,14 @@ if (empty($conf) || !is_object($conf))
 }
 
 
-$prefix = '.csv';
-
+$prefix = 'csv';
+$filename='export_magasin';
 
 $date_export = "_".dol_print_date(dol_now(), '%Y%m%d%H%M%S');
-$endaccountingperiod = dol_print_date(dol_now(), '%Y%m%d');
 
 header('Content-Type: text/csv');
 
-	$completefilename = .$filename.".".$prefix;
+$completefilename = $filename.".".$prefix;
 
 
 header('Content-Disposition: attachment;filename='.$completefilename);
