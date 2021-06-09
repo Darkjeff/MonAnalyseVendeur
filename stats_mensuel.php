@@ -90,7 +90,7 @@ print '<td align="center">'.$langs->trans("December").'</td>';
 print '<td align="center"><b>'.$langs->trans("Total").'</b></td></tr>';
 
 
-	
+
 $sql = "SELECT cat.label AS Mag,";
 $sql .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=1,rj.nb_traitement,0)),0) AS 'Janvier',";
 $sql .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=2,rj.nb_traitement,0)),0) AS 'Fevrier',";
@@ -118,11 +118,11 @@ $resql = $db->query ( $sql );
 if ($resql) {
 	$i = 0;
 	$num = $db->num_rows ( $resql );
-	
+
 	while ( $i < $num ) {
-		
+
 		$row = $db->fetch_row ( $resql );
-		
+
 		print '<tr><td>' . $row [0] . '</td>';
 		print '<td align="right">' . $row [1] . '</td>';
 		print '<td align="right">' . $row [2] . '</td>';
@@ -192,11 +192,11 @@ $resql2 = $db->query ( $sql2 );
 if ($resql2) {
 	$i = 0;
 	$num = $db->num_rows ( $resql2 );
-	
+
 	while ( $i < $num ) {
-		
+
 		$row = $db->fetch_row ( $resql2 );
-		
+
 		print '<tr><td>' . $row [0] . '</td>';
 		print '<td align="right">' . $row [1] . '</td>';
 		print '<td align="right">' . $row [2] . '</td>';
@@ -214,7 +214,7 @@ if ($resql2) {
 		print '</tr>';
 		$i ++;
 	}
-	$db->free ( $resql );
+	$db->free ( $resql2 );
 } else {
 	print $db->lasterror (); // affiche la derniere erreur sql
 }
@@ -242,7 +242,7 @@ print '<td align="center">'.$langs->trans("December").'</td>';
 print '<td align="center"><b>'.$langs->trans("Total").'</b></td></tr>';
 
 
-	
+
 $sql = "SELECT cat.label AS Mag,";
 $sql .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=1,rj.nb_box,0)),0) AS 'Janvier',";
 $sql .= "  ROUND(SUM(IF(MONTH(rj.date_creation)=2,rj.nb_box,0)),0) AS 'Fevrier',";
@@ -270,11 +270,11 @@ $resql = $db->query ( $sql );
 if ($resql) {
 	$i = 0;
 	$num = $db->num_rows ( $resql );
-	
+
 	while ( $i < $num ) {
-		
+
 		$row = $db->fetch_row ( $resql );
-		
+
 		print '<tr><td>' . $row [0] . '</td>';
 		print '<td align="right">' . $row [1] . '</td>';
 		print '<td align="right">' . $row [2] . '</td>';
@@ -344,11 +344,11 @@ $resql2 = $db->query ( $sql2 );
 if ($resql2) {
 	$i = 0;
 	$num = $db->num_rows ( $resql2 );
-	
+
 	while ( $i < $num ) {
-		
+
 		$row = $db->fetch_row ( $resql2 );
-		
+
 		print '<tr><td>' . $row [0] . '</td>';
 		print '<td align="right">' . $row [1] . '</td>';
 		print '<td align="right">' . $row [2] . '</td>';
