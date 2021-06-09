@@ -105,7 +105,7 @@ class Rapportjournalier extends CommonObject
 		'nb_traitement' => array('type'=>'real', 'label'=>'Nombre Traitement', 'enabled'=>'1', 'position'=>46, 'notnull'=>1, 'visible'=>1,),
 		'nb_abohv' => array('type'=>'real', 'label'=>'Nombre Abo HV', 'enabled'=>'1', 'position'=>48, 'notnull'=>1, 'visible'=>1,),
 		'nb_service' => array('type'=>'real', 'label'=>'Nombre Service', 'enabled'=>'1', 'position'=>49, 'notnull'=>1, 'visible'=>1,),
-		'date' => array('type'=>'datetime', 'label'=>'date', 'enabled'=>'1', 'position'=>45, 'notnull'=>1, 'visible'=>1,),
+		'date' => array('type'=>'date', 'label'=>'date', 'enabled'=>'1', 'position'=>45, 'notnull'=>1, 'visible'=>1,),
 	);
 	public $rowid;
 	public $ref;
