@@ -148,7 +148,7 @@ class MonAnayseVendeurStats
 				return -1;
 			}
 			
-/*
+
 			//Picking potbox box
 			$sql = 'SELECT count(fi.rowid) as nb';
 			$sql .= ',IFNULL(SUM(CASE WHEN ext.potentielbox LIKE \'%1%\' THEN 1 ELSE 0 END),0) as potbox';
@@ -173,12 +173,10 @@ class MonAnayseVendeurStats
 				$this->error=$this->db->lasterror;
 				return -1;
 			}
-
+/*
 			//ecoute
 			$sql = 'SELECT count(ec.rowid) as nb  FROM ' . MAIN_DB_PREFIX . 'monanalysevendeur_ecoute as ec';
 			$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'categorie_user as catu ON ec.salesman=catu.fk_user ';
-			//$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'ficheinter_extrafields as ext ON (ext.fk_object = fi.rowid)';
-			//$sql .= ' WHERE ec.salesman='.$key;
 			$sql .= " WHERE ec.date_creation BETWEEN '".$this->db->idate($from_date)."' AND '".$this->db->idate($to_date)."'";
 			$sql .= ' AND catu.fk_categorie='.$key;
 			$resql = $this->db->query($sql);
@@ -191,10 +189,9 @@ class MonAnayseVendeurStats
 			} else {
 				$this->error=$this->db->lasterror;
 				return -1;
-			}
-*/
+			
 		}
-
+*/}
 		return $data;
 		
 	}
