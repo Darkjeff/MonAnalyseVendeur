@@ -105,7 +105,7 @@ print '</td></tr>';
 //print '<tr><td class="left">' . $langs->trans("Agence") . '</td><td class="left">';
 //print $form->select_all_categories('user', $categid, 'categuser', null, null, 0);
 //print '</td></tr>';
-print '<input type="button" class="butAction" name="exportcsv" value="'.$langs->trans("ExportCSV").'" onclick="launch_export();" />';
+//print '<input type="button" class="butAction" name="exportcsv" value="'.$langs->trans("ExportCSV").'" onclick="launch_export();" />';
 print '<input type="submit" name="submit" class="butAction" value="Export Excel" style="font-weight: bold;float:right;text-shadow: none;">';
 print '<tr><td class="center" colspan="2"><input type="submit" name="submit" class="button" value="' . $langs->trans("Refresh") . '"></td></tr>';
 
