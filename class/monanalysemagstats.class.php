@@ -173,7 +173,7 @@ class MonAnayseVendeurStats
 				$this->error=$this->db->lasterror;
 				return -1;
 			}
-/*
+
 			//ecoute
 			$sql = 'SELECT count(ec.rowid) as nb  FROM ' . MAIN_DB_PREFIX . 'monanalysevendeur_ecoute as ec';
 			$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'categorie_user as catu ON ec.salesman=catu.fk_user ';
@@ -191,7 +191,7 @@ class MonAnayseVendeurStats
 				return -1;
 			
 		}
-*/}
+}
 		return $data;
 		
 	}
