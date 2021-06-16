@@ -82,8 +82,8 @@ class MonAnayseVendeurStats
 		$sql .= ',IFNULL(SUM(CASE WHEN ect.foyereli LIKE \'%1%\' THEN 1 ELSE 0 END),0) as okfoyereli';
 		$sql .= ',IFNULL(SUM(CASE WHEN ect.foyereli LIKE \'%2%\' THEN 1 ELSE 0 END),0) as kofoyereli';
 		$sql .= ' FROM ' . MAIN_DB_PREFIX . 'monanalysevendeur_ecoute as ec';
-		$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'monanalysevendeur_ecoute_extrafields as ect ON (ect.fk_object = ec.rowid)';
-		$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'user as usr ON (usr.rowid = ec.salesman)';
+		$sql .= ' JOIN ' . MAIN_DB_PREFIX . 'monanalysevendeur_ecoute_extrafields as ect ON (ect.fk_object = ec.rowid)';
+		$sql .= ' JOIN ' . MAIN_DB_PREFIX . 'user as usr ON (usr.rowid = ec.salesman)';
 		$sql .= " WHERE ec.date_creation BETWEEN '".$this->db->idate($from_date)."' AND '".$this->db->idate($to_date)."'";
 		$sql .= " GROUP BY ec.salesman";
 		
@@ -91,6 +91,7 @@ class MonAnayseVendeurStats
 		$resql = $this->db->query($sql);
 		if ($resql)
 		{
+			
 			while ($obj = $this->db->fetch_object($resql))
 			{
 				$data[$obj->salesman] = array(
