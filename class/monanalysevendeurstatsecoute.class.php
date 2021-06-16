@@ -72,7 +72,7 @@ class MonAnayseVendeurStats
 	public function getDataStatVendeur($from_date, $to_date, $categid=0) {
     	$data = array();
 
-    	$sql = 'SELECT count(ec.rowid) as nb, usr.lastname as name  ';
+    	$sql = 'SELECT count(ec.rowid) as nb, usr.lastname as name, ec.salesman  ';
 		$sql .= ',IFNULL(SUM(CASE WHEN ect.foyerequip LIKE \'%1%\' THEN 1 ELSE 0 END),0) as okfoyerequip';
 		$sql .= ',IFNULL(SUM(CASE WHEN ect.foyerequip LIKE \'%2%\' THEN 1 ELSE 0 END),0) as kofoyerequip';
 		$sql .= ',IFNULL(SUM(CASE WHEN ect.foyercompo LIKE \'%1%\' THEN 1 ELSE 0 END),0) as okfoyercompo';
