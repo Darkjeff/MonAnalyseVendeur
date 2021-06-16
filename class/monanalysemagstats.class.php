@@ -73,7 +73,7 @@ class MonAnayseVendeurStats
     	$data = array();
 
     	$sql = 'SELECT catu.fk_categorie as cate, cat.label as mag, SUM(IFNULL(rpj.nb_traitement,0)) as nbt, SUM(IFNULL(rpj.nb_box,0)) as nbb, ';
-		$sql .= ' SUM(IFNULL(rpj.nb_abohv,0)) as nba, SUM(IFNULL(rpj.nb_service,0)) as nbs ';
+		$sql .= ' SUM(IFNULL(rpj.nb_abohv,0)) as nba, SUM(IFNULL(rpj.nb_service,0)) as nbs, count(rpj.rowid) as vendeur ';
 		$sql .= ' FROM '.MAIN_DB_PREFIX.'monanalysevendeur_rapportjournalier as rpj';
 		$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'categorie_user as catu ON rpj.fk_user_creat=catu.fk_user ';
 		$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'categorie as cat ON catu.fk_categorie=cat.rowid ';
@@ -88,6 +88,7 @@ class MonAnayseVendeurStats
 			{
 				$data[$obj->cate] = array(
 					'mag'=>$obj->mag,
+					'vendeur'=>$obj->vendeur,
 					'nbt'=>$obj->nbt,
 					'nbb'=>$obj->nbb,
 					'nba'=>$obj->nba,
