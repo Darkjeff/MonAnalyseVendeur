@@ -72,26 +72,22 @@ class MonAnayseVendeurStats
 	public function getDataStatVendeur($from_date, $to_date, $categid=0) {
     	$data = array();
 
-    	$sql = 'SELECT rpj.fk_user_creat, SUM(IFNULL(rpj.nb_traitement,0)) as nbt, SUM(IFNULL(rpj.nb_box,0)) as nbb, ';
-		$sql .= ' SUM(IFNULL(rpj.nb_abohv,0)) as nba, SUM(IFNULL(rpj.nb_service,0)) as nbs ';
-		$sql .= ' FROM '.MAIN_DB_PREFIX.'monanalysevendeur_rapportjournalier as rpj';
-		if (!empty($categid)) {
-			$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'categorie_user as catu ON rpj.fk_user_creat=catu.fk_user AND catu.fk_categorie=' . (int)$categid;
-		}
-		$sql .= " WHERE rpj.date BETWEEN '".$this->db->idate($from_date)."' AND '".$this->db->idate($to_date)."' AND rpj.fk_user_creat IS NOT NULL";
-		$sql .= " GROUP BY rpj.fk_user_creat";
-		//$sql .= $this->db->order('dm,t.fk_user_creat', 'DESC');
+    	$sql = 'SELECT count(ec.rowid) as nb  FROM ' . MAIN_DB_PREFIX . 'monanalysevendeur_ecoute as ec';
+		$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'monanalysevendeur_ecoute_extrafields as ect ON (ect.fk_object = ec.rowid)';
+		$sql .= " WHERE ec.date_creation BETWEEN '".$this->db->idate($from_date)."' AND '".$this->db->idate($to_date)."'";
+		$sql .= " GROUP BY ec.salesman";
+		
 
 		$resql = $this->db->query($sql);
 		if ($resql)
 		{
 			while ($obj = $this->db->fetch_object($resql))
 			{
-				$data[$obj->fk_user_creat] = array(
-					'nbt'=>$obj->nbt,
-					'txtb'=>round(($obj->nbb / (empty($obj->nbt)?1:$obj->nbt)) * 100),
-					'txta'=>round(($obj->nba / (empty($obj->nbt)?1:$obj->nbt)) * 100),
-					'txts'=>round(($obj->nbs / (empty($obj->nbt)?1:$obj->nbt)) * 100),
+				$data[$obj->salesman] = array(
+					'nbt'=>$obj->nb,
+					'txtb'=>0,
+					'txta'=>0,
+					'txts'=>0,
 					'relance'=>0,
 					'picking'=>0,
 					'potbox'=>0,
@@ -105,68 +101,7 @@ class MonAnayseVendeurStats
 			return -1;
 		}
 
-		foreach($data as $key=>$detail) {
-			//Relance
-			$sql = 'SELECT count(ct.rowid) as nb FROM ' . MAIN_DB_PREFIX . 'contacttracking as ct';
-			$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'actioncomm as ac ON (ac.id = ct.fk_event) ';
-			//$sql .= ' WHERE ct.fk_user_creat='.$key;
-			$sql .= " WHERE ac.datec BETWEEN '".$this->db->idate($from_date)."' AND '".$this->db->idate($to_date)."'";
-			$sql .= ' AND ct.fk_user_creat='.$key;
-			$resql = $this->db->query($sql);
-			if ($resql)
-			{
-				while ($obj = $this->db->fetch_object($resql))
-				{
-					$data[$key]['relance'] = $obj->nb;
-				}
-			} else {
-				$this->error=$this->db->lasterror;
-				return -1;
-			}
-
-			//Picking potbox box
-			$sql = 'SELECT count(fi.rowid) as nb';
-			$sql .= ',IFNULL(SUM(CASE WHEN ext.potentielbox LIKE \'%1%\' THEN 1 ELSE 0 END),0) as potbox';
-			$sql .= ',IFNULL(SUM(CASE WHEN ext.boxvalidee LIKE \'%1%\' THEN 1 ELSE 0 END),0) as box';
-			$sql .= ' FROM ' . MAIN_DB_PREFIX . 'fichinter as fi';
-			$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'fichinter_extrafields as ext ON (ext.fk_object = fi.rowid)';
-			//$sql .= ' WHERE ext.vendeur='.$key;
-			$sql .= "WHERE fi.dateo BETWEEN '".$this->db->idate($from_date)."' AND '".$this->db->idate($to_date)."'";
-			$sql .= ' AND ext.vendeur='.$key;
-			$resql = $this->db->query($sql);
-			if ($resql)
-			{
-				while ($obj = $this->db->fetch_object($resql))
-				{
-					$data[$key]['potbox'] = $obj->potbox;
-					$data[$key]['picking'] = $obj->nb;
-					$data[$key]['box'] = $obj->box;
-					$data[$key]['txbb']=round(($data[$key]['box'] / (empty($data[$key]['potbox'])?1:$data[$key]['potbox'])) * 100);
-				}
-			} else {
-				$this->error=$this->db->lasterror;
-				return -1;
-			}
-
-			//ecoute
-			$sql = 'SELECT count(ec.rowid) as nb  FROM ' . MAIN_DB_PREFIX . 'monanalysevendeur_ecoute as ec';
-			//$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'ficheinter_extrafields as ext ON (ext.fk_object = fi.rowid)';
-			//$sql .= ' WHERE ec.salesman='.$key;
-			$sql .= " WHERE ec.date_creation BETWEEN '".$this->db->idate($from_date)."' AND '".$this->db->idate($to_date)."'";
-			$sql .= ' AND ec.salesman='.$key;
-			$resql = $this->db->query($sql);
-			if ($resql)
-			{
-				while ($obj = $this->db->fetch_object($resql))
-				{
-					$data[$key]['ecoute'] = $obj->nb;
-				}
-			} else {
-				$this->error=$this->db->lasterror;
-				return -1;
-			}
-
-		}
+		
 
 		return $data;
 	}
