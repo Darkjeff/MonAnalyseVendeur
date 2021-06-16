@@ -132,6 +132,7 @@ print '<div class="div-table-responsive">'; // You can use div-table-responsive-
 print '<table class="tagtable nobottomiftotal liste">'."\n";
 print '<tr class="liste_titre">';
 print '<td>Magasin</td>';
+print '<td>Nb vendeur</td>';
 print '<td>Dilax</td>';
 print '<td>Nb traitement</td>';
 print '<td>Tx traitement</td>';
@@ -163,6 +164,11 @@ if (!empty($from_date) && !empty($to_date)) {
 			print $data['mag'];
 			print '</td>';
 
+
+			//Nb Vendeur
+			print '<td>';
+			print $data['vendeur'];
+			print '</td>';
 
 			//Dilax
 			print '<td>';
