@@ -36,7 +36,7 @@ if (! $res) die("Include of main fails");
 
 // Class
 require_once (DOL_DOCUMENT_ROOT . "/core/lib/date.lib.php");
-dol_include_once('/monanalysevendeur/class/monanalysevendeurstats.class.php');
+dol_include_once('/monanalysevendeur/class/monanalysevendeurstatsecoute.class.php');
 
 // Langs
 $langs->load ( "immobilier@immobilier" );
@@ -121,9 +121,7 @@ if (!empty($from_date) && !empty($to_date)) {
 
 			//User
 			print '<td>';
-			$saleman=new User($db);
-			$saleman->fetch($userId);
-			print $saleman->getNomUrl();
+			print $data['name'];
 			print '</td>';
 
 

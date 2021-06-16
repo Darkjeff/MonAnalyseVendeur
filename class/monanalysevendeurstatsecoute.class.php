@@ -72,8 +72,18 @@ class MonAnayseVendeurStats
 	public function getDataStatVendeur($from_date, $to_date, $categid=0) {
     	$data = array();
 
-    	$sql = 'SELECT count(ec.rowid) as nb  FROM ' . MAIN_DB_PREFIX . 'monanalysevendeur_ecoute as ec';
+    	$sql = 'SELECT count(ec.rowid) as nb, usr.lastname as name  ';
+		$sql .= ',IFNULL(SUM(CASE WHEN ect.foyerequip LIKE \'%1%\' THEN 1 ELSE 0 END),0) as okfoyerequip';
+		$sql .= ',IFNULL(SUM(CASE WHEN ect.foyerequip LIKE \'%2%\' THEN 1 ELSE 0 END),0) as kofoyerequip';
+		$sql .= ',IFNULL(SUM(CASE WHEN ect.foyercompo LIKE \'%1%\' THEN 1 ELSE 0 END),0) as okfoyercompo';
+		$sql .= ',IFNULL(SUM(CASE WHEN ect.foyercompo LIKE \'%2%\' THEN 1 ELSE 0 END),0) as kofoyercompo';
+		$sql .= ',IFNULL(SUM(CASE WHEN ect.foyerfai LIKE \'%1%\' THEN 1 ELSE 0 END),0) as okfoyerfai';
+		$sql .= ',IFNULL(SUM(CASE WHEN ect.foyerfai LIKE \'%2%\' THEN 1 ELSE 0 END),0) as kofoyerfai';
+		$sql .= ',IFNULL(SUM(CASE WHEN ect.foyereli LIKE \'%1%\' THEN 1 ELSE 0 END),0) as okfoyereli';
+		$sql .= ',IFNULL(SUM(CASE WHEN ect.foyereli LIKE \'%2%\' THEN 1 ELSE 0 END),0) as kofoyereli';
+		$sql .= ' FROM ' . MAIN_DB_PREFIX . 'monanalysevendeur_ecoute as ec';
 		$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'monanalysevendeur_ecoute_extrafields as ect ON (ect.fk_object = ec.rowid)';
+		$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'user as usr ON (usr.rowid = ec.salesman)';
 		$sql .= " WHERE ec.date_creation BETWEEN '".$this->db->idate($from_date)."' AND '".$this->db->idate($to_date)."'";
 		$sql .= " GROUP BY ec.salesman";
 		
@@ -85,10 +95,11 @@ class MonAnayseVendeurStats
 			{
 				$data[$obj->salesman] = array(
 					'nbt'=>$obj->nb,
-					'txtb'=>0,
-					'txta'=>0,
-					'txts'=>0,
-					'relance'=>0,
+					'name'=>$obj->name,
+					'txtb'=>($obj->okfoyerequip/($obj->okfoyerequip+$obj->kofoyerequip))*100,
+					'txta'=>($obj->okfoyercompo/($obj->okfoyercompo+$obj->kofoyercompo))*100,
+					'txts'=>($obj->okfoyerfai/($obj->okfoyerfai+$obj->kofoyerfai))*100,
+					'relance'=>($obj->okfoyereli/($obj->okfoyerfai+$obj->kofoyereli))*100,
 					'picking'=>0,
 					'potbox'=>0,
 					'box'=>0,
