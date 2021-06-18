@@ -111,6 +111,18 @@ class MonAnayseVendeurStats
 		$sql .= ',IFNULL(SUM(CASE WHEN ect.rebondrmd LIKE \'%2%\' THEN 1 ELSE 0 END),0) as korebondrmd';
 		$sql .= ',IFNULL(SUM(CASE WHEN ect.rebondoptions LIKE \'%1%\' THEN 1 ELSE 0 END),0) as okrebondoptions';
 		$sql .= ',IFNULL(SUM(CASE WHEN ect.rebondoptions LIKE \'%2%\' THEN 1 ELSE 0 END),0) as korebondoptions';
+		$sql .= ',IFNULL(SUM(CASE WHEN ect.moyensdevis LIKE \'%1%\' THEN 1 ELSE 0 END),0) as okmoyensdevis';
+		$sql .= ',IFNULL(SUM(CASE WHEN ect.moyensdevis LIKE \'%2%\' THEN 1 ELSE 0 END),0) as komoyensdevis';
+		$sql .= ',IFNULL(SUM(CASE WHEN ect.moyensdouble LIKE \'%1%\' THEN 1 ELSE 0 END),0) as okmoyensdouble';
+		$sql .= ',IFNULL(SUM(CASE WHEN ect.moyensdouble LIKE \'%2%\' THEN 1 ELSE 0 END),0) as komoyensdouble';
+		$sql .= ',IFNULL(SUM(CASE WHEN ect.moyensreprise LIKE \'%1%\' THEN 1 ELSE 0 END),0) as okmoyensreprise';
+		$sql .= ',IFNULL(SUM(CASE WHEN ect.moyensreprise LIKE \'%2%\' THEN 1 ELSE 0 END),0) as komoyensreprise';
+		$sql .= ',IFNULL(SUM(CASE WHEN ect.moyensfloa LIKE \'%1%\' THEN 1 ELSE 0 END),0) as okmoyensfloa';
+		$sql .= ',IFNULL(SUM(CASE WHEN ect.moyensfloa LIKE \'%2%\' THEN 1 ELSE 0 END),0) as komoyensfloa';
+		$sql .= ',IFNULL(SUM(CASE WHEN ect.moyensfamily LIKE \'%1%\' THEN 1 ELSE 0 END),0) as okmoyensfamily';
+		$sql .= ',IFNULL(SUM(CASE WHEN ect.moyensfamily LIKE \'%2%\' THEN 1 ELSE 0 END),0) as komoyensfamily';
+		$sql .= ',IFNULL(SUM(CASE WHEN ect.moyenspropo LIKE \'%1%\' THEN 1 ELSE 0 END),0) as okmoyenspropo';
+		$sql .= ',IFNULL(SUM(CASE WHEN ect.moyenspropo LIKE \'%2%\' THEN 1 ELSE 0 END),0) as komoyenspropo';
 		$sql .= ' FROM ' . MAIN_DB_PREFIX . 'monanalysevendeur_ecoute as ec';
 		$sql .= ' JOIN ' . MAIN_DB_PREFIX . 'monanalysevendeur_ecoute_extrafields as ect ON (ect.fk_object = ec.rowid)';
 		$sql .= ' JOIN ' . MAIN_DB_PREFIX . 'user as usr ON (usr.rowid = ec.salesman)';
@@ -127,10 +139,10 @@ class MonAnayseVendeurStats
 				$data[$obj->salesman] = array(
 					'nbt'=>$obj->nb,
 					'name'=>$obj->name,
-					'txtb'=>($obj->okfoyerequip/($obj->okfoyerequip+$obj->kofoyerequip))*100,
-					'txta'=>($obj->okfoyercompo/($obj->okfoyercompo+$obj->kofoyercompo))*100,
-					'txts'=>($obj->okfoyerfai/($obj->okfoyerfai+$obj->kofoyerfai))*100,
-					'relance'=>($obj->okfoyereli/($obj->okfoyerfai+$obj->kofoyereli))*100,
+					'foyerequip'=>($obj->okfoyerequip/($obj->okfoyerequip+$obj->kofoyerequip))*100,
+					'foyercompo'=>($obj->okfoyercompo/($obj->okfoyercompo+$obj->kofoyercompo))*100,
+					'foyerfai'=>($obj->okfoyerfai/($obj->okfoyerfai+$obj->kofoyerfai))*100,
+					'foyereli'=>($obj->okfoyereli/($obj->okfoyerfai+$obj->kofoyereli))*100,
 					'propcoh'=>($obj->okpropcoh/($obj->okpropcoh+$obj->kopropcoh))*100,
 					'proprotv'=>($obj->okproprotv/($obj->okproprotv+$obj->koproprotv))*100,
 					'proprooption'=>($obj->okproprooption/($obj->okproprooption+$obj->koproprooption))*100,
@@ -146,6 +158,12 @@ class MonAnayseVendeurStats
 					'rebondabo'=>($obj->okrebondabo/($obj->okrebondabo+$obj->korebondabo))*100,
 					'rebondrmd'=>($obj->okrebondrmd/($obj->okrebondrmd+$obj->korebondrmd))*100,
 					'rebondoptions'=>($obj->okrebondoptions/($obj->okrebondoptions+$obj->korebondoptions))*100,
+					'moyensdevis'=>($obj->okmoyensdevis/($obj->okmoyensdevis+$obj->komoyensdevis))*100,
+					'moyensdouble'=>($obj->okmoyensdouble/($obj->okmoyensdouble+$obj->komoyensdouble))*100,
+					'moyensreprise'=>($obj->okmoyensreprise/($obj->okmoyensreprise+$obj->komoyensreprise))*100,
+					'moyensfloa'=>($obj->okmoyensfloa/($obj->okmoyensfloa+$obj->komoyensfloa))*100,
+					'moyensfamily'=>($obj->okmoyensfamily/($obj->okmoyensfamily+$obj->komoyensfamily))*100,
+					'moyenspropo'=>($obj->okmoyenspropo/($obj->okmoyenspropo+$obj->komoyenspropo))*100,
 					'picking'=>0,
 					'potbox'=>0,
 					'box'=>0,
