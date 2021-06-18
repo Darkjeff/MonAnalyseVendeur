@@ -49,14 +49,52 @@ $categid=GETPOST('categuser','int');
 if ($categid==-1) {
 	$categid=0;
 }
-/////action to export to excel
-
-if ( $action == "exl" ) {
-	$filename="rapport_vendeur_".sprintf("%02d", $from_date)."-".$to_date.".xls";
-	require_once dol_buildpath('/monanalysevendeur/tpl/rapport_vendeur_xsl.php');
-	die();
+$submit=GETPOST('submit', 'alpha');
+if ($submit=='Export Excel') {
+	$action='exportcsv';
 }
 
+/////action to export to excel
+$stats = new MonAnayseVendeurStats($db);
+if ( $action == "exportcsv" ) {
+	$sep = ';';
+	$filename = 'rapport';
+	dol_include_once('/monanalysevendeur/tpl/export_ecoute.tpl.php');
+	$result = $stats->getDataStatVendeur($from_date, $to_date);
+	foreach($result as $userId=>$data) {
+		print '"'.$data['name'].'"'.$sep;
+		print '"'.$data['nb'].'"'.$sep;
+		print '"'.$data['foyerequip'].'"'.$sep;
+		print '"'.$data['foyercompo'].'"'.$sep;
+		print '"'.$data['foyerfai'].'"'.$sep;
+		print '"'.$data['foyereli'].'"'.$sep;
+		print '"'.$data['propcoh'].'"'.$sep;
+		print '"'.$data['proprotv'].'"'.$sep;
+		print '"'.$data['proprooption'].'"'.$sep;
+		print '"'.$data['propropro5g'].'"'.$sep;
+		print '"'.$data['ventespartner'].'"'.$sep;
+		print '"'.$data['venteschubb'].'"'.$sep;
+		print '"'.$data['ventesaccess'].'"'.$sep;
+		print '"'.$data['expsfr'].'"'.$sep;
+		print '"'.$data['expenqu'].'"'.$sep;
+		print '"'.$data['expremise'].'"'.$sep;
+		print '"'.$data['exprdv'].'"'.$sep;
+		print '"'.$data['expremise'].'"'.$sep;
+		print '"'.$data['rebondbox'].'"'.$sep;
+		print '"'.$data['rebondabo'].'"'.$sep;
+		print '"'.$data['rebondrmd'].'"'.$sep;
+		print '"'.$data['rebondoptions'].'"'.$sep;
+		print '"'.$data['moyensdevis'].'"'.$sep;
+		print '"'.$data['moyensdouble'].'"'.$sep;
+		print '"'.$data['moyensreprise'].'"'.$sep;
+		print '"'.$data['moyensfloa'].'"'.$sep;
+		print '"'.$data['moyensfamily'].'"'.$sep;
+		print '"'.$data['moyenspropo'].'"'.$sep;
+		print "\n";
+	}
+
+	exit;
+}
 
 
 /*
@@ -89,6 +127,18 @@ print $form->select_all_categories('user', $categid, 'categuser', null, null, 0)
 print '</td></tr>';
 print '<input type="submit" name="submit" class="butAction" value="Export Excel" style="font-weight: bold;float:right;text-shadow: none;">';
 print '<tr><td class="center" colspan="2"><input type="submit" name="submit" class="button" value="' . $langs->trans("Refresh") . '"></td></tr>';
+
+// TODO Avoid using js. We can use a direct link with $param
+	print '
+	<script type="text/javascript">
+		function launch_export() {
+			$("div.fiche form input[name=\"action\"]").val("exportcsv");
+			$("div.fiche form input[type=\"submit\"]").click();
+			$("div.fiche form input[name=\"action\"]").val("");
+		}
+
+	</script>';
+
 print '</table>';
 print '</form>';
 print '<br><br>';
