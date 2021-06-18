@@ -155,7 +155,8 @@ if (!empty($from_date) && !empty($to_date)) {
 	if (!is_array($result) && $result < 0) {
 		setEventMessage($stats->error, 'errors');
 	} else {
-
+		$total=array();
+		$total['mag']='Total';
 		foreach($result as $userId=>$data) {
 			print '<tr class="oddeven">';
 
@@ -168,23 +169,27 @@ if (!empty($from_date) && !empty($to_date)) {
 			//Nb Vendeur
 			print '<td>';
 			print $data['vendeur'];
+			$total['vendeur'] += (int)$data['vendeur'];
 			print '</td>';
 
 			//Dilax
 			print '<td>';
 			print $data['dilax'];
+			$total['dilax'] += (int)$data['dilax'];
 			print '</td>';
 
 
 			//Nb Traitment
 			print '<td>';
 			print $data['nbt'];
+			$total['nbt'] += (int)$data['nbt'];
 			print '</td>';
 
 			//Tx Traitment
 			print '<td>';
 			if (!empty($data['dilax'])) {
 				print round($data['nbt'] / $data['dilax'], 2);
+				$total['tx_traitement'] = '';
 			} else {
 				print 'N/A';
 			}
@@ -193,51 +198,66 @@ if (!empty($from_date) && !empty($to_date)) {
 			//Tx Transfo Box
 			print '<td>';
 			print $data['nbb'];
+			$total['nbb'] += (int)$data['nbt'];
 			print '</td>';
 
 			//Tx Transfo AboHV
 			print '<td>';
 			print $data['nba'];
+			$total['nba'] += (int)$data['nba'];
 			print '</td>';
 
 			//Tx Transfo Service
 			print '<td>';
 			print $data['nbs'];
+			$total['nbs'] += (int)$data['nbs'];
 			print '</td>';
 
 			//relance
 			print '<td>';
 			print $data['relance'];
+			$total['relance'] += (int)$data['relance'];
 			print '</td>';
 
 			//Picking
 			print '<td>';
 			print $data['picking'];
+			$total['picking'] += (int)$data['picking'];
 			print '</td>';
 
 			//PotBox
 			print '<td>';
 			print $data['potbox'];
+			$total['potbox'] += (int)$data['potbox'];
 			print '</td>';
 
 			//Box
 			print '<td>';
 			print $data['box'];
+			$total['box'] += (int)$data['box'];
 			print '</td>';
 
 			//TxBB
 			print '<td>';
 			print $data['txbb'];
+			$total['txbb'] += (int)$data['txbb'];
 			print '</td>';
 
 			//ecoute
 			print '<td>';
 			print $data['ecoute'];
+			$total['ecoute'] += (int)$data['ecoute'];
 			print '</td>';
 
 			print '</tr>';
 		}
-
+	 if (!empty($total)) {
+		 print '<tr class="liste_total">';
+		 foreach($total as $key=>$val) {
+		 	print '<td>'.$val.'</td>';
+		 }
+		 print '</tr>';
+	 }
 
 	}
 }
