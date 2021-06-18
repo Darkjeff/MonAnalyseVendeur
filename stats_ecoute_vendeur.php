@@ -61,6 +61,36 @@ if ( $action == "exportcsv" ) {
 	$filename = 'rapport';
 	dol_include_once('/monanalysevendeur/tpl/export_ecoute.tpl.php');
 	$result = $stats->getDataStatVendeur($from_date, $to_date);
+	
+	print "name".$sep;
+	print "Nb Ecoute".$sep;
+print "Equipements foyer".$sep;
+print "Composition foyer".$sep;
+print "FAI Actuel".$sep;
+print "Test eligibilite".$sep;
+print "Propo cohérente avec découverte besoins".$sep;
+print "Propo offre avec TV".$sep;
+print "Propo Options SFR".$sep;
+print "Propo argumentée de la 5G".$sep;
+print "Proposition Offres partenaires".$sep;
+print "Proposition Offre Chubb<".$sep;
+print "Proposition Accessoires".$sep;
+print "Commentaire Vente additionneles".$sep;
+print "Démo d au moins d un service SFR".$sep;
+print "Invitation à répondre à l enquête".$sep;
+print "Remise de la carte de visite avec explication".$sep;
+print "Proposition d une prise de RDV".$sep;
+print "Propo box ou Mig Fibre".$sep;
+print "Propo ABO".$sep;
+print "Propo RMD".$sep;
+print "Propo Options ou Mig intra".$sep;;
+print "En cas de réflexion client remise d un devis".$sep;
+print "Devis gardé en double avec coordonnées clients + Motif de réflexion".$sep;
+print "Propo reprise mobile".$sep;
+print "Propo FLOA".$sep;
+print "Argu SFR FAMILY".$sep;
+print "Propo ODR ou VF en cours".$sep;
+	print "\n";
 	foreach($result as $userId=>$data) {
 		print '"'.$data['name'].'"'.$sep;
 		print '"'.$data['nb'].'"'.$sep;
