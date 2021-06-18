@@ -108,6 +108,23 @@ print '<td>Propo offre avec TV</td>';
 print '<td>Propo Options SFR</td>';
 print '<td>Propo argumentée de la 5G</td>';
 print '<td>Proposition Offres partenaires</td>';
+print '<td>Proposition Offre Chubb</td>';
+print '<td>Proposition Accessoires</td>';
+print '<td>Commentaire Vente additionneles</td>';
+print '<td>Démo d au moins d un service SFR</td>';
+print '<td>Invitation à répondre à l enquête</td>';
+print '<td>Remise de la carte de visite avec explication</td>';
+print '<td>Proposition d une prise de RDV</td>';
+print '<td>Propo box ou Mig Fibre</td>';
+print '<td>Propo ABO</td>';
+print '<td>Propo RMD</td>';
+print '<td>Propo Options ou Mig intra</td>';
+print '<td>En cas de réflexion client remise d un devis</td>';
+print '<td>Devis gardé en double avec coordonnées clients + Motif de réflexion</td>';
+print '<td>Propo reprise mobile</td>';
+print '<td>Propo FLOA</td>';
+print '<td>Argu SFR FAMILY</td>';
+print '<td>Propo ODR ou VF en cours</td>';
 print '</tr>';
 // Build graphic number of object
 if (!empty($from_date) && !empty($to_date)) {
