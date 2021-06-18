@@ -140,6 +140,11 @@ if (!empty($from_date) && !empty($to_date)) {
 			print '<td>';
 			print $data['name'];
 			print '</td>';
+			
+			//User
+			print '<td>';
+			print $data['nb'];
+			print '</td>';
 
 
 			//Nb Traitment
@@ -176,11 +181,62 @@ if (!empty($from_date) && !empty($to_date)) {
 			print '<td>';
 			print $data['proprooption'];
 			print '</td>';
+			
+			//PotBox
+			print '<td>';
+			print $data['propropro5g'];
+			print '</td>';
+			
+			//PotBox
+			print '<td>';
+			print $data['ventespartner'];
+			print '</td>';
+			
+			//PotBox
+			print '<td>';
+			print $data['venteschubb'];
+			print '</td>';
+			
+			//PotBox
+			print '<td>';
+			print $data['ventesaccess'];
+			print '</td>';
+			
+			//PotBox
+			print '<td>';
+			print $data['ventesaccess'];
+			print '</td>';
 
+			//Box
+			print '<td>';
+			print $data['expsfr'];
+			print '</td>';
+			
+			//Box
+			print '<td>';
+			print $data['expenqu'];
+			print '</td>';
+			
+			//Box
+			print '<td>';
+			print $data['expremise'];
+			print '</td>';
+			
+			//Box
+			print '<td>';
+			print $data['exprdv'];
+			print '</td>';
+			
+			//Box
+			print '<td>';
+			print $data['rebondbox'];
+			print '</td>';
+			
 			//Box
 			print '<td>';
 			print $data['rebondabo'];
 			print '</td>';
+
 
 			//TxBB
 			print '<td>';
