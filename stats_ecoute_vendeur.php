@@ -144,53 +144,84 @@ if (!empty($from_date) && !empty($to_date)) {
 
 			//Nb Traitment
 			print '<td>';
-			print $data['nbt'];
+			print $data['foyerequip'];
 			print '</td>';
 
 			//Tx Transfo Box
 			print '<td>';
-			print $data['txtb'];
+			print $data['foyercompo'];
 			print '</td>';
 
 			//Tx Transfo AboHV
 			print '<td>';
-			print $data['txta'];
+			print $data['foyerfai'];
 			print '</td>';
 
 			//Tx Transfo Service
 			print '<td>';
-			print $data['txts'];
+			print $data['foyereli'];
 			print '</td>';
 
 			//relance
 			print '<td>';
-			print $data['relance'];
+			print $data['propcoh'];
 			print '</td>';
 
 			//Picking
 			print '<td>';
-			print $data['picking'];
+			print $data['proprotv'];
 			print '</td>';
 
 			//PotBox
 			print '<td>';
-			print $data['potbox'];
+			print $data['proprooption'];
 			print '</td>';
 
 			//Box
 			print '<td>';
-			print $data['box'];
+			print $data['rebondabo'];
 			print '</td>';
 
 			//TxBB
 			print '<td>';
-			print $data['txbb'];
+			print $data['rebondrmd'];
 			print '</td>';
 
 			//ecoute
 			print '<td>';
-			print $data['ecoute'];
+			print $data['rebondoptions'];
 			print '</td>';
+			
+			//ecoute
+			print '<td>';
+			print $data['moyensdevis'];
+			print '</td>';
+			//ecoute
+			print '<td>';
+			print $data['moyensdouble'];
+			print '</td>';
+			//ecoute
+			print '<td>';
+			print $data['moyensreprise'];
+			print '</td>';
+			//ecoute
+			print '<td>';
+			print $data['moyensfloa'];
+			print '</td>';
+			//ecoute
+			print '<td>';
+			print $data['moyensfamily'];
+			print '</td>';
+			//ecoute
+			print '<td>';
+			print $data['moyenspropo'];
+			print '</td>';
+			
+			
+			
+			
+			
+			
 
 			print '</tr>';
 		}
