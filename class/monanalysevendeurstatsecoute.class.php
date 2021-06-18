@@ -139,6 +139,7 @@ class MonAnayseVendeurStats
 				$data[$obj->salesman] = array(
 					'nbt'=>$obj->nb,
 					'name'=>$obj->name,
+					'nb'=>$obj->nb,
 					'foyerequip'=>($obj->okfoyerequip/($obj->okfoyerequip+$obj->kofoyerequip))*100,
 					'foyercompo'=>($obj->okfoyercompo/($obj->okfoyercompo+$obj->kofoyercompo))*100,
 					'foyerfai'=>($obj->okfoyerfai/($obj->okfoyerfai+$obj->kofoyerfai))*100,
