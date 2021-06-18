@@ -198,7 +198,7 @@ if (!empty($from_date) && !empty($to_date)) {
 			//Tx Transfo Box
 			print '<td>';
 			print $data['nbb'];
-			$total['nbb'] += (int)$data['nbt'];
+			$total['nbb'] += (int)$data['nbb'];
 			print '</td>';
 
 			//Tx Transfo AboHV
