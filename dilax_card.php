@@ -142,9 +142,14 @@ if (empty($reshook))
 	}
 	$triggermodname = 'MONANALYSEVENDEUR_DILAX_MODIFY'; // Name of trigger action code to execute when we modify record
 
-	// Actions cancel, add, update, update_extras, confirm_validate, confirm_delete, confirm_deleteline, confirm_clone, confirm_close, confirm_setdraft, confirm_reopen
-	include DOL_DOCUMENT_ROOT.'/core/actions_addupdatedelete.inc.php';
-
+	if (($action=='add' || $action=="update") && empty(GETPOST('qty'))) {
+		setEventMessage('La quantité est obligatoire','errors');
+		if ($action=='add') $action='create';
+		if ($action=='update') $action='edit';
+	} else {
+		// Actions cancel, add, update, update_extras, confirm_validate, confirm_delete, confirm_deleteline, confirm_clone, confirm_close, confirm_setdraft, confirm_reopen
+		include DOL_DOCUMENT_ROOT . '/core/actions_addupdatedelete.inc.php';
+	}
 	// Actions when linking object each other
 	include DOL_DOCUMENT_ROOT.'/core/actions_dellink.inc.php';
 
