@@ -104,8 +104,8 @@ $extrafields->fetch_name_optionals_label($object->table_element);
 $search_array_options = $extrafields->getOptionalsFromPost($object->table_element, '', 'search_');
 
 // Default sort order (if not yet defined by previous GETPOST)
-if (!$sortfield) $sortfield = "t.".key($object->fields); // Set here default search field. By default 1st field in definition.
-if (!$sortorder) $sortorder = "ASC";
+if (!$sortfield) $sortfield = "t.date";
+if (!$sortorder) $sortorder = "DESC";
 
 // Initialize array of search criterias
 $search_all = GETPOST('search_all', 'alphanohtml') ? trim(GETPOST('search_all', 'alphanohtml')) : trim(GETPOST('sall', 'alphanohtml'));
