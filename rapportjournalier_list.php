@@ -249,6 +249,10 @@ if (!empty($search_users_tags)) {
 
 if ($object->ismultientitymanaged == 1) $sql .= " WHERE t.entity IN (".getEntity($object->element).")";
 else $sql .= " WHERE 1 = 1";
+//TODO DO NOt WROK
+/*if (!empty($search_users_tags)) {
+	$sql .= ' AND t.fk_category_user IN (' . implode(',', $search_users_tags) . ')';
+}*/
 
 if (empty($user->admin)) {
 	$user_to_read=array();
