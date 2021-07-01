@@ -100,6 +100,7 @@ class Rapportjournalier extends CommonObject
 		'tms' => array('type'=>'timestamp', 'label'=>'DateModification', 'enabled'=>'1', 'position'=>501, 'notnull'=>0, 'visible'=>-2,),
 		'fk_user_creat' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserAuthor', 'enabled'=>'1', 'position'=>510, 'notnull'=>1, 'visible'=>-2, 'foreignkey'=>'user.rowid',),
 		'fk_user_modif' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserModif', 'enabled'=>'1', 'position'=>511, 'notnull'=>-1, 'visible'=>-2,),
+		'fk_category_user' => array('type'=>'integer', 'label'=>'Boutique', 'enabled'=>'1', 'position'=>21, 'notnull'=>0, 'visible'=>1,),
 		'model_pdf' => array('type'=>'varchar(255)', 'label'=>'Model pdf', 'enabled'=>'1', 'position'=>1010, 'notnull'=>-1, 'visible'=>0,),
 		'nb_box' => array('type'=>'real', 'label'=>'Nombre Box', 'enabled'=>'1', 'position'=>47, 'notnull'=>1, 'visible'=>1,),
 		'nb_traitement' => array('type'=>'real', 'label'=>'Nombre Traitement', 'enabled'=>'1', 'position'=>46, 'notnull'=>1, 'visible'=>1,),
@@ -113,6 +114,7 @@ class Rapportjournalier extends CommonObject
 	public $tms;
 	public $fk_user_creat;
 	public $fk_user_modif;
+	public $fk_category_user;
 	public $model_pdf;
 	public $nb_box;
 	public $nb_traitement;
