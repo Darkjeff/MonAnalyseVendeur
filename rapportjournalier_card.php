@@ -60,6 +60,7 @@ if (!$res) die("Include of main fails");
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formcompany.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
+require_once DOL_DOCUMENT_ROOT.'/categories/class/categorie.class.php';
 dol_include_once('/monanalysevendeur/class/rapportjournalier.class.php');
 dol_include_once('/monanalysevendeur/lib/monanalysevendeur_rapportjournalier.lib.php');
 
@@ -223,7 +224,7 @@ if ($action == 'create')
 	print '<table class="border centpercent tableforfieldcreate">'."\n";
 
 	// Common attributes
-	include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_add.tpl.php';
+	include dol_buildpath('/monanalysevendeur/tpl/rapportjournalier_add.tpl.php');
 
 	// Other attributes
 	include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_add.tpl.php';
@@ -260,7 +261,7 @@ if (($id || $ref) && $action == 'edit')
 	print '<table class="border centpercent tableforfieldedit">'."\n";
 
 	// Common attributes
-	include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_edit.tpl.php';
+	include dol_buildpath('/monanalysevendeur/tpl/rapportjournalier_edit.tpl.php');
 
 	// Other attributes
 	include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_edit.tpl.php';
@@ -386,7 +387,8 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	//$keyforbreak='fieldkeytoswitchonsecondcolumn';	// We change column just before this field
 	//unset($object->fields['fk_project']);				// Hide field already shown in banner
 	//unset($object->fields['fk_soc']);					// Hide field already shown in banner
-	include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_view.tpl.php';
+	//include DOL_DOCUMENT_ROOT.'/core/tpl/commonfields_view.tpl.php';
+	include dol_buildpath('/monanalysevendeur/tpl/rapportjournalier_view.tpl.php');
 
 	// Other attributes. Fields from hook formObjectOptions and Extrafields.
 	include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_view.tpl.php';

@@ -1,5 +1,5 @@
 <?php
-/* Copyright (C) 2017  Laurent Destailleur  <eldy@users.sourceforge.net>
+/* Copyright (C) 2017-2019  Laurent Destailleur  <eldy@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,9 +19,8 @@
  * $action
  * $conf
  * $langs
- *
- * $keyforbreak may be defined to key to switch on second column
  */
+
 // Protection to avoid direct call of template
 if (empty($conf) || !is_object($conf))
 {
@@ -31,56 +30,40 @@ if (empty($conf) || !is_object($conf))
 if (!is_object($form)) $form = new Form($db);
 
 ?>
-<!-- BEGIN PHP TEMPLATE commonfields_view.tpl.php -->
+<!-- BEGIN PHP TEMPLATE commonfields_edit.tpl.php -->
 <?php
 
 $object->fields = dol_sort_array($object->fields, 'position');
 
 foreach ($object->fields as $key => $val)
 {
-	if (!empty($keyforbreak) && $key == $keyforbreak) break; // key used for break on second column
-
 	// Discard if extrafield is a hidden field on form
-	if (abs($val['visible']) != 1 && abs($val['visible']) != 3 && abs($val['visible']) != 4 && abs($val['visible']) != 5) continue;
+	if (abs($val['visible']) != 1 && abs($val['visible']) != 3 && abs($val['visible']) != 4) continue;
 
 	if (array_key_exists('enabled', $val) && isset($val['enabled']) && !verifCond($val['enabled'])) continue; // We don't want this field
-	if (in_array($key, array('ref', 'status'))) continue; // Ref and status are already in dol_banner
-
-	$value = $object->$key;
 
 	print '<tr><td';
-	print ' class="titlefield fieldname_'.$key;
-	//if ($val['notnull'] > 0) print ' fieldrequired';     // No fieldrequired on the view output
+	print ' class="titlefieldcreate';
+	if ($val['notnull'] > 0) print ' fieldrequired';
 	if ($val['type'] == 'text' || $val['type'] == 'html') print ' tdtop';
 	print '">';
 	if (!empty($val['help'])) print $form->textwithpicto($langs->trans($val['label']), $langs->trans($val['help']));
 	else print $langs->trans($val['label']);
 	print '</td>';
-	print '<td class="valuefield fieldname_'.$key;
-	if ($val['type'] == 'text') print ' wordbreak';
-	print '">';
+	print '<td>';
 	if ($key== 'fk_category_user')  {
-		if (!empty($value)) {
-			$sqlCat = "SELECT c.label, c.rowid";
-			$sqlCat .= " FROM " . MAIN_DB_PREFIX . "categorie as c";
-			$sqlCat .= " WHERE c.rowid=" . $value;
-			$resqlCat = $db->query($sqlCat);
-			if ($resqlCat) {
-				if ($obj = $db->fetch_object($resqlCat)) {
-					print $obj->label;
-				}
-			} else {
-				setEventMessage($db->lasterror, 'errors');
-			}
-		}
+		print $form->select_all_categories('user', GETPOSTISSET($key) ? GETPOST($key, 'int') : $object->$key , $key, null, null, 0);
 	} else {
-		print $object->showOutputField($val, $key, $value, '', '', '', 0);
+		if (in_array($val['type'], array('int', 'integer'))) $value = GETPOSTISSET($key) ? GETPOST($key, 'int') : $object->$key;
+		elseif ($val['type'] == 'text' || $val['type'] == 'html') $value = GETPOSTISSET($key) ? GETPOST($key, 'none') : $object->$key;
+		else $value = GETPOSTISSET($key) ? GETPOST($key, 'alpha') : $object->$key;
+		//var_dump($val.' '.$key.' '.$value);
+		if ($val['noteditable']) print $object->showOutputField($val, $key, $value, '', '', '', 0);
+		else print $object->showInputField($val, $key, $value, '', '', '', 0);
 	}
-	//print dol_escape_htmltag($object->$key, 1, 1);
 	print '</td>';
 	print '</tr>';
 }
 
-
 ?>
-<!-- END PHP TEMPLATE commonfields_view.tpl.php -->
+<!-- END PHP TEMPLATE commonfields_edit.tpl.php -->

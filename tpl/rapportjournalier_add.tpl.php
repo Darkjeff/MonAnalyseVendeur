@@ -19,68 +19,60 @@
  * $action
  * $conf
  * $langs
- *
- * $keyforbreak may be defined to key to switch on second column
+ * $form
  */
+
 // Protection to avoid direct call of template
 if (empty($conf) || !is_object($conf))
 {
 	print "Error, template page can't be called as URL";
 	exit;
 }
-if (!is_object($form)) $form = new Form($db);
 
 ?>
-<!-- BEGIN PHP TEMPLATE commonfields_view.tpl.php -->
+<!-- BEGIN PHP TEMPLATE commonfields_add.tpl.php -->
 <?php
 
 $object->fields = dol_sort_array($object->fields, 'position');
 
 foreach ($object->fields as $key => $val)
 {
-	if (!empty($keyforbreak) && $key == $keyforbreak) break; // key used for break on second column
-
 	// Discard if extrafield is a hidden field on form
-	if (abs($val['visible']) != 1 && abs($val['visible']) != 3 && abs($val['visible']) != 4 && abs($val['visible']) != 5) continue;
+	if (abs($val['visible']) != 1 && abs($val['visible']) != 3) continue;
 
 	if (array_key_exists('enabled', $val) && isset($val['enabled']) && !verifCond($val['enabled'])) continue; // We don't want this field
-	if (in_array($key, array('ref', 'status'))) continue; // Ref and status are already in dol_banner
 
-	$value = $object->$key;
-
-	print '<tr><td';
-	print ' class="titlefield fieldname_'.$key;
-	//if ($val['notnull'] > 0) print ' fieldrequired';     // No fieldrequired on the view output
+	print '<tr id="field_'.$key.'">';
+	print '<td';
+	print ' class="titlefieldcreate';
+	if ($val['notnull'] > 0) print ' fieldrequired';
 	if ($val['type'] == 'text' || $val['type'] == 'html') print ' tdtop';
-	print '">';
+	print '"';
+	print '>';
 	if (!empty($val['help'])) print $form->textwithpicto($langs->trans($val['label']), $langs->trans($val['help']));
 	else print $langs->trans($val['label']);
 	print '</td>';
-	print '<td class="valuefield fieldname_'.$key;
-	if ($val['type'] == 'text') print ' wordbreak';
-	print '">';
+	print '<td>';
 	if ($key== 'fk_category_user')  {
-		if (!empty($value)) {
-			$sqlCat = "SELECT c.label, c.rowid";
-			$sqlCat .= " FROM " . MAIN_DB_PREFIX . "categorie as c";
-			$sqlCat .= " WHERE c.rowid=" . $value;
-			$resqlCat = $db->query($sqlCat);
-			if ($resqlCat) {
-				if ($obj = $db->fetch_object($resqlCat)) {
-					print $obj->label;
-				}
-			} else {
-				setEventMessage($db->lasterror, 'errors');
-			}
+		$cat = New Categorie($db);
+		$cats=$cat->containing($user->id,'user');
+		if (!empty($cats)) {
+			$defaultVal = reset($cats)->id;
 		}
+		print $form->select_all_categories('user', $defaultVal , $key, null, null, 0);
 	} else {
-		print $object->showOutputField($val, $key, $value, '', '', '', 0);
+		if (in_array($val['type'], array('int', 'integer'))) $value = GETPOST($key, 'int');
+		elseif ($val['type'] == 'text' || $val['type'] == 'html') $value = GETPOST($key, 'none');
+		elseif ($val['type'] == 'date') $value = dol_mktime(12, 0, 0, GETPOST($key . 'month', 'int'), GETPOST($key . 'day', 'int'), GETPOST($key . 'year', 'int'));
+		elseif ($val['type'] == 'datetime') $value = dol_mktime(GETPOST($key . 'hour', 'int'), GETPOST($key . 'min', 'int'), 0, GETPOST($key . 'month', 'int'), GETPOST($key . 'day', 'int'), GETPOST($key . 'year', 'int'));
+		elseif ($val['type'] == 'boolean') $value = (GETPOST($key) == 'on' ? 1 : 0);
+		else $value = GETPOST($key, 'alphanohtml');
+		if ($val['noteditable']) print $object->showOutputField($val, $key, $value, '', '', '', 0);
+		else print $object->showInputField($val, $key, $value, '', '', '', 0);
 	}
-	//print dol_escape_htmltag($object->$key, 1, 1);
 	print '</td>';
 	print '</tr>';
 }
 
-
 ?>
-<!-- END PHP TEMPLATE commonfields_view.tpl.php -->
+<!-- END PHP TEMPLATE commonfields_add.tpl.php -->

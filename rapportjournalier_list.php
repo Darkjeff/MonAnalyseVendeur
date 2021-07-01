@@ -118,6 +118,7 @@ foreach ($object->fields as $key => $val)
 	} elseif (GETPOST('search_'.$key, 'alpha') !== '') $search[$key] = GETPOST('search_'.$key, 'alpha');
 }
 $search_users_tags = GETPOST('users_tags', 'array');
+
 // List of fields to search into when doing a "search in all"
 $fieldstosearchall = array();
 foreach ($object->fields as $key => $val)
@@ -468,20 +469,22 @@ foreach ($object->fields as $key => $val)
 	if (!empty($arrayfields['t.'.$key]['checked']))
 	{
 		print '<td class="liste_titre'.($cssforfield ? ' '.$cssforfield : '').'">';
-		if (is_array($val['arrayofkeyval'])) print $form->selectarray('search_'.$key, $val['arrayofkeyval'], $search[$key], $val['notnull'], 0, 0, '', 1, 0, 0, '', 'maxwidth75');
-		elseif (strpos($val['type'], 'integer:') === 0) {
-			print $object->showInputField($val, $key, $search[$key], '', '', 'search_', 'maxwidth150', 1);
-		} elseif (!preg_match('/^(date|timestamp)/', $val['type'])) {
-			print '<input type="text" class="flat maxwidth75" name="search_'.$key.'" value="'.dol_escape_htmltag($search[$key]).'">';
-		} elseif (preg_match('/^(date|timestamp)/', $val['type']))  {
-			print '<div class="nowrap">';
-			print $langs->trans('From').' ';
-			print $form->selectDate($search[$key.'_from'] ? $search[$key.'_from'] : -1, 'search_'.$key.'_from', 0, 0, 1);
-			print '</div>';
-			print '<div class="nowrap">';
-			print $langs->trans('to').' ';
-			print $form->selectDate($search[$key.'_to'] ? $search[$key.'_to'] : -1, 'search_'.$key.'_to', 0, 0, 1);
-			print '</div>';
+		if ($key!=='fk_category_user') {
+			if (is_array($val['arrayofkeyval'])) print $form->selectarray('search_' . $key, $val['arrayofkeyval'], $search[$key], $val['notnull'], 0, 0, '', 1, 0, 0, '', 'maxwidth75');
+			elseif (strpos($val['type'], 'integer:') === 0) {
+				print $object->showInputField($val, $key, $search[$key], '', '', 'search_', 'maxwidth150', 1);
+			} elseif (!preg_match('/^(date|timestamp)/', $val['type'])) {
+				print '<input type="text" class="flat maxwidth75" name="search_' . $key . '" value="' . dol_escape_htmltag($search[$key]) . '">';
+			} elseif (preg_match('/^(date|timestamp)/', $val['type'])) {
+				print '<div class="nowrap">';
+				print $langs->trans('From') . ' ';
+				print $form->selectDate($search[$key . '_from'] ? $search[$key . '_from'] : -1, 'search_' . $key . '_from', 0, 0, 1);
+				print '</div>';
+				print '<div class="nowrap">';
+				print $langs->trans('to') . ' ';
+				print $form->selectDate($search[$key . '_to'] ? $search[$key . '_to'] : -1, 'search_' . $key . '_to', 0, 0, 1);
+				print '</div>';
+			}
 		}
 		print '</td>';
 	}
@@ -567,8 +570,27 @@ while ($i < ($limit ? min($num, $limit) : $num))
 		if (!empty($arrayfields['t.'.$key]['checked']))
 		{
 			print '<td'.($cssforfield ? ' class="'.$cssforfield.'"' : '').'>';
-			if ($key == 'status') print $object->getLibStatut(5);
-			else print $object->showOutputField($val, $key, $object->$key, '');
+			if ($key == 'status') {
+				print $object->getLibStatut(5);
+			}
+			elseif ($key== 'fk_category_user') {
+				if (!empty($object->$key)) {
+					$sqlCat = "SELECT c.label, c.rowid";
+					$sqlCat .= " FROM " . MAIN_DB_PREFIX . "categorie as c";
+					$sqlCat .= " WHERE c.rowid=" . $object->$key;
+					$resqlCat = $db->query($sqlCat);
+					if ($resqlCat) {
+						if ($obj = $db->fetch_object($resqlCat)) {
+							print $obj->label;
+						}
+					} else {
+						setEventMessage($db->lasterror, 'errors');
+					}
+				}
+			}
+			else {
+				print $object->showOutputField($val, $key, $object->$key, '');
+			}
 			print '</td>';
 			if (!$i) $totalarray['nbfield']++;
 			if (!empty($val['isameasure']))
