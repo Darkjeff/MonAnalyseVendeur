@@ -100,6 +100,7 @@ class Autodiag extends CommonObject
 		'tms' => array('type'=>'timestamp', 'label'=>'DateModification', 'enabled'=>'1', 'position'=>501, 'notnull'=>0, 'visible'=>-2,),
 		'fk_user_creat' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserAuthor', 'enabled'=>'1', 'position'=>510, 'notnull'=>1, 'visible'=>-2, 'foreignkey'=>'user.rowid',),
 		'fk_user_modif' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'UserModif', 'enabled'=>'1', 'position'=>511, 'notnull'=>-1, 'visible'=>-2,),
+		'fk_category_user' => array('type'=>'integer', 'label'=>'Boutique', 'enabled'=>'1', 'position'=>21, 'notnull'=>0, 'visible'=>1,),
 		'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>-2,),
 		'model_pdf' => array('type'=>'varchar(255)', 'label'=>'Model pdf', 'enabled'=>'1', 'position'=>1010, 'notnull'=>-1, 'visible'=>0,),
 		'autodiag' => array('type'=>'html', 'label'=>'auto diagnostic', 'enabled'=>'1', 'position'=>50, 'notnull'=>0, 'visible'=>1,),
@@ -125,6 +126,7 @@ class Autodiag extends CommonObject
 	public $ref;
 	public $date_creation;
 	public $tms;
+	public $fk_category_user;
 	public $fk_user_creat;
 	public $fk_user_modif;
 	public $import_key;

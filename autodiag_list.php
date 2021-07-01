@@ -801,6 +801,11 @@ foreach ($object->fields as $key => $val) {
 				print '</td>';
 			}*/
 			break;
+
+		case 'fk_category_user':
+			print '<td></td>';
+			break;
+
 		default:
 			$align = '';
 
@@ -999,6 +1004,20 @@ while ($i < min($num, $limit)) {
 							} else {
 								print '<input type="hidden" name="actioncode" value="' . $cactioncomm->code . '">' . $langs->trans("Action" . $cactioncomm->code);
 							}
+						}
+					}
+				} elseif ($key == 'fk_category_user') {
+					if (!empty($obj->$key)) {
+						$sqlCat = "SELECT c.label, c.rowid";
+						$sqlCat .= " FROM " . MAIN_DB_PREFIX . "categorie as c";
+						$sqlCat .= " WHERE c.rowid=" . $obj->$key;
+						$resqlCat = $db->query($sqlCat);
+						if ($resqlCat) {
+							if ($obj = $db->fetch_object($resqlCat)) {
+								print $obj->label;
+							}
+						} else {
+							setEventMessage($db->lasterror, 'errors');
 						}
 					}
 				} elseif ($key == 'comment') {

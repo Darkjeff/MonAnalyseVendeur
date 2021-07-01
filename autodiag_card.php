@@ -71,6 +71,7 @@ if ($action == 'add') {
 	$object->object = GETPOST('object');
 	$object->fk_soc = GETPOST('fk_soc');
 	$object->fk_user_creat = GETPOST('fk_user_creat');
+	$object->fk_category_user = GETPOST('fk_category_user');
 	$object->fk_contact = !GETPOST('fk_contact') ? 'NULL' : GETPOST('fk_contact');
 	$object->comment = GETPOST('comment');
 	if (!empty($conf->global->AGENDA_USE_EVENT_TYPE)) {
@@ -180,6 +181,7 @@ if ($action == 'update') {
 	$object->object = GETPOST('object');
 	$object->fk_soc = GETPOST('fk_soc');
 	//$object->fk_user_creat = GETPOST('fk_user_creat');
+	$object->fk_category_user = GETPOST('fk_category_user');
 	$object->fk_contact = !GETPOST('fk_contact') ? 'NULL' : GETPOST('fk_contact');
 	$object->comment = GETPOST('comment');
 	if (!empty($conf->global->AGENDA_USE_EVENT_TYPE)) {
@@ -274,6 +276,26 @@ if ($action == 'create') {
 					print '<input type="radio" name="' . $key . '" value="1" />';
 					print $langs->trans("contacttracking_INCOMING");
 					print '</label>';
+
+					print '</td>';
+					print '</tr>';
+					break;
+
+				case 'fk_category_user':
+					print '<tr id="field_' . $key . '">';
+					print '<td';
+					print ' class="titlefieldcreate';
+					if ($val['notnull'] > 0)
+						print ' fieldrequired';
+					if ($val['type'] == 'text' || $val['type'] == 'html')
+						print ' tdtop';
+					print '"';
+					print '>';
+					print $langs->trans($val['label']);
+					print '</td>';
+					print '<td>';
+
+					print $form->select_all_categories('user', GETPOSTISSET($key) ? GETPOST($key, 'int') : $object->$key , $key, null, null, 0);
 
 					print '</td>';
 					print '</tr>';
@@ -671,6 +693,26 @@ if (($id || $ref) && $action == 'edit') {
 				 */
 				break;
 
+			case 'fk_category_user':
+				print '<tr id="field_' . $key . '">';
+				print '<td';
+				print ' class="titlefieldcreate';
+				if ($val['notnull'] > 0)
+					print ' fieldrequired';
+				if ($val['type'] == 'text' || $val['type'] == 'html')
+					print ' tdtop';
+				print '"';
+				print '>';
+				print $langs->trans($val['label']);
+				print '</td>';
+				print '<td>';
+
+				print $form->select_all_categories('user', GETPOSTISSET($key) ? GETPOST($key, 'int') : $object->$key , $key, null, null, 0);
+
+				print '</td>';
+				print '</tr>';
+				break;
+
 			case 'type_event':
 				/*
 				 print '</table>';
@@ -988,6 +1030,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	// Common attributes
 	//$keyforbreak='fieldkeytoswithonsecondcolumn';
 	foreach ($object->fields as $key => $val) {
+
 		// Discard if extrafield is a hidden field on form
 		if (abs($val['visible']) != 1)
 			continue;
@@ -1249,6 +1292,22 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 				print '</tr>';
 
 				break;
+
+			case 'fk_category_user' :
+				if (!empty($object->$key)) {
+					print $object->$key;
+					/*$sqlCat = "SELECT c.label, c.rowid";
+					$sqlCat .= " FROM " . MAIN_DB_PREFIX . "categorie as c";
+					$sqlCat .= " WHERE c.rowid=" . $object->$key;
+					$resqlCat = $db->query($sqlCat);
+					if ($resqlCat) {
+						if ($obj = $db->fetch_object($resqlCat)) {
+							print $obj->label;
+						}
+					} else {
+						setEventMessage($db->lasterror, 'errors');
+					}*/
+				}
 
 			default :
 				print '<tr id="field_' . $key . '">';

@@ -84,6 +84,7 @@ class Contacttracking extends CommonObject
 		'date_creation' => array('type'=>'datetime', 'label'=>'DateCreation', 'enabled'=>'1', 'position'=>500, 'notnull'=>1, 'visible'=>1,),
 		'type_contact' => array('type'=>'integer', 'label'=>'Type', 'enabled'=>'1', 'position'=>504, 'notnull'=>1, 'visible'=>1, 'comment'=>"Type de contact (entrant ou sortant)"),
 		'tms' => array('type'=>'timestamp', 'label'=>'DateModification', 'enabled'=>'1', 'position'=>501, 'notnull'=>1, 'visible'=>-2,),
+		'fk_category_user' => array('type'=>'integer', 'label'=>'Boutique', 'enabled'=>'1', 'position'=>21, 'notnull'=>0, 'visible'=>1,),
 		'fk_user_modif' => array('type'=>'integer', 'label'=>'UserModif', 'enabled'=>'1', 'position'=>511, 'notnull'=>-1, 'visible'=>-2,),
 		'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>'1', 'position'=>1000, 'notnull'=>-1, 'visible'=>-2,),
 		'mode_contact' => array('type'=>'varchar(255)', 'label'=>'ContactMode', 'enabled'=>'1', 'position'=>505, 'notnull'=>-1, 'visible'=>1, 'searchall'=>1, 'comment'=>"Mode de contact"),
@@ -103,6 +104,7 @@ class Contacttracking extends CommonObject
 	public $date_creation;
 	public $type_contact;
 	public $tms;
+	public $fk_category_user;
 	public $fk_user_modif;
 	public $import_key;
 	public $mode_contact;
