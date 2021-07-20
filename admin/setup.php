@@ -57,8 +57,11 @@ $value = GETPOST('value', 'alpha');
 
 $arrayofparameters = array(
 	'MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVFIX'=>array('css'=>'minwidth500', 'enabled'=>1),
+	'MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVFIX_VISIBLE'=>array('css'=>'minwidth500', 'enabled'=>1),
 	'MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVMOB'=>array('css'=>'minwidth500', 'enabled'=>1),
+	'MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVMOB_VISIBLE'=>array('css'=>'minwidth500', 'enabled'=>1),
 	'MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVADD'=>array('css'=>'minwidth500', 'enabled'=>1),
+	'MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVADD_VISIBLE'=>array('css'=>'minwidth500', 'enabled'=>1),
 	'MONANALYSEVENDEUR_MAG_1'=>array('css'=>'minwidth500', 'enabled'=>1),
 	'MONANALYSEVENDEUR_MAG_2'=>array('css'=>'minwidth500', 'enabled'=>1),
 	'MONANALYSEVENDEUR_MAG_3'=>array('css'=>'minwidth500', 'enabled'=>1),
@@ -221,11 +224,22 @@ if ($action == 'edit')
 
 	foreach ($arrayofparameters as $key => $val)
 	{
-		$setupnotempty++;
-		print '<tr class="oddeven"><td>';
-		$tooltiphelp = (($langs->trans($key.'Tooltip') != $key.'Tooltip') ? $langs->trans($key.'Tooltip') : '');
-		print $form->textwithpicto($langs->trans($key), $tooltiphelp);
-		print '</td><td><input name="'.$key.'"  class="flat '.(empty($val['css']) ? 'minwidth200' : $val['css']).'" value="'.$conf->global->$key.'"></td></tr>';
+		if (strpos($key,'_VISIBLE')!==false) {
+			$setupnotempty++;
+			print '<tr class="oddeven"><td>';
+			$tooltiphelp = (($langs->trans($key.'Tooltip') != $key.'Tooltip') ? $langs->trans($key.'Tooltip') : '');
+			print $form->textwithpicto($langs->trans($key), $tooltiphelp);
+			print '</td><td>';
+			print ajax_constantonoff($key);
+			print '</td></tr>';
+		} else {
+			$setupnotempty++;
+			print '<tr class="oddeven"><td>';
+			$tooltiphelp = (($langs->trans($key.'Tooltip') != $key.'Tooltip') ? $langs->trans($key.'Tooltip') : '');
+			print $form->textwithpicto($langs->trans($key), $tooltiphelp);
+			print '</td><td><input name="'.$key.'"  class="flat '.(empty($val['css']) ? 'minwidth200' : $val['css']).'" value="'.$conf->global->$key.'"></td></tr>';
+		}
+
 	}
 	print '</table>';
 
@@ -245,12 +259,22 @@ if ($action == 'edit')
 
 		foreach ($arrayofparameters as $key => $val)
 		{
-			$setupnotempty++;
+			if (strpos($key,'_VISIBLE')!==false) {
+				$setupnotempty++;
+				print '<tr class="oddeven"><td>';
+				$tooltiphelp = (($langs->trans($key.'Tooltip') != $key.'Tooltip') ? $langs->trans($key.'Tooltip') : '');
+				print $form->textwithpicto($langs->trans($key), $tooltiphelp);
+				print '</td><td>';
+				print ajax_constantonoff($key);
+				print '</td></tr>';
+			} else {
+				$setupnotempty++;
 
-			print '<tr class="oddeven"><td>';
-			$tooltiphelp = (($langs->trans($key.'Tooltip') != $key.'Tooltip') ? $langs->trans($key.'Tooltip') : '');
-			print $form->textwithpicto($langs->trans($key), $tooltiphelp);
-			print '</td><td>'.$conf->global->$key.'</td></tr>';
+				print '<tr class="oddeven"><td>';
+				$tooltiphelp = (($langs->trans($key . 'Tooltip') != $key . 'Tooltip') ? $langs->trans($key . 'Tooltip') : '');
+				print $form->textwithpicto($langs->trans($key), $tooltiphelp);
+				print '</td><td>' . $conf->global->$key . '</td></tr>';
+			}
 		}
 
 		print '</table>';

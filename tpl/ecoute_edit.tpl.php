@@ -38,7 +38,13 @@ $object->fields = dol_sort_array($object->fields, 'position');
 foreach ($object->fields as $key => $val)
 {
 	// Discard if extrafield is a hidden field on form
-	if (abs($val['visible']) != 1 && abs($val['visible']) != 3 && abs($val['visible']) != 4) continue;
+	if (is_int($val['visible'])) {
+		$visible = 	$val['visible'];
+	} else {
+		$visible=dol_eval($val['visible'],1);
+	}
+	if (abs($visible) != 1 && abs($visible) != 3 && abs($visible) != 4) continue;
+
 
 	if (array_key_exists('enabled', $val) && isset($val['enabled']) && !verifCond($val['enabled'])) continue; // We don't want this field
 	if ($key=='salesman') {
