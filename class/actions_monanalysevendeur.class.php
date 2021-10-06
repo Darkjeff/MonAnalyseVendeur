@@ -110,6 +110,11 @@ class ActionsMonAnalyseVendeur
 					$socid = GETPOST('socid','int');
 				}
 				$stcomm_id=dol_getIdFromCode($this->db, GETPOST('stcomm', 'alpha'), 'c_stcomm');
+				if ($langs->trans('StatusProspect'.$stcomm_id)=='StatusProspect'.$stcomm_id) {
+					$stcomm_label = dol_getIdFromCode($this->db, GETPOST('stcomm', 'alpha'), 'c_stcomm','code','libelle');
+				} else  {
+					$stcomm_label = $langs->trans('StatusProspect'.$stcomm_id);
+				}
 
 				$now=dol_now();
 				require_once DOL_DOCUMENT_ROOT.'/comm/action/class/actioncomm.class.php';
