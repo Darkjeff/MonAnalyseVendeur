@@ -741,7 +741,6 @@ foreach ($object->fields as $key => $val) {
 			break;
 
 		case 'fk_contact':
-
 			print '<td></td>';
 			break;
 
@@ -929,7 +928,6 @@ while ($i < min($num, $limit)) {
 	// Show here line of result
 	print '<tr class="oddeven">';
 	foreach ($object->fields as $key => $val) {
-		$align = '';
 		if (in_array($val['type'], array('date', 'datetime', 'timestamp')))
 			$align .= ($align ? ' ' : '') . 'center';
 		if (in_array($val['type'], array('timestamp')))
@@ -959,7 +957,6 @@ while ($i < min($num, $limit)) {
 				if ($align)
 					print ' class="' . $align . '"';
 				print '>';
-
 				if ($key == 'type_contact' && ($obj->$key == 1 || $obj->$key == 2)) {
 					if ($obj->$key == 1) {
 						echo $langs->trans("contacttracking_INCOMING");
@@ -1013,8 +1010,8 @@ while ($i < min($num, $limit)) {
 						$sqlCat .= " WHERE c.rowid=" . $obj->$key;
 						$resqlCat = $db->query($sqlCat);
 						if ($resqlCat) {
-							if ($obj = $db->fetch_object($resqlCat)) {
-								print $obj->label;
+							if ($objCat = $db->fetch_object($resqlCat)) {
+								print $objCat->label;
 							}
 						} else {
 							setEventMessage($db->lasterror, 'errors');
@@ -1034,6 +1031,7 @@ while ($i < min($num, $limit)) {
 					} else {
 						switch ($key) {
 							case 'fk_soc' :
+								print $obj->$key;
 								$societedef->fetch($obj->$key);
 								echo $societedef->getNomUrl();
 								break;
