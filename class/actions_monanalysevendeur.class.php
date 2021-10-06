@@ -121,7 +121,7 @@ class ActionsMonAnalyseVendeur
 				$actioncomm = new ActionComm($this->db);
 				$actioncomm->type_code   = 'AC_OTH_AUTO'; // Type of event ('AC_OTH', 'AC_OTH_AUTO', 'AC_XXX'...)
 				$actioncomm->code        = 'AC_OTH_AUTO';
-				$actioncomm->label       = 'Status de prospection passé à '.$langs->trans('StatusProspect'.$stcomm_id);
+				$actioncomm->label       = 'Status de prospection passé à '.$stcomm_label;
 				//$actioncomm->note_private = $object->actionmsg; // TODO Replace with ($actioncomm->email_msgid ? $object->email_content : $object->actionmsg)
 				//$actioncomm->fk_project  = $projectid;
 				$actioncomm->datep       = $now;
