@@ -105,8 +105,9 @@ class ActionsMonAnalyseVendeur
 
 				if (empty($object->id)) {
 					$socid = GETPOST('stcommsocid','int');
-				} else {
-					$socid = $object->id;
+				}
+				if (empty($socid)) {
+					$socid = GETPOST('socid','int');
 				}
 				$stcomm_id=dol_getIdFromCode($this->db, GETPOST('stcomm', 'alpha'), 'c_stcomm');
 
