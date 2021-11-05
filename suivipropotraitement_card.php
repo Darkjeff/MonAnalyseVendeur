@@ -509,10 +509,10 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 			}
 
 			// Clone
-			if ($permissiontoadd)
+			/*if ($permissiontoadd)
 			{
 				print '<a class="butAction" href="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&socid='.$object->socid.'&action=clone&object=suivipropotraitement">'.$langs->trans("ToClone").'</a>'."\n";
-			}
+			}*/
 
 			/*
 			if ($permissiontoadd)
