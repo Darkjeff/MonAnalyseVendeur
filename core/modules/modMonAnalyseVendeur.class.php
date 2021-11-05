@@ -19,14 +19,14 @@
  */
 
 /**
- * 	\defgroup   monanalysevendeur     Module MonAnalyseVendeur
+ *    \defgroup   monanalysevendeur     Module MonAnalyseVendeur
  *  \brief      MonAnalyseVendeur module descriptor.
  *
  *  \file       htdocs/monanalysevendeur/core/modules/modMonAnalyseVendeur.class.php
  *  \ingroup    monanalysevendeur
  *  \brief      Description and activation file for module MonAnalyseVendeur
  */
-include_once DOL_DOCUMENT_ROOT.'/core/modules/DolibarrModules.class.php';
+include_once DOL_DOCUMENT_ROOT . '/core/modules/DolibarrModules.class.php';
 
 /**
  *  Description and activation class for module MonAnalyseVendeur
@@ -69,7 +69,7 @@ class modMonAnalyseVendeur extends DolibarrModules
 		//$this->url_last_version = 'http://www.example.com/versionmodule.txt';
 
 		// Key used in llx_const table to save module status enabled/disabled (where MONANALYSEVENDEUR is value of property name of module in uppercase)
-		$this->const_name = 'MAIN_MODULE_'.strtoupper($this->name);
+		$this->const_name = 'MAIN_MODULE_' . strtoupper($this->name);
 		// Name of image file used for this module.
 		// If file is in theme/yourtheme/img directory under name object_pictovalue.png, use this->picto='pictovalue'
 		// If file is in module/img directory under name object_pictovalue.png, use this->picto='pictovalue@module'
@@ -77,35 +77,33 @@ class modMonAnalyseVendeur extends DolibarrModules
 		// Define some features supported by module (triggers, login, substitutions, menus, css, etc...)
 		$this->module_parts = array(
 			// Set this to 1 if module has its own trigger directory (core/triggers)
-			'triggers' => 0,
+			'triggers'          => 0,
 			// Set this to 1 if module has its own login method file (core/login)
-			'login' => 0,
+			'login'             => 0,
 			// Set this to 1 if module has its own substitution function file (core/substitutions)
-			'substitutions' => 0,
+			'substitutions'     => 0,
 			// Set this to 1 if module has its own menus handler directory (core/menus)
-			'menus' => 0,
+			'menus'             => 0,
 			// Set this to 1 if module overwrite template dir (core/tpl)
-			'tpl' => 0,
+			'tpl'               => 0,
 			// Set this to 1 if module has its own barcode directory (core/modules/barcode)
-			'barcode' => 0,
+			'barcode'           => 0,
 			// Set this to 1 if module has its own models directory (core/modules/xxx)
-			'models' => 1,
+			'models'            => 1,
 			// Set this to 1 if module has its own theme directory (theme)
-			'theme' => 0,
+			'theme'             => 0,
 			// Set this to relative path of css file if module has its own css file
-			'css' => array(
-				//    '/monanalysevendeur/css/monanalysevendeur.css.php',
+			'css'               => array(//    '/monanalysevendeur/css/monanalysevendeur.css.php',
 			),
 			// Set this to relative path of js file if module must load a js on all pages
-			'js' => array(
-				//   '/monanalysevendeur/js/monanalysevendeur.js.php',
+			'js'                => array(//   '/monanalysevendeur/js/monanalysevendeur.js.php',
 			),
 			// Set here all hooks context managed by module. To find available hook context, make a "grep -r '>initHooks(' *" on source code. You can also set hook context to 'all'
-			'hooks' => array(
-				   'data' => array(
-				       'thirdpartylist',
-				       'thirdpartycomm',
-				   ),
+			'hooks'             => array(
+				'data' => array(
+					'thirdpartylist',
+					'thirdpartycomm',
+				),
 				//   'entity' => '0',
 			),
 			// Set this to 1 if features of module are opened to external users
@@ -137,8 +135,8 @@ class modMonAnalyseVendeur extends DolibarrModules
 		//                             2 => array('MONANALYSEVENDEUR_MYNEWCONST2', 'chaine', 'myvalue', 'This is another constant to add', 0, 'current', 1)
 		// );
 		$this->const = array(1 => array('MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVFIX', 'chaine', '', '', 0),
-			2 => array('MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVMOB', 'chaine', '', '', 0),
-			3 => array('MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVADD', 'chaine', '', '', 0));
+							 2 => array('MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVMOB', 'chaine', '', '', 0),
+							 3 => array('MONANALYSEVENDEUR_PRODUCT_ECOUTE_UNIVADD', 'chaine', '', '', 0));
 
 		// Some keys to add into the overwriting translation tables
 		/*$this->overwrite_translation = array(
@@ -252,7 +250,7 @@ class modMonAnalyseVendeur extends DolibarrModules
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
 		$this->rights[$r][1] = 'Voir les RJ, diag, relance des subordonnées'; // Permission label
 		$this->rights[$r][4] = 'rapportjournalier'; // In php code, permission will be checked by test if ($user->rights->monanalysevendeur->level1->level2)
-    	$this->rights[$r][5] = 'rpv'; // In php code, permission will be checked by test if ($user->rights->monanalysevendeur->level1->level2)
+		$this->rights[$r][5] = 'rpv'; // In php code, permission will be checked by test if ($user->rights->monanalysevendeur->level1->level2)
 		$r++;
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
 		$this->rights[$r][1] = 'Modifier Rapport Journalier'; // Permission label
@@ -311,6 +309,25 @@ class modMonAnalyseVendeur extends DolibarrModules
 		$this->rights[$r][3] = 1;      // Permission by default for new user (0/1)
 		$this->rights[$r][4] = 'import';    // In php code, permission will be checked by test if ($user->rights->activityreport->level1->level2)
 		$this->rights[$r][5] = '';
+
+		$r++;
+		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
+		$this->rights[$r][1] = 'suivi propo / traitements lire'; // Permission label
+		$this->rights[$r][4] = 'suivipropotraitement'; // In php code, permission will be checked by test if ($user->rights->monanalysevendeur->level1->level2)
+		$this->rights[$r][5] = 'read'; // In php code, permission will be checked by test if ($user->rights->monanalysevendeur->level1->level2)
+
+		$r++;
+		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
+		$this->rights[$r][1] = 'suivi propo / traitements lire'; // Permission label
+		$this->rights[$r][4] = 'suivipropotraitement'; // In php code, permission will be checked by test if ($user->rights->monanalysevendeur->level1->level2)
+		$this->rights[$r][5] = 'write'; // In php code, permission will be checked by test if ($user->rights->monanalysevendeur->level1->level2)
+
+		$r++;
+		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
+		$this->rights[$r][1] = 'suivi propo / traitements lire'; // Permission label
+		$this->rights[$r][4] = 'suivipropotraitement'; // In php code, permission will be checked by test if ($user->rights->monanalysevendeur->level1->level2)
+		$this->rights[$r][5] = 'delete'; // In php code, permission will be checked by test if ($user->rights->monanalysevendeur->level1->level2)
+
 		/* END MODULEBUILDER PERMISSIONS */
 
 		// Main menu entries to add
@@ -319,18 +336,22 @@ class modMonAnalyseVendeur extends DolibarrModules
 		// Add here entries to declare new menus
 		/* BEGIN MODULEBUILDER TOPMENU */
 		$this->menu[$r++] = array(
-			'fk_menu'=>'', // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'type'=>'top', // This is a Top menu entry
-			'titre'=>'ModuleMonAnalyseVendeurName',
-			'mainmenu'=>'monanalysevendeur',
-			'leftmenu'=>'',
-			'url'=>'/monanalysevendeur/monanalysevendeurindex.php',
-			'langs'=>'monanalysevendeur@monanalysevendeur', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'position'=>1000 + $r,
-			'enabled'=>'$conf->monanalysevendeur->enabled', // Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled.
-			'perms'=>'1', // Use 'perms'=>'$user->rights->monanalysevendeur->rapportjournalier->read' if you want your menu with a permission rules
-			'target'=>'',
-			'user'=>2, // 0=Menu for internal users, 1=external users, 2=both
+			'fk_menu'  => '',
+			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'type'     => 'top', // This is a Top menu entry
+			'titre'    => 'ModuleMonAnalyseVendeurName',
+			'mainmenu' => 'monanalysevendeur',
+			'leftmenu' => '',
+			'url'      => '/monanalysevendeur/monanalysevendeurindex.php',
+			'langs'    => 'monanalysevendeur@monanalysevendeur',
+			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'position' => 1000 + $r,
+			'enabled'  => '$conf->monanalysevendeur->enabled',
+			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled.
+			'perms'    => '1',
+			// Use 'perms'=>'$user->rights->monanalysevendeur->rapportjournalier->read' if you want your menu with a permission rules
+			'target'   => '',
+			'user'     => 2, // 0=Menu for internal users, 1=external users, 2=both
 		);
 		/* END MODULEBUILDER TOPMENU */
 		/* BEGIN MODULEBUILDER LEFTMENU RAPPORTJOURNALIER
@@ -378,565 +399,605 @@ class modMonAnalyseVendeur extends DolibarrModules
 		);
 		*/
 
-        $this->menu[$r++]=array(
-            // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-            'fk_menu'=>'fk_mainmenu=monanalysevendeur',
-            // This is a Left menu entry
-            'type'=>'left',
-            'titre'=>'Liste Rapport journalier',
-            'mainmenu'=>'monanalysevendeur',
-            'leftmenu'=>'monanalysevendeur_rapportjournalier',
-            'url'=>'/monanalysevendeur/rapportjournalier_list.php',
-            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-            'langs'=>'monanalysevendeur@monanalysevendeur',
-            'position'=>1100+$r,
-            // Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-            'enabled'=>'$conf->monanalysevendeur->enabled',
-            // Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
-            'perms'=>'1',
-            'target'=>'',
-            // 0=Menu for internal users, 1=external users, 2=both
-            'user'=>2,
-        );
-        $this->menu[$r++]=array(
-            // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-            'fk_menu'=>'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_rapportjournalier',
-            // This is a Left menu entry
-            'type'=>'left',
-            'titre'=>'Nouveau Rapport',
-            'mainmenu'=>'monanalysevendeur',
-            'leftmenu'=>'monanalysevendeur_new',
-            'url'=>'/monanalysevendeur/rapportjournalier_card.php?action=create',
-            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-            'langs'=>'monanalysevendeur@monanalysevendeur',
-            'position'=>1100+$r,
-            // Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-            'enabled'=>'$conf->monanalysevendeur->enabled',
-            // Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
-            'perms'=>'1',
-            'target'=>'',
-            // 0=Menu for internal users, 1=external users, 2=both
-            'user'=>2
-        );
-		$this->menu[$r++]=array(
+		$this->menu[$r++] = array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_rapportjournalier',
+			'fk_menu'  => 'fk_mainmenu=monanalysevendeur',
 			// This is a Left menu entry
-			'type'=>'left',
-			'titre'=>'Statistique Mensuel',
-			'mainmenu'=>'monanalysevendeur',
-			'leftmenu'=>'monanalysevendeur_statmensuel',
-			'url'=>'/monanalysevendeur/stats_mensuel.php',
+			'type'     => 'left',
+			'titre'    => 'Liste Rapport journalier',
+			'mainmenu' => 'monanalysevendeur',
+			'leftmenu' => 'monanalysevendeur_rapportjournalier',
+			'url'      => '/monanalysevendeur/rapportjournalier_list.php',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'langs'=>'monanalysevendeur@monanalysevendeur',
-			'position'=>1100+$r,
+			'langs'    => 'monanalysevendeur@monanalysevendeur',
+			'position' => 1100 + $r,
 			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-			'enabled'=>'$conf->monanalysevendeur->enabled',
+			'enabled'  => '$conf->monanalysevendeur->enabled',
 			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
-			'perms'=>'1',
-			'target'=>'',
+			'perms'    => '1',
+			'target'   => '',
 			// 0=Menu for internal users, 1=external users, 2=both
-			'user'=>2
+			'user'     => 2,
 		);
-		$this->menu[$r++]=array(
+		$this->menu[$r++] = array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_rapportjournalier',
+			'fk_menu'  => 'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_rapportjournalier',
 			// This is a Left menu entry
-			'type'=>'left',
-			'titre'=>'Statistique Hebdo',
-			'mainmenu'=>'monanalysevendeur',
-			'leftmenu'=>'monanalysevendeur_stathebdo',
-			'url'=>'/monanalysevendeur/stats_hebdo.php',
+			'type'     => 'left',
+			'titre'    => 'Nouveau Rapport',
+			'mainmenu' => 'monanalysevendeur',
+			'leftmenu' => 'monanalysevendeur_new',
+			'url'      => '/monanalysevendeur/rapportjournalier_card.php?action=create',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'langs'=>'monanalysevendeur@monanalysevendeur',
-			'position'=>1100+$r,
+			'langs'    => 'monanalysevendeur@monanalysevendeur',
+			'position' => 1100 + $r,
 			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-			'enabled'=>'$conf->monanalysevendeur->enabled',
+			'enabled'  => '$conf->monanalysevendeur->enabled',
 			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
-			'perms'=>'1',
-			'target'=>'',
+			'perms'    => '1',
+			'target'   => '',
 			// 0=Menu for internal users, 1=external users, 2=both
-			'user'=>2
+			'user'     => 2
 		);
-		$this->menu[$r++]=array(
+		$this->menu[$r++] = array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_rapportjournalier',
+			'fk_menu'  => 'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_rapportjournalier',
 			// This is a Left menu entry
-			'type'=>'left',
-			'titre'=>'Statistique',
-			'mainmenu'=>'monanalysevendeur',
-			'leftmenu'=>'monanalysevendeur_stat',
-			'url'=>'/monanalysevendeur/index_stat.php',
+			'type'     => 'left',
+			'titre'    => 'Statistique Mensuel',
+			'mainmenu' => 'monanalysevendeur',
+			'leftmenu' => 'monanalysevendeur_statmensuel',
+			'url'      => '/monanalysevendeur/stats_mensuel.php',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'langs'=>'monanalysevendeur@monanalysevendeur',
-			'position'=>1100+$r,
+			'langs'    => 'monanalysevendeur@monanalysevendeur',
+			'position' => 1100 + $r,
 			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-			'enabled'=>'$conf->monanalysevendeur->enabled',
+			'enabled'  => '$conf->monanalysevendeur->enabled',
 			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
-			'perms'=>'1',
-			'target'=>'',
+			'perms'    => '1',
+			'target'   => '',
 			// 0=Menu for internal users, 1=external users, 2=both
-			'user'=>2
+			'user'     => 2
 		);
-     $this->menu[$r++]=array(
-            // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-            'fk_menu'=>'fk_mainmenu=monanalysevendeur',
-            // This is a Left menu entry
-            'type'=>'left',
-            'titre'=>'Liste Dilax',
-            'mainmenu'=>'monanalysevendeur',
-            'leftmenu'=>'monanalysevendeur_Dilax',
-            'url'=>'/monanalysevendeur/dilax_list.php',
-            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-            'langs'=>'monanalysevendeur@monanalysevendeur',
-            'position'=>1100+$r,
-            // Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-            'enabled'=>'$conf->monanalysevendeur->enabled',
-            // Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
-            'perms'=>'1',
-            'target'=>'',
-            // 0=Menu for internal users, 1=external users, 2=both
-            'user'=>2
-        );
-    $this->menu[$r++]=array(
-            // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-            'fk_menu'=>'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_Dilax',
-            // This is a Left menu entry
-            'type'=>'left',
-            'titre'=>'Nouveau Dilax',
-            'mainmenu'=>'monanalysevendeur',
-            'leftmenu'=>'monanalysevendeur_dilaxnew',
-            'url'=>'/monanalysevendeur/dilax_card.php?action=create',
-            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-            'langs'=>'monanalysevendeur@monanalysevendeur',
-            'position'=>1100+$r,
-            // Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-            'enabled'=>'$conf->monanalysevendeur->enabled',
-            // Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
-            'perms'=>'1',
-            'target'=>'',
-            // 0=Menu for internal users, 1=external users, 2=both
-            'user'=>2
-        );
-        $this->menu[$r++]=array(
-            // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-            'fk_menu'=>'fk_mainmenu=monanalysevendeur',
-            // This is a Left menu entry
-            'type'=>'left',
-            'titre'=>'Liste Auto Diagnostic',
-            'mainmenu'=>'monanalysevendeur',
-            'leftmenu'=>'monanalysevendeur_autodiag',
-            'url'=>'/monanalysevendeur/autodiag_list.php?relance=0',
-            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-            'langs'=>'monanalysevendeur@monanalysevendeur',
-            'position'=>1100+$r,
-            // Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-            'enabled'=>'$conf->monanalysevendeur->enabled',
-            // Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
-            'perms'=>'1',
-            'target'=>'',
-            // 0=Menu for internal users, 1=external users, 2=both
-            'user'=>2
-        );
-         $this->menu[$r++]=array(
-            // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-            'fk_menu'=>'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_autodiag',
-            // This is a Left menu entry
-            'type'=>'left',
-            'titre'=>'Nouveau Auto Diagnostic',
-            'mainmenu'=>'monanalysevendeur',
-            'leftmenu'=>'monanalysevendeur_autodiagnew',
-            'url'=>'/monanalysevendeur/autodiag_card.php?action=create&relance=0',
-            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-            'langs'=>'monanalysevendeur@monanalysevendeur',
-            'position'=>1100+$r,
-            // Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-            'enabled'=>'$conf->monanalysevendeur->enabled',
-            // Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
-            'perms'=>'1',
-            'target'=>'',
-            // 0=Menu for internal users, 1=external users, 2=both
-            'user'=>2
-        );
-		$this->menu[$r++]=array(
-            // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-            'fk_menu'=>'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_autodiag',
-            // This is a Left menu entry
-            'type'=>'left',
-            'titre'=>'Statistique Hebdo',
-            'mainmenu'=>'monanalysevendeur',
-            'leftmenu'=>'monanalysevendeur_statautodiag',
-            'url'=>'/monanalysevendeur/stats_hebdo_autodiag.php',
-            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-            'langs'=>'monanalysevendeur@monanalysevendeur',
-            'position'=>1100+$r,
-            // Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-            'enabled'=>'$conf->monanalysevendeur->enabled',
-            // Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
-            'perms'=>'1',
-            'target'=>'',
-            // 0=Menu for internal users, 1=external users, 2=both
-            'user'=>2
-        );
-        $this->menu[$r++]=array(
-            // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-            'fk_menu'=>'fk_mainmenu=monanalysevendeur',
-            // This is a Left menu entry
-            'type'=>'left',
-            'titre'=>'Liste Relance',
-            'mainmenu'=>'monanalysevendeur',
-            'leftmenu'=>'monanalysevendeur_relance',
-            'url'=>'/monanalysevendeur/autodiag_list.php?relance=1',
-            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-            'langs'=>'monanalysevendeur@monanalysevendeur',
-            'position'=>1100+$r,
-            // Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-            'enabled'=>'$conf->monanalysevendeur->enabled',
-            // Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
-            'perms'=>'1',
-            'target'=>'',
-            // 0=Menu for internal users, 1=external users, 2=both
-            'user'=>2
-        );
-         $this->menu[$r++]=array(
-            // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-            'fk_menu'=>'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_relance',
-            // This is a Left menu entry
-            'type'=>'left',
-            'titre'=>'Nouvelle Relance',
-            'mainmenu'=>'monanalysevendeur',
-            'leftmenu'=>'monanalysevendeur_relancenew',
-            'url'=>'/monanalysevendeur/autodiag_card.php?action=create&relance=1',
-            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-            'langs'=>'monanalysevendeur@monanalysevendeur',
-            'position'=>1100+$r,
-            // Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-            'enabled'=>'$conf->monanalysevendeur->enabled',
-            // Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
-            'perms'=>'1',
-            'target'=>'',
-            // 0=Menu for internal users, 1=external users, 2=both
-            'user'=>2
-        );
-		$this->menu[$r++]=array(
+		$this->menu[$r++] = array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_relance',
+			'fk_menu'  => 'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_rapportjournalier',
 			// This is a Left menu entry
-			'type'=>'left',
-			'titre'=>'Liste des Evt de Relance',
-			'mainmenu'=>'monanalysevendeur',
-			'leftmenu'=>'monanalysevendeur_relancelistevt',
-			'url'=>'/comm/action/list.php?sortfield=c.libelle&sortorder=desc&begin=&contextpage=actioncommlist&search_actioncode=AC_OTH&search_filtert=-1&search_title=Relance',
+			'type'     => 'left',
+			'titre'    => 'Statistique Hebdo',
+			'mainmenu' => 'monanalysevendeur',
+			'leftmenu' => 'monanalysevendeur_stathebdo',
+			'url'      => '/monanalysevendeur/stats_hebdo.php',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'langs'=>'monanalysevendeur@monanalysevendeur',
-			'position'=>1100+$r,
+			'langs'    => 'monanalysevendeur@monanalysevendeur',
+			'position' => 1100 + $r,
 			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-			'enabled'=>'$conf->monanalysevendeur->enabled',
+			'enabled'  => '$conf->monanalysevendeur->enabled',
 			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
-			'perms'=>'1',
-			'target'=>'',
+			'perms'    => '1',
+			'target'   => '',
 			// 0=Menu for internal users, 1=external users, 2=both
-			'user'=>2
+			'user'     => 2
 		);
-		$this->menu[$r++]=array(
-            // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-            'fk_menu'=>'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_relance',
-            // This is a Left menu entry
-            'type'=>'left',
-            'titre'=>'Statistique Hebdo',
-            'mainmenu'=>'monanalysevendeur',
-            'leftmenu'=>'monanalysevendeur_statrelance',
-            'url'=>'/monanalysevendeur/stats_hebdo_relance.php',
-            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-            'langs'=>'monanalysevendeur@monanalysevendeur',
-            'position'=>1100+$r,
-            // Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-            'enabled'=>'$conf->monanalysevendeur->enabled',
-            // Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
-            'perms'=>'1',
-            'target'=>'',
-            // 0=Menu for internal users, 1=external users, 2=both
-            'user'=>2
-        );
-		$this->menu[$r++]=array(
+		$this->menu[$r++] = array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=monanalysevendeur',
+			'fk_menu'  => 'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_rapportjournalier',
 			// This is a Left menu entry
-			'type'=>'left',
-			'titre'=>'Liste Ecoute',
-			'mainmenu'=>'monanalysevendeur',
-			'leftmenu'=>'monanalysevendeur_ecoute',
-			'url'=>'/monanalysevendeur/ecoute_list.php',
+			'type'     => 'left',
+			'titre'    => 'Statistique',
+			'mainmenu' => 'monanalysevendeur',
+			'leftmenu' => 'monanalysevendeur_stat',
+			'url'      => '/monanalysevendeur/index_stat.php',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'langs'=>'monanalysevendeur@monanalysevendeur',
-			'position'=>1100+$r,
+			'langs'    => 'monanalysevendeur@monanalysevendeur',
+			'position' => 1100 + $r,
 			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-			'enabled'=>'$conf->monanalysevendeur->enabled',
+			'enabled'  => '$conf->monanalysevendeur->enabled',
 			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
-			'perms'=>'$user->rights->monanalysevendeur->read',
-			'target'=>'',
+			'perms'    => '1',
+			'target'   => '',
 			// 0=Menu for internal users, 1=external users, 2=both
-			'user'=>2
+			'user'     => 2
 		);
-		$this->menu[$r++]=array(
+		$this->menu[$r++] = array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_ecoute',
+			'fk_menu'  => 'fk_mainmenu=monanalysevendeur',
 			// This is a Left menu entry
-			'type'=>'left',
-			'titre'=>'Nouvelle Ecoute',
-			'mainmenu'=>'monanalysevendeur',
-			'leftmenu'=>'monanalysevendeur_ecoutenew',
-			'url'=>'/monanalysevendeur/ecoute_card.php?action=create',
+			'type'     => 'left',
+			'titre'    => 'Liste Dilax',
+			'mainmenu' => 'monanalysevendeur',
+			'leftmenu' => 'monanalysevendeur_Dilax',
+			'url'      => '/monanalysevendeur/dilax_list.php',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'langs'=>'monanalysevendeur@monanalysevendeur',
-			'position'=>1100+$r,
+			'langs'    => 'monanalysevendeur@monanalysevendeur',
+			'position' => 1100 + $r,
 			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-			'enabled'=>'$conf->monanalysevendeur->enabled',
+			'enabled'  => '$conf->monanalysevendeur->enabled',
 			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
-			'perms'=>'$user->rights->monanalysevendeur->read',
-			'target'=>'',
+			'perms'    => '1',
+			'target'   => '',
 			// 0=Menu for internal users, 1=external users, 2=both
-			'user'=>2
+			'user'     => 2
 		);
-		$this->menu[$r++]=array(
+		$this->menu[$r++] = array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_ecoute',
+			'fk_menu'  => 'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_Dilax',
 			// This is a Left menu entry
-			'type'=>'left',
-			'titre'=>'Statistique Hebdo',
-			'mainmenu'=>'monanalysevendeur',
-			'leftmenu'=>'monanalysevendeur_statecoute',
-			'url'=>'/monanalysevendeur/stats_hebdo_ecoute.php',
+			'type'     => 'left',
+			'titre'    => 'Nouveau Dilax',
+			'mainmenu' => 'monanalysevendeur',
+			'leftmenu' => 'monanalysevendeur_dilaxnew',
+			'url'      => '/monanalysevendeur/dilax_card.php?action=create',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'langs'=>'monanalysevendeur@monanalysevendeur',
-			'position'=>1100+$r,
+			'langs'    => 'monanalysevendeur@monanalysevendeur',
+			'position' => 1100 + $r,
 			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-			'enabled'=>'$conf->monanalysevendeur->enabled',
+			'enabled'  => '$conf->monanalysevendeur->enabled',
 			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
-			'perms'=>'$user->rights->monanalysevendeur->read',
-			'target'=>'',
+			'perms'    => '1',
+			'target'   => '',
 			// 0=Menu for internal users, 1=external users, 2=both
-			'user'=>2
+			'user'     => 2
 		);
-		$this->menu[$r++]=array(
+		$this->menu[$r++] = array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_ecoute',
+			'fk_menu'  => 'fk_mainmenu=monanalysevendeur',
 			// This is a Left menu entry
-			'type'=>'left',
-			'titre'=>'Statistique Vendeur',
-			'mainmenu'=>'monanalysevendeur',
-			'leftmenu'=>'monanalysevendeur_statecoute2',
-			'url'=>'/monanalysevendeur/stats_ecoute_vendeur.php',
+			'type'     => 'left',
+			'titre'    => 'Liste Auto Diagnostic',
+			'mainmenu' => 'monanalysevendeur',
+			'leftmenu' => 'monanalysevendeur_autodiag',
+			'url'      => '/monanalysevendeur/autodiag_list.php?relance=0',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'langs'=>'monanalysevendeur@monanalysevendeur',
-			'position'=>1100+$r,
+			'langs'    => 'monanalysevendeur@monanalysevendeur',
+			'position' => 1100 + $r,
 			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-			'enabled'=>'$conf->monanalysevendeur->enabled',
+			'enabled'  => '$conf->monanalysevendeur->enabled',
 			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
-			'perms'=>'$user->rights->monanalysevendeur->read',
-			'target'=>'',
+			'perms'    => '1',
+			'target'   => '',
 			// 0=Menu for internal users, 1=external users, 2=both
-			'user'=>2
+			'user'     => 2
 		);
-		$this->menu[$r++]=array(
-            // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-            'fk_menu'=>'fk_mainmenu=monanalysevendeur',
-            // This is a Left menu entry
-            'type'=>'left',
-            'titre'=>'Liste Picking',
-            'mainmenu'=>'monanalysevendeur',
-            'leftmenu'=>'monanalysevendeur_picking',
-            'url'=>'/fichinter/list.php',
-            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-            'langs'=>'monanalysevendeur@monanalysevendeur',
-            'position'=>1100+$r,
-            // Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-            'enabled'=>'$conf->monanalysevendeur->enabled',
-            // Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
-            'perms'=>'1',
-            'target'=>'',
-            // 0=Menu for internal users, 1=external users, 2=both
-            'user'=>2
-        );
-         $this->menu[$r++]=array(
-            // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-            'fk_menu'=>'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_picking',
-            // This is a Left menu entry
-            'type'=>'left',
-            'titre'=>'Nouveau Picking',
-            'mainmenu'=>'monanalysevendeur',
-            'leftmenu'=>'monanalysevendeur_picknew',
-            'url'=>'/fichinter/card.php?action=create',
-            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-            'langs'=>'monanalysevendeur@monanalysevendeur',
-            'position'=>1100+$r,
-            // Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-            'enabled'=>'$conf->monanalysevendeur->enabled',
-            // Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
-            'perms'=>'1',
-            'target'=>'',
-            // 0=Menu for internal users, 1=external users, 2=both
-            'user'=>2
-        );
-		$this->menu[$r++]=array(
-            // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-            'fk_menu'=>'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_picking',
-            // This is a Left menu entry
-            'type'=>'left',
-            'titre'=>'Statistique Hebdo',
-            'mainmenu'=>'monanalysevendeur',
-            'leftmenu'=>'monanalysevendeur_pickstatshebdo',
-            'url'=>'/monanalysevendeur/stats_hebdo_picking.php',
-            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-            'langs'=>'monanalysevendeur@monanalysevendeur',
-            'position'=>1100+$r,
-            // Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-            'enabled'=>'$conf->monanalysevendeur->enabled',
-            // Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
-            'perms'=>'1',
-            'target'=>'',
-            // 0=Menu for internal users, 1=external users, 2=both
-            'user'=>2
-        );
-		$this->menu[$r++]=array(
-            // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-            'fk_menu'=>'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_picking',
-            // This is a Left menu entry
-            'type'=>'left',
-            'titre'=>'Statistique',
-            'mainmenu'=>'monanalysevendeur',
-            'leftmenu'=>'monanalysevendeur_pickstats',
-            'url'=>'/monanalysevendeur/picking_stat.php',
-            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-            'langs'=>'monanalysevendeur@monanalysevendeur',
-            'position'=>1100+$r,
-            // Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-            'enabled'=>'$conf->monanalysevendeur->enabled',
-            // Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
-            'perms'=>'1',
-            'target'=>'',
-            // 0=Menu for internal users, 1=external users, 2=both
-            'user'=>2
-        );
-		$this->menu[$r++]=array(
+		$this->menu[$r++] = array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=monanalysevendeur',
+			'fk_menu'  => 'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_autodiag',
 			// This is a Left menu entry
-			'type'=>'left',
-			'titre'=>'Import',
-			'mainmenu'=>'monanalysevendeur',
-			'leftmenu'=>'monanalysevendeur_import',
-			'url'=>'',
+			'type'     => 'left',
+			'titre'    => 'Nouveau Auto Diagnostic',
+			'mainmenu' => 'monanalysevendeur',
+			'leftmenu' => 'monanalysevendeur_autodiagnew',
+			'url'      => '/monanalysevendeur/autodiag_card.php?action=create&relance=0',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'langs'=>'monanalysevendeur@monanalysevendeur',
-			'position'=>1100+$r,
+			'langs'    => 'monanalysevendeur@monanalysevendeur',
+			'position' => 1100 + $r,
 			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-			'enabled'=>'$conf->monanalysevendeur->enabled',
+			'enabled'  => '$conf->monanalysevendeur->enabled',
 			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
-			'perms'=>'$user->rights->monanalysevendeur->import',
-			'target'=>'',
+			'perms'    => '1',
+			'target'   => '',
 			// 0=Menu for internal users, 1=external users, 2=both
-			'user'=>2
+			'user'     => 2
 		);
-		$this->menu[$r++]=array(
+		$this->menu[$r++] = array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_import',
+			'fk_menu'  => 'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_autodiag',
 			// This is a Left menu entry
-			'type'=>'left',
-			'titre'=>'Nouvelle Import 3GWin',
-			'mainmenu'=>'monanalysevendeur',
-			'leftmenu'=>'monanalysevendeur_import 3GWin',
-			'url'=>'/monanalysevendeur/import3gwin.php',
+			'type'     => 'left',
+			'titre'    => 'Statistique Hebdo',
+			'mainmenu' => 'monanalysevendeur',
+			'leftmenu' => 'monanalysevendeur_statautodiag',
+			'url'      => '/monanalysevendeur/stats_hebdo_autodiag.php',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'langs'=>'monanalysevendeur@monanalysevendeur',
-			'position'=>1100+$r,
+			'langs'    => 'monanalysevendeur@monanalysevendeur',
+			'position' => 1100 + $r,
 			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-			'enabled'=>'$conf->monanalysevendeur->enabled',
+			'enabled'  => '$conf->monanalysevendeur->enabled',
 			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
-			'perms'=>'$user->rights->monanalysevendeur->import',
-			'target'=>'',
+			'perms'    => '1',
+			'target'   => '',
 			// 0=Menu for internal users, 1=external users, 2=both
-			'user'=>2
+			'user'     => 2
 		);
-		$this->menu[$r++]=array(
+		$this->menu[$r++] = array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=monanalysevendeur',
+			'fk_menu'  => 'fk_mainmenu=monanalysevendeur',
 			// This is a Left menu entry
-			'type'=>'left',
-			'titre'=>'Rapport Vendeur',
-			'mainmenu'=>'monanalysevendeur',
-			'leftmenu'=>'monanalysevendeur_reportsaleman',
-			'url'=>'/monanalysevendeur/stats_vendeur.php',
+			'type'     => 'left',
+			'titre'    => 'Liste Relance',
+			'mainmenu' => 'monanalysevendeur',
+			'leftmenu' => 'monanalysevendeur_relance',
+			'url'      => '/monanalysevendeur/autodiag_list.php?relance=1',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'langs'=>'monanalysevendeur@monanalysevendeur',
-			'position'=>1100+$r,
+			'langs'    => 'monanalysevendeur@monanalysevendeur',
+			'position' => 1100 + $r,
 			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-			'enabled'=>'$conf->monanalysevendeur->enabled',
+			'enabled'  => '$conf->monanalysevendeur->enabled',
 			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
-			'perms'=>'1',
-			'target'=>'',
+			'perms'    => '1',
+			'target'   => '',
 			// 0=Menu for internal users, 1=external users, 2=both
-			'user'=>2
+			'user'     => 2
 		);
-		$this->menu[$r++]=array(
+		$this->menu[$r++] = array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=monanalysevendeur',
+			'fk_menu'  => 'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_relance',
 			// This is a Left menu entry
-			'type'=>'left',
-			'titre'=>'Rapport Magasin',
-			'mainmenu'=>'monanalysevendeur',
-			'leftmenu'=>'monanalysevendeur_reportmag',
-			'url'=>'/monanalysevendeur/stats_magasin.php',
+			'type'     => 'left',
+			'titre'    => 'Nouvelle Relance',
+			'mainmenu' => 'monanalysevendeur',
+			'leftmenu' => 'monanalysevendeur_relancenew',
+			'url'      => '/monanalysevendeur/autodiag_card.php?action=create&relance=1',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'langs'=>'monanalysevendeur@monanalysevendeur',
-			'position'=>1100+$r,
+			'langs'    => 'monanalysevendeur@monanalysevendeur',
+			'position' => 1100 + $r,
 			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-			'enabled'=>'$conf->monanalysevendeur->enabled',
+			'enabled'  => '$conf->monanalysevendeur->enabled',
 			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
-			'perms'=>'1',
-			'target'=>'',
+			'perms'    => '1',
+			'target'   => '',
 			// 0=Menu for internal users, 1=external users, 2=both
-			'user'=>2
+			'user'     => 2
 		);
-		$this->menu[$r++]=array(
+		$this->menu[$r++] = array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=monanalysevendeur',
+			'fk_menu'  => 'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_relance',
 			// This is a Left menu entry
-			'type'=>'left',
-			'titre'=>'Sketchs Vendeur',
-			'mainmenu'=>'monanalysevendeur',
-			'leftmenu'=>'monanalysevendeur_sketchsvendeur',
-			'url'=>'/monanalysevendeur/sketchsvendeur_list.php',
+			'type'     => 'left',
+			'titre'    => 'Liste des Evt de Relance',
+			'mainmenu' => 'monanalysevendeur',
+			'leftmenu' => 'monanalysevendeur_relancelistevt',
+			'url'      => '/comm/action/list.php?sortfield=c.libelle&sortorder=desc&begin=&contextpage=actioncommlist&search_actioncode=AC_OTH&search_filtert=-1&search_title=Relance',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'langs'=>'monanalysevendeur@monanalysevendeur',
-			'position'=>1100+$r,
+			'langs'    => 'monanalysevendeur@monanalysevendeur',
+			'position' => 1100 + $r,
 			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-			'enabled'=>'$conf->monanalysevendeur->enabled',
+			'enabled'  => '$conf->monanalysevendeur->enabled',
 			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
-			'perms'=>'1',
-			'target'=>'',
+			'perms'    => '1',
+			'target'   => '',
 			// 0=Menu for internal users, 1=external users, 2=both
-			'user'=>2
+			'user'     => 2
 		);
-		$this->menu[$r++]=array(
+		$this->menu[$r++] = array(
 			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'fk_menu'=>'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_sketchsvendeur',
+			'fk_menu'  => 'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_relance',
 			// This is a Left menu entry
-			'type'=>'left',
-			'titre'=>'Nouveau Sketchs Vendeur',
-			'mainmenu'=>'monanalysevendeur',
-			'leftmenu'=>'monanalysevendeur_sketchsvendeurcard',
-			'url'=>'/monanalysevendeur/sketchsvendeur_card.php?action=create',
+			'type'     => 'left',
+			'titre'    => 'Statistique Hebdo',
+			'mainmenu' => 'monanalysevendeur',
+			'leftmenu' => 'monanalysevendeur_statrelance',
+			'url'      => '/monanalysevendeur/stats_hebdo_relance.php',
 			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'langs'=>'monanalysevendeur@monanalysevendeur',
-			'position'=>1100+$r,
+			'langs'    => 'monanalysevendeur@monanalysevendeur',
+			'position' => 1100 + $r,
 			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-			'enabled'=>'$conf->monanalysevendeur->enabled',
+			'enabled'  => '$conf->monanalysevendeur->enabled',
 			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
-			'perms'=>'1',
-			'target'=>'',
+			'perms'    => '1',
+			'target'   => '',
 			// 0=Menu for internal users, 1=external users, 2=both
-			'user'=>2
+			'user'     => 2
+		);
+		$this->menu[$r++] = array(
+			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'fk_menu'  => 'fk_mainmenu=monanalysevendeur',
+			// This is a Left menu entry
+			'type'     => 'left',
+			'titre'    => 'Liste Ecoute',
+			'mainmenu' => 'monanalysevendeur',
+			'leftmenu' => 'monanalysevendeur_ecoute',
+			'url'      => '/monanalysevendeur/ecoute_list.php',
+			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'langs'    => 'monanalysevendeur@monanalysevendeur',
+			'position' => 1100 + $r,
+			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'enabled'  => '$conf->monanalysevendeur->enabled',
+			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
+			'perms'    => '$user->rights->monanalysevendeur->read',
+			'target'   => '',
+			// 0=Menu for internal users, 1=external users, 2=both
+			'user'     => 2
+		);
+		$this->menu[$r++] = array(
+			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'fk_menu'  => 'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_ecoute',
+			// This is a Left menu entry
+			'type'     => 'left',
+			'titre'    => 'Nouvelle Ecoute',
+			'mainmenu' => 'monanalysevendeur',
+			'leftmenu' => 'monanalysevendeur_ecoutenew',
+			'url'      => '/monanalysevendeur/ecoute_card.php?action=create',
+			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'langs'    => 'monanalysevendeur@monanalysevendeur',
+			'position' => 1100 + $r,
+			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'enabled'  => '$conf->monanalysevendeur->enabled',
+			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
+			'perms'    => '$user->rights->monanalysevendeur->read',
+			'target'   => '',
+			// 0=Menu for internal users, 1=external users, 2=both
+			'user'     => 2
+		);
+		$this->menu[$r++] = array(
+			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'fk_menu'  => 'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_ecoute',
+			// This is a Left menu entry
+			'type'     => 'left',
+			'titre'    => 'Statistique Hebdo',
+			'mainmenu' => 'monanalysevendeur',
+			'leftmenu' => 'monanalysevendeur_statecoute',
+			'url'      => '/monanalysevendeur/stats_hebdo_ecoute.php',
+			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'langs'    => 'monanalysevendeur@monanalysevendeur',
+			'position' => 1100 + $r,
+			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'enabled'  => '$conf->monanalysevendeur->enabled',
+			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
+			'perms'    => '$user->rights->monanalysevendeur->read',
+			'target'   => '',
+			// 0=Menu for internal users, 1=external users, 2=both
+			'user'     => 2
+		);
+		$this->menu[$r++] = array(
+			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'fk_menu'  => 'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_ecoute',
+			// This is a Left menu entry
+			'type'     => 'left',
+			'titre'    => 'Statistique Vendeur',
+			'mainmenu' => 'monanalysevendeur',
+			'leftmenu' => 'monanalysevendeur_statecoute2',
+			'url'      => '/monanalysevendeur/stats_ecoute_vendeur.php',
+			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'langs'    => 'monanalysevendeur@monanalysevendeur',
+			'position' => 1100 + $r,
+			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'enabled'  => '$conf->monanalysevendeur->enabled',
+			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
+			'perms'    => '$user->rights->monanalysevendeur->read',
+			'target'   => '',
+			// 0=Menu for internal users, 1=external users, 2=both
+			'user'     => 2
+		);
+		$this->menu[$r++] = array(
+			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'fk_menu'  => 'fk_mainmenu=monanalysevendeur',
+			// This is a Left menu entry
+			'type'     => 'left',
+			'titre'    => 'Liste Picking',
+			'mainmenu' => 'monanalysevendeur',
+			'leftmenu' => 'monanalysevendeur_picking',
+			'url'      => '/fichinter/list.php',
+			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'langs'    => 'monanalysevendeur@monanalysevendeur',
+			'position' => 1100 + $r,
+			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'enabled'  => '$conf->monanalysevendeur->enabled',
+			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
+			'perms'    => '1',
+			'target'   => '',
+			// 0=Menu for internal users, 1=external users, 2=both
+			'user'     => 2
+		);
+		$this->menu[$r++] = array(
+			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'fk_menu'  => 'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_picking',
+			// This is a Left menu entry
+			'type'     => 'left',
+			'titre'    => 'Nouveau Picking',
+			'mainmenu' => 'monanalysevendeur',
+			'leftmenu' => 'monanalysevendeur_picknew',
+			'url'      => '/fichinter/card.php?action=create',
+			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'langs'    => 'monanalysevendeur@monanalysevendeur',
+			'position' => 1100 + $r,
+			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'enabled'  => '$conf->monanalysevendeur->enabled',
+			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
+			'perms'    => '1',
+			'target'   => '',
+			// 0=Menu for internal users, 1=external users, 2=both
+			'user'     => 2
+		);
+		$this->menu[$r++] = array(
+			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'fk_menu'  => 'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_picking',
+			// This is a Left menu entry
+			'type'     => 'left',
+			'titre'    => 'Statistique Hebdo',
+			'mainmenu' => 'monanalysevendeur',
+			'leftmenu' => 'monanalysevendeur_pickstatshebdo',
+			'url'      => '/monanalysevendeur/stats_hebdo_picking.php',
+			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'langs'    => 'monanalysevendeur@monanalysevendeur',
+			'position' => 1100 + $r,
+			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'enabled'  => '$conf->monanalysevendeur->enabled',
+			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
+			'perms'    => '1',
+			'target'   => '',
+			// 0=Menu for internal users, 1=external users, 2=both
+			'user'     => 2
+		);
+		$this->menu[$r++] = array(
+			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'fk_menu'  => 'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_picking',
+			// This is a Left menu entry
+			'type'     => 'left',
+			'titre'    => 'Statistique',
+			'mainmenu' => 'monanalysevendeur',
+			'leftmenu' => 'monanalysevendeur_pickstats',
+			'url'      => '/monanalysevendeur/picking_stat.php',
+			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'langs'    => 'monanalysevendeur@monanalysevendeur',
+			'position' => 1100 + $r,
+			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'enabled'  => '$conf->monanalysevendeur->enabled',
+			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
+			'perms'    => '1',
+			'target'   => '',
+			// 0=Menu for internal users, 1=external users, 2=both
+			'user'     => 2
+		);
+		$this->menu[$r++] = array(
+			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'fk_menu'  => 'fk_mainmenu=monanalysevendeur',
+			// This is a Left menu entry
+			'type'     => 'left',
+			'titre'    => 'Import',
+			'mainmenu' => 'monanalysevendeur',
+			'leftmenu' => 'monanalysevendeur_import',
+			'url'      => '',
+			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'langs'    => 'monanalysevendeur@monanalysevendeur',
+			'position' => 1100 + $r,
+			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'enabled'  => '$conf->monanalysevendeur->enabled',
+			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
+			'perms'    => '$user->rights->monanalysevendeur->import',
+			'target'   => '',
+			// 0=Menu for internal users, 1=external users, 2=both
+			'user'     => 2
+		);
+		$this->menu[$r++] = array(
+			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'fk_menu'  => 'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_import',
+			// This is a Left menu entry
+			'type'     => 'left',
+			'titre'    => 'Nouvelle Import 3GWin',
+			'mainmenu' => 'monanalysevendeur',
+			'leftmenu' => 'monanalysevendeur_import 3GWin',
+			'url'      => '/monanalysevendeur/import3gwin.php',
+			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'langs'    => 'monanalysevendeur@monanalysevendeur',
+			'position' => 1100 + $r,
+			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'enabled'  => '$conf->monanalysevendeur->enabled',
+			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
+			'perms'    => '$user->rights->monanalysevendeur->import',
+			'target'   => '',
+			// 0=Menu for internal users, 1=external users, 2=both
+			'user'     => 2
+		);
+		$this->menu[$r++] = array(
+			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'fk_menu'  => 'fk_mainmenu=monanalysevendeur',
+			// This is a Left menu entry
+			'type'     => 'left',
+			'titre'    => 'Rapport Vendeur',
+			'mainmenu' => 'monanalysevendeur',
+			'leftmenu' => 'monanalysevendeur_reportsaleman',
+			'url'      => '/monanalysevendeur/stats_vendeur.php',
+			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'langs'    => 'monanalysevendeur@monanalysevendeur',
+			'position' => 1100 + $r,
+			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'enabled'  => '$conf->monanalysevendeur->enabled',
+			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
+			'perms'    => '1',
+			'target'   => '',
+			// 0=Menu for internal users, 1=external users, 2=both
+			'user'     => 2
+		);
+		$this->menu[$r++] = array(
+			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'fk_menu'  => 'fk_mainmenu=monanalysevendeur',
+			// This is a Left menu entry
+			'type'     => 'left',
+			'titre'    => 'Rapport Magasin',
+			'mainmenu' => 'monanalysevendeur',
+			'leftmenu' => 'monanalysevendeur_reportmag',
+			'url'      => '/monanalysevendeur/stats_magasin.php',
+			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'langs'    => 'monanalysevendeur@monanalysevendeur',
+			'position' => 1100 + $r,
+			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'enabled'  => '$conf->monanalysevendeur->enabled',
+			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
+			'perms'    => '1',
+			'target'   => '',
+			// 0=Menu for internal users, 1=external users, 2=both
+			'user'     => 2
+		);
+		$this->menu[$r++] = array(
+			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'fk_menu'  => 'fk_mainmenu=monanalysevendeur',
+			// This is a Left menu entry
+			'type'     => 'left',
+			'titre'    => 'Sketchs Vendeur',
+			'mainmenu' => 'monanalysevendeur',
+			'leftmenu' => 'monanalysevendeur_sketchsvendeur',
+			'url'      => '/monanalysevendeur/sketchsvendeur_list.php',
+			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'langs'    => 'monanalysevendeur@monanalysevendeur',
+			'position' => 1100 + $r,
+			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'enabled'  => '$conf->monanalysevendeur->enabled',
+			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
+			'perms'    => '1',
+			'target'   => '',
+			// 0=Menu for internal users, 1=external users, 2=both
+			'user'     => 2
+		);
+		$this->menu[$r++] = array(
+			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'fk_menu'  => 'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_sketchsvendeur',
+			// This is a Left menu entry
+			'type'     => 'left',
+			'titre'    => 'Nouveau Sketchs Vendeur',
+			'mainmenu' => 'monanalysevendeur',
+			'leftmenu' => 'monanalysevendeur_sketchsvendeurcard',
+			'url'      => '/monanalysevendeur/sketchsvendeur_card.php?action=create',
+			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'langs'    => 'monanalysevendeur@monanalysevendeur',
+			'position' => 1100 + $r,
+			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'enabled'  => '$conf->monanalysevendeur->enabled',
+			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
+			'perms'    => '1',
+			'target'   => '',
+			// 0=Menu for internal users, 1=external users, 2=both
+			'user'     => 2
+		);
+		$this->menu[$r++] = array(
+			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'fk_menu'  => 'fk_mainmenu=monanalysevendeur',
+			// This is a Left menu entry
+			'type'     => 'left',
+			'titre'    => 'Suivi propo / traitements',
+			'mainmenu' => 'monanalysevendeur',
+			'leftmenu' => 'monanalysevendeur_suivipropotraitement',
+			'url'      => '/monanalysevendeur/suivipropotraitement_list.php',
+			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'langs'    => 'monanalysevendeur@monanalysevendeur',
+			'position' => 1100 + $r,
+			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'enabled'  => '$conf->monanalysevendeur->enabled',
+			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
+			'perms'    => '$user->rights->monanalysevendeur->suivipropotraitement->read',
+			'target'   => '',
+			// 0=Menu for internal users, 1=external users, 2=both
+			'user'     => 2
+		);
+		$this->menu[$r++] = array(
+			// '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'fk_menu'  => 'fk_mainmenu=monanalysevendeur,fk_leftmenu=monanalysevendeur_suivipropotraitement',
+			// This is a Left menu entry
+			'type'     => 'left',
+			'titre'    => 'Nouveau Suivi propo / traitements',
+			'mainmenu' => 'monanalysevendeur',
+			'leftmenu' => 'monanalysevendeur_suivipropotraitement',
+			'url'      => '/monanalysevendeur/suivipropotraitement_card.php?action=create',
+			// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'langs'    => 'monanalysevendeur@monanalysevendeur',
+			'position' => 1100 + $r,
+			// Define condition to show or hide menu entry. Use '$conf->monanalysevendeur->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'enabled'  => '$conf->monanalysevendeur->enabled',
+			// Use 'perms'=>'$user->rights->monanalysevendeur->level1->level2' if you want your menu with a permission rules
+			'perms'    => '$user->rights->monanalysevendeur->suivipropotraitement->write',
+			'target'   => '',
+			// 0=Menu for internal users, 1=external users, 2=both
+			'user'     => 2
 		);
 		/* END MODULEBUILDER LEFTMENU RAPPORTJOURNALIER */
 
@@ -997,8 +1058,8 @@ class modMonAnalyseVendeur extends DolibarrModules
 	 *  The init function add constants, boxes, permissions and menus (defined in constructor) into Dolibarr database.
 	 *  It also creates data directories
 	 *
-	 *  @param      string  $options    Options when enabling module ('', 'noboxes')
-	 *  @return     int             	1 if OK, 0 if KO
+	 * @param string $options Options when enabling module ('', 'noboxes')
+	 * @return     int                1 if OK, 0 if KO
 	 */
 	public function init($options = '')
 	{
@@ -1008,40 +1069,40 @@ class modMonAnalyseVendeur extends DolibarrModules
 		if ($result < 0) return -1; // Do not activate module if error 'not allowed' returned when loading module SQL queries (the _load_table run sql with run_sql with the error allowed parameter set to 'default')
 
 		// Create extrafields during init
-		include_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
+		include_once DOL_DOCUMENT_ROOT . '/core/class/extrafields.class.php';
 		$extrafields = new ExtraFields($this->db);
-		$result=$extrafields->addExtraField('mav_thirdparty_birthday', "DateToBirth", 'date', 1000,  '', 'thirdparty',   0, 0, '', array('options'=>array(''=>null)), 1, '', 1, 0, '', '', 'companies', '$conf->monanalysevendeur->enabled');
-		if ($result<0) {
+		$result = $extrafields->addExtraField('mav_thirdparty_birthday', "DateToBirth", 'date', 1000, '', 'thirdparty', 0, 0, '', array('options' => array('' => null)), 1, '', 1, 0, '', '', 'companies', '$conf->monanalysevendeur->enabled');
+		if ($result < 0) {
 			return -1;
 		}
 
 		$extrafields = new ExtraFields($this->db);
-		$result=$extrafields->addExtraField('mav_thirdparty_eligbfilter', "ADSL eligibilty", 'checkbox', 1001,  '', 'thirdparty',   0, 0, '', array('options'=>array(''=>null)), 1, '', 1, 0, '', '', 'companies', '$conf->monanalysevendeur->enabled');
-		if ($result<0) {
+		$result = $extrafields->addExtraField('mav_thirdparty_eligbfilter', "ADSL eligibilty", 'checkbox', 1001, '', 'thirdparty', 0, 0, '', array('options' => array('' => null)), 1, '', 1, 0, '', '', 'companies', '$conf->monanalysevendeur->enabled');
+		if ($result < 0) {
 			return -1;
 		}
 
 		$extrafields = new ExtraFields($this->db);
-		$result=$extrafields->addExtraField('mav_contact_brandmob', "MavMarqueMobile", 'varchar', 1001,  '255', 'socpeople',   0, 0, '', array('options'=>array(''=>null)), 1, '', 1, 0, '', '', 'monanalysevendeur@monanalysevendeur', '$conf->monanalysevendeur->enabled');
-		if ($result<0) {
+		$result = $extrafields->addExtraField('mav_contact_brandmob', "MavMarqueMobile", 'varchar', 1001, '255', 'socpeople', 0, 0, '', array('options' => array('' => null)), 1, '', 1, 0, '', '', 'monanalysevendeur@monanalysevendeur', '$conf->monanalysevendeur->enabled');
+		if ($result < 0) {
 			return -1;
 		}
 
 		$extrafields = new ExtraFields($this->db);
-		$result=$extrafields->addExtraField('mav_contact_modelmobile', "MavModeleMobile", 'varchar', 1002,  '255', 'socpeople',   0, 0, '', array('options'=>array(''=>null)), 1, '', 1, 0, '', '', 'monanalysevendeur@monanalysevendeur', '$conf->monanalysevendeur->enabled');
-		if ($result<0) {
+		$result = $extrafields->addExtraField('mav_contact_modelmobile', "MavModeleMobile", 'varchar', 1002, '255', 'socpeople', 0, 0, '', array('options' => array('' => null)), 1, '', 1, 0, '', '', 'monanalysevendeur@monanalysevendeur', '$conf->monanalysevendeur->enabled');
+		if ($result < 0) {
 			return -1;
 		}
 
 		$extrafields = new ExtraFields($this->db);
-		$result=$extrafields->addExtraField('mav_relance_done', "Relance effectuée", 'boolean', 1003,  '255', 'actioncomm',   0, 0, '', array('options'=>array(''=>null)), 1, '', 1, 0, '', '', 'monanalysevendeur@monanalysevendeur', '$conf->monanalysevendeur->enabled');
-		if ($result<0) {
+		$result = $extrafields->addExtraField('mav_relance_done', "Relance effectuée", 'boolean', 1003, '255', 'actioncomm', 0, 0, '', array('options' => array('' => null)), 1, '', 1, 0, '', '', 'monanalysevendeur@monanalysevendeur', '$conf->monanalysevendeur->enabled');
+		if ($result < 0) {
 			return -1;
 		}
 
 		$extrafields = new ExtraFields($this->db);
-		$result=$extrafields->addExtraField('mav_sales_done', "Vente réalisée", 'boolean', 1004,  '255', 'actioncomm',   0, 0, '', array('options'=>array(''=>null)), 1, '', 1, 0, '', '', 'monanalysevendeur@monanalysevendeur', '$conf->monanalysevendeur->enabled');
-		if ($result<0) {
+		$result = $extrafields->addExtraField('mav_sales_done', "Vente réalisée", 'boolean', 1004, '255', 'actioncomm', 0, 0, '', array('options' => array('' => null)), 1, '', 1, 0, '', '', 'monanalysevendeur@monanalysevendeur', '$conf->monanalysevendeur->enabled');
+		if ($result < 0) {
 			return -1;
 		}
 
@@ -1059,33 +1120,31 @@ class modMonAnalyseVendeur extends DolibarrModules
 		// Document templates
 		$moduledir = 'monanalysevendeur';
 		$myTmpObjects = array();
-		$myTmpObjects['Rapportjournalier']=array('includerefgeneration'=>0, 'includedocgeneration'=>0);
+		$myTmpObjects['Rapportjournalier'] = array('includerefgeneration' => 0, 'includedocgeneration' => 0);
 
 		foreach ($myTmpObjects as $myTmpObjectKey => $myTmpObjectArray) {
 			if ($myTmpObjectKey == 'Rapportjournalier') continue;
 			if ($myTmpObjectArray['includerefgeneration']) {
-				$src=DOL_DOCUMENT_ROOT.'/install/doctemplates/monanalysevendeur/template_rapportjournaliers.odt';
-				$dirodt=DOL_DATA_ROOT.'/doctemplates/monanalysevendeur';
-				$dest=$dirodt.'/template_rapportjournaliers.odt';
+				$src = DOL_DOCUMENT_ROOT . '/install/doctemplates/monanalysevendeur/template_rapportjournaliers.odt';
+				$dirodt = DOL_DATA_ROOT . '/doctemplates/monanalysevendeur';
+				$dest = $dirodt . '/template_rapportjournaliers.odt';
 
-				if (file_exists($src) && ! file_exists($dest))
-				{
-					require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
+				if (file_exists($src) && !file_exists($dest)) {
+					require_once DOL_DOCUMENT_ROOT . '/core/lib/files.lib.php';
 					dol_mkdir($dirodt);
-					$result=dol_copy($src, $dest, 0, 0);
-					if ($result < 0)
-					{
+					$result = dol_copy($src, $dest, 0, 0);
+					if ($result < 0) {
 						$langs->load("errors");
-						$this->error=$langs->trans('ErrorFailToCopyFile', $src, $dest);
+						$this->error = $langs->trans('ErrorFailToCopyFile', $src, $dest);
 						return 0;
 					}
 				}
 
 				$sql = array_merge($sql, array(
-					"DELETE FROM ".MAIN_DB_PREFIX."document_model WHERE nom = 'standard_".strtolower($myTmpObjectKey)."' AND type = '".strtolower($myTmpObjectKey)."' AND entity = ".$conf->entity,
-					"INSERT INTO ".MAIN_DB_PREFIX."document_model (nom, type, entity) VALUES('standard_".strtolower($myTmpObjectKey)."','".strtolower($myTmpObjectKey)."',".$conf->entity.")",
-					"DELETE FROM ".MAIN_DB_PREFIX."document_model WHERE nom = 'generic_".strtolower($myTmpObjectKey)."_odt' AND type = '".strtolower($myTmpObjectKey)."' AND entity = ".$conf->entity,
-					"INSERT INTO ".MAIN_DB_PREFIX."document_model (nom, type, entity) VALUES('generic_".strtolower($myTmpObjectKey)."_odt', '".strtolower($myTmpObjectKey)."', ".$conf->entity.")"
+					"DELETE FROM " . MAIN_DB_PREFIX . "document_model WHERE nom = 'standard_" . strtolower($myTmpObjectKey) . "' AND type = '" . strtolower($myTmpObjectKey) . "' AND entity = " . $conf->entity,
+					"INSERT INTO " . MAIN_DB_PREFIX . "document_model (nom, type, entity) VALUES('standard_" . strtolower($myTmpObjectKey) . "','" . strtolower($myTmpObjectKey) . "'," . $conf->entity . ")",
+					"DELETE FROM " . MAIN_DB_PREFIX . "document_model WHERE nom = 'generic_" . strtolower($myTmpObjectKey) . "_odt' AND type = '" . strtolower($myTmpObjectKey) . "' AND entity = " . $conf->entity,
+					"INSERT INTO " . MAIN_DB_PREFIX . "document_model (nom, type, entity) VALUES('generic_" . strtolower($myTmpObjectKey) . "_odt', '" . strtolower($myTmpObjectKey) . "', " . $conf->entity . ")"
 				));
 			}
 		}
@@ -1098,8 +1157,8 @@ class modMonAnalyseVendeur extends DolibarrModules
 	 *  Remove from database constants, boxes and permissions from Dolibarr database.
 	 *  Data directories are not deleted
 	 *
-	 *  @param      string	$options    Options when enabling module ('', 'noboxes')
-	 *  @return     int                 1 if OK, 0 if KO
+	 * @param string $options Options when enabling module ('', 'noboxes')
+	 * @return     int                 1 if OK, 0 if KO
 	 */
 	public function remove($options = '')
 	{
