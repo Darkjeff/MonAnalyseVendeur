@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /* Copyright (C) 2003      Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (c) 2005-2013 Laurent Destailleur  <eldy@users.sourceforge.net>
  * Copyright (C) 2005-2012 Regis Houssin        <regis.houssin@inodbox.com>
@@ -102,7 +102,9 @@ class MonAnayseVendeurStats
 					'box'=>0,
 					'txbb'=>0,
 					'dilax'=>0,
-					'ecoute'=>0
+					'ecoute'=>0,
+					'autodiag'=>0,
+					'sketch'=>0
 				);
 			}
 		} else {
@@ -190,8 +192,45 @@ class MonAnayseVendeurStats
 			} else {
 				$this->error=$this->db->lasterror;
 				return -1;
+			}
+			//AutoDiag
+			$sql = 'SELECT count(ct.rowid) as nb FROM ' . MAIN_DB_PREFIX . 'contacttracking as ct';
+			$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'categorie_user as catu ON ct.fk_user_creat=catu.fk_user ';
+			$sql .= " WHERE ac.datec BETWEEN '".$this->db->idate($from_date)."' AND '".$this->db->idate($to_date)."'";
+			$sql .= ' AND ct.fk_event is null';
+			$sql .= ' AND catu.fk_categorie='.$key;
+			$resql = $this->db->query($sql);
+			if ($resql)
+			{
+				while ($obj = $this->db->fetch_object($resql))
+				{
+					$data[$key]['autodiag'] = $obj->nb;
+				}
+			} else {
+				$this->error=$this->db->lasterror;
+				return -1;
+			}
 			
-		}
+			//Sketches
+			$sql = 'SELECT count(ske.rowid) as nbd FROM ' . MAIN_DB_PREFIX . 'monanalysevendeur_sketchsvendeur as ske';
+			$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'categorie_user as catu ON ske.fk_user=catu.fk_user ';
+			$sql .= " WHERE ske.date BETWEEN '".$this->db->idate($from_date)."' AND '".$this->db->idate($to_date)."'";
+			$sql .= ' AND catu.fk_category_user='.$key;
+			$sql .= " GROUP BY catu.fk_category_user";
+			$resql = $this->db->query($sql);
+			if ($resql)
+			{
+				while ($obj = $this->db->fetch_object($resql))
+				{
+					$data[$key]['sketch'] = $obj->nbd;
+				}
+			} else {
+				$this->error=$this->db->lasterror;
+				return -1;
+			}
+			
+			
+			
 }
 		return $data;
 		
