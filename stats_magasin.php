@@ -145,6 +145,8 @@ print '<td>Pot Box</td>';
 print '<td>Box</td>';
 print '<td>Tx Transfo</td>';
 print '<td>Ecoute</td>';
+print '<td>Autodiag</td>';
+print '<td>Sketch</td>';
 print '</tr>';
 
 
@@ -248,7 +250,21 @@ if (!empty($from_date) && !empty($to_date)) {
 			print $data['ecoute'];
 			$total['ecoute'] += (int)$data['ecoute'];
 			print '</td>';
+			
+			//autodiag
+			print '<td>';
+			print $data['autodiag'];
+			$total['autodiag'] += (int)$data['autodiag'];
+			print '</td>';
 
+			//Sketches
+			print '<td>';
+			print $data['sketch'];
+			$total['sketch'] += (int)$data['sketch'];
+			print '</td>';
+			
+			
+			
 			print '</tr>';
 		}
 	 if (!empty($total)) {
