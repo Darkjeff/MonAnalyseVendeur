@@ -18,7 +18,10 @@ CREATE TABLE llx_monanalysevendeur_suivipropotraitement(
 	-- BEGIN MODULEBUILDER FIELDS
 	rowid integer AUTO_INCREMENT PRIMARY KEY NOT NULL, 
 	ref varchar(128) NOT NULL, 
-	qty real, 
+	nopropobox real, 
+	propobox real, 
+	salesman integer NOT NULL, 
+	date_input datetime NOT NULL, 
 	description text, 
 	note_public text, 
 	note_private text, 
@@ -28,6 +31,6 @@ CREATE TABLE llx_monanalysevendeur_suivipropotraitement(
 	fk_user_modif integer, 
 	import_key varchar(14), 
 	model_pdf varchar(255), 
-	status smallint NOT NULL
+	status smallint DEFAULT 1 NOT NULL
 	-- END MODULEBUILDER FIELDS
 ) ENGINE=innodb;
