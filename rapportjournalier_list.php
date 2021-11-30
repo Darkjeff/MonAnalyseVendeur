@@ -241,18 +241,14 @@ $sql .= preg_replace('/^,/', '', $hookmanager->resPrint);
 $sql = preg_replace('/,\s*$/', '', $sql);
 $sql .= " FROM ".MAIN_DB_PREFIX.$object->table_element." as t";
 if (is_array($extrafields->attributes[$object->table_element]['label']) && count($extrafields->attributes[$object->table_element]['label'])) $sql .= " LEFT JOIN ".MAIN_DB_PREFIX.$object->table_element."_extrafields as ef on (t.rowid = ef.fk_object)";
-/*if (!empty($search_users_tags)) {
+if (!empty($search_users_tags)) {
 	$sql .= ' INNER JOIN '.MAIN_DB_PREFIX.'categorie_user as tagu ON tagu.fk_user=t.fk_user_creat';
 	$sql .= ' AND tagu.fk_categorie IN (' . implode(',', $search_users_tags) . ')';
-}*/
+}
 
 
 if ($object->ismultientitymanaged == 1) $sql .= " WHERE t.entity IN (".getEntity($object->element).")";
 else $sql .= " WHERE 1 = 1";
-//TODO DO NOt WROK
-if (!empty($search_users_tags)) {
-	$sql .= ' AND t.fk_category_user IN (' . implode(',', $search_users_tags) . ')';
-}
 
 if (empty($user->admin)) {
 	$user_to_read=array();

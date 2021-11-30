@@ -124,6 +124,7 @@ foreach ($object->fields as $key => $val) {
 		$search[$key . '_to'] = dol_mktime(23, 59, 59, GETPOST('search_' . $key . '_tomonth', 'int'), GETPOST('search_' . $key . '_today', 'int'), GETPOST('search_' . $key . '_toyear', 'int'));
 	} elseif (GETPOST('search_' . $key, 'alpha') !== '') $search[$key] = GETPOST('search_' . $key, 'alpha');
 }
+$search_users_tags = GETPOST('users_tags', 'array');
 
 // List of fields to search into when doing a "search in all"
 $fieldstosearchall = array();
@@ -245,8 +246,28 @@ $sql .= preg_replace('/^,/', '', $hookmanager->resPrint);
 $sql = preg_replace('/,\s*$/', '', $sql);
 $sql .= " FROM " . MAIN_DB_PREFIX . $object->table_element . " as t";
 if (is_array($extrafields->attributes[$object->table_element]['label']) && count($extrafields->attributes[$object->table_element]['label'])) $sql .= " LEFT JOIN " . MAIN_DB_PREFIX . $object->table_element . "_extrafields as ef on (t.rowid = ef.fk_object)";
+if (!empty($search_users_tags)) {
+	$sql .= ' INNER JOIN '.MAIN_DB_PREFIX.'categorie_user as tagu ON tagu.fk_user=t.salesman';
+	$sql .= ' AND tagu.fk_categorie IN (' . implode(',', $search_users_tags) . ')';
+}
+
+
 if ($object->ismultientitymanaged == 1) $sql .= " WHERE t.entity IN (" . getEntity($object->element) . ")";
 else $sql .= " WHERE 1 = 1";
+
+if (empty($user->admin)) {
+	$user_to_read=array();
+	if (!empty($user->rights->monanalysevendeur->rapportjournalier->read)) {
+		//si droit read = venderu simple, il voie ses éléments
+		$user_to_read[$user->id] = $user->id;
+	}
+	if (!empty($user->rights->monanalysevendeur->rapportjournalier->rpv)) {
+		//si l'utilisateur à la permission rpv il vois les siens et ceux des vendeurs dont il est responsable
+		$user_to_read=array_merge($user_to_read, $user->getAllChildIds());
+	}
+	if (!empty($user_to_read)) $sql .= " AND t.fk_user_creat IN (".implode(',', $user_to_read).')';
+}
+
 foreach ($search as $key => $val) {
 	if ($key == 'status' && $search[$key] == -1) continue;
 	if (preg_match('/_from$/', $key) || preg_match('/_to$/', $key) && $val <> '') {
@@ -402,6 +423,12 @@ if ($search_all) {
 }
 
 $moreforfilter = '';
+$moreforfilter.='<div class="divsearchfield">';
+$moreforfilter.= $langs->trans('Agence') . ':';
+
+$cate_arbo = $form->select_all_categories('user', null, 'parent', null, null, 1);
+$moreforfilter.= $form->multiselectarray('users_tags', $cate_arbo, $search_users_tags, null, null, null, null, '100%');
+$moreforfilter.= '</div>';
 /*$moreforfilter.='<div class="divsearchfield">';
 $moreforfilter.= $langs->trans('MyFilter') . ': <input type="text" name="search_myfield" value="'.dol_escape_htmltag($search_myfield).'">';
 $moreforfilter.= '</div>';*/
@@ -456,6 +483,8 @@ foreach ($object->fields as $key => $val) {
 		print '</td>';
 	}
 }
+//Agence
+print '<td></td>';
 // Extra fields
 include DOL_DOCUMENT_ROOT . '/core/tpl/extrafields_list_search_input.tpl.php';
 
@@ -486,6 +515,7 @@ foreach ($object->fields as $key => $val) {
 		print getTitleFieldOfList($arrayfields['t.' . $key]['label'], 0, $_SERVER['PHP_SELF'], 't.' . $key, '', $param, ($cssforfield ? 'class="' . $cssforfield . '"' : ''), $sortfield, $sortorder, ($cssforfield ? $cssforfield . ' ' : '')) . "\n";
 	}
 }
+print getTitleFieldOfList('Agence', 0, $_SERVER['PHP_SELF'], '', '', $param, ($cssforfield ? 'class="' . $cssforfield . '"' : ''), $sortfield, $sortorder, ($cssforfield ? $cssforfield . ' ' : '')) . "\n";
 // Extra fields
 include DOL_DOCUMENT_ROOT . '/core/tpl/extrafields_list_search_title.tpl.php';
 // Hook fields
@@ -535,8 +565,27 @@ while ($i < ($limit ? min($num, $limit) : $num)) {
 
 		if (!empty($arrayfields['t.' . $key]['checked'])) {
 			print '<td' . ($cssforfield ? ' class="' . $cssforfield . '"' : '') . '>';
-			if ($key == 'status') print $object->getLibStatut(5);
-			else print $object->showOutputField($val, $key, $object->$key, '');
+			if ($key == 'status') {
+				print $object->getLibStatut(5);
+			}
+			elseif ($key== 'fk_category_user') {
+				if (!empty($object->$key)) {
+					$sqlCat = "SELECT c.label, c.rowid";
+					$sqlCat .= " FROM " . MAIN_DB_PREFIX . "categorie as c";
+					$sqlCat .= " WHERE c.rowid=" . $object->$key;
+					$resqlCat = $db->query($sqlCat);
+					if ($resqlCat) {
+						if ($obj = $db->fetch_object($resqlCat)) {
+							print $obj->label;
+						}
+					} else {
+						setEventMessage($db->lasterror, 'errors');
+					}
+				}
+			}
+			else {
+				print $object->showOutputField($val, $key, $object->$key, '');
+			}
 			print '</td>';
 			if (!$i) $totalarray['nbfield']++;
 			if (!empty($val['isameasure'])) {
@@ -545,6 +594,11 @@ while ($i < ($limit ? min($num, $limit) : $num)) {
 			}
 		}
 	}
+	//Agence
+	print '<td>';
+	print $form->showCategories($object->salesman, Categorie::TYPE_USER, 1);
+	print '</td>';
+
 	// Extra fields
 	include DOL_DOCUMENT_ROOT . '/core/tpl/extrafields_list_print_fields.tpl.php';
 	// Fields from hook
@@ -577,6 +631,8 @@ if ($num == 0) {
 	foreach ($arrayfields as $key => $val) {
 		if (!empty($val['checked'])) $colspan++;
 	}
+	//Agence
+	$colspan++;
 	print '<tr><td colspan="' . $colspan . '" class="opacitymedium">' . $langs->trans("NoRecordFound") . '</td></tr>';
 }
 
